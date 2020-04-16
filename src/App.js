@@ -4,6 +4,7 @@ import DiseaseParameters from './DiseaseParameters'
 import SimulationParameters from './SimulationParameters'
 import DiseaseGraph from './DiseaseGraph'
 import MorbidityAndMortalityGraph from './MorbidityAndMortalityGraph'
+import ModelDescription from './ModelDescription'
 
 class App extends Component {
   state = {
@@ -51,6 +52,8 @@ class App extends Component {
 
         <DiseaseGraph parameters={this.state.simulation}/>
         <MorbidityAndMortalityGraph parameters={this.state.simulation}/>
+
+        <ModelDescription/>
       </div>
     );
   }
