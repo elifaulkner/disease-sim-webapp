@@ -1,14 +1,21 @@
 # Backend
 ## Initialize
 
-```$cd api
+```
+$cd api
 $pip install -r requirements.txt
-$cd ..111
+$cd ..
+
+```
 
 ## Start
 
-```$yarn start-api
+```
+$yarn start-api
+```
 
 ## Frontend
 
-```$yarn start```
+```
+$yarn start
+```
