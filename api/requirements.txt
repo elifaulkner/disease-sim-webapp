@@ -1,0 +1,4 @@
+numpy
+scipy
+flask
+python-dotenv
