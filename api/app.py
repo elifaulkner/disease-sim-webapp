@@ -30,21 +30,21 @@ def sim(avg_days_infected):
 
 @app.route('/simulate/<float:R0>/<float:avg_days_infected>/<float:avg_days_hospitalized>/<float:avg_days_immune>/<float:p_hospitalization_given_infection>/<float:p_death_given_hospitalization>/<int:max_time>/<int:num_time_points>/<float:init_infection>', methods=['GET'])
 def simulate(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization,max_time, num_time_points, init_infection):
-    model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization)
+    model = DiseaseModel(float(R0), float(avg_days_infected), float(avg_days_hospitalized), avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization)
     t, sim = model.simulate(max_time, num_time_points, init_infection)
     return build_json(t, sim)
 
 @app.route('/simulate', methods=['POST'])
 def simulate_post():
-    R0 = request.json['disease_parameters']['R0']
-    avg_days_infected = request.json['disease_parameters']['avg_days_infected'] 
-    avg_days_hospitalized = request.json['disease_parameters']['avg_days_hospitalized']
-    avg_days_immune = request.json['disease_parameters']['avg_days_immune'] 
-    p_hospitalization_given_infection = request.json['disease_parameters']['p_hospitalization_given_infection'] 
-    p_death_given_hospitalization = request.json['disease_parameters']['p_death_given_hospitalization']
-    max_time = request.json['sim_parameters']['max_time']
-    num_time_points = request.json['sim_parameters']['num_time_points']
-    init_infection = request.json['sim_parameters']['init_infection']
+    R0 = float(request.json['disease_parameters']['R0'])
+    avg_days_infected = float(request.json['disease_parameters']['avg_days_infected'])
+    avg_days_hospitalized = float(request.json['disease_parameters']['avg_days_hospitalized'])
+    avg_days_immune = float(request.json['disease_parameters']['avg_days_immune'])
+    p_hospitalization_given_infection = float(request.json['disease_parameters']['p_hospitalization_given_infection'])
+    p_death_given_hospitalization = float(request.json['disease_parameters']['p_death_given_hospitalization'])
+    max_time = int(request.json['sim_parameters']['max_time'])
+    num_time_points = int(request.json['sim_parameters']['num_time_points'])
+    init_infection = float(request.json['sim_parameters']['init_infection'])
 
     model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization)
     t, sim = model.simulate(max_time, num_time_points, init_infection)

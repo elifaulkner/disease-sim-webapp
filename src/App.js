@@ -18,8 +18,8 @@ function App() {
   });
 
   const [simParameters, setSimParameters] = useState({
-    max_time: 365,
-    num_time_points: 1000,
+    max_time: 730,
+    num_time_points: 730*2,
     init_infection: 0.0001
   });
 
@@ -40,14 +40,14 @@ function App() {
       .then(data => setSimulation(data));
   }
 
-  useEffect(simulate);
+  useEffect(simulate, [diseaseParameters, simParameters]);
 
   return (
     <div className="App">
       <table>
         <tr>
-          <td><DiseaseParameters parameters={diseaseParameters} /></td>
-          <td><SimulationParameters parameters={simParameters} /></td>
+          <td><DiseaseParameters parameters={diseaseParameters} onChange={setDiseaseParameters}/></td>
+          <td><SimulationParameters parameters={simParameters} onChange={setSimParameters} /></td>
         </tr>
       </table>
 

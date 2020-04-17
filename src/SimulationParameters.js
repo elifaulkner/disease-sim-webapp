@@ -4,6 +4,11 @@ class SimulationParameters extends Component {
     constructor(props) {
         super(props);
         this.state = props.parameters
+
+        this.onInputChange = (state) => {
+          this.setState(state)
+          this.props.onChange(this.state)
+        }
       }
 
     render() {
@@ -11,13 +16,13 @@ class SimulationParameters extends Component {
             <div>
               <table>
                 <tr>
-                  <td># Days to Simulation</td> <td><input type="text" value={this.state.max_time} onChange={(event) => this.setState({max_time: event.target.value})}/></td>
+                  <td># Days to Simulation</td> <td><input type="text" value={this.state.max_time} onChange={(event) => this.onInputChange({max_time: event.target.value})}/></td>
                 </tr>
                 <tr>
-                  <td>Simulation Data points</td> <td><input type="text" value={this.state.num_time_points}  onChange={(event) => this.setState({num_time_points:event.target.value})}/></td>
+                  <td>Simulation Data points</td> <td><input type="text" value={this.state.num_time_points}  onChange={(event) => this.onInputChange({num_time_points:event.target.value})}/></td>
                 </tr>
                 <tr>
-                  <td>Initial Infection Rate</td> <td><input type="text" value={this.state.init_infection}  onChange={(event) => this.setState({init_infection:event.target.value})}/></td>
+                  <td>Initial Infection Rate</td> <td><input type="text" value={this.state.init_infection}  onChange={(event) => this.onInputChange({init_infection:event.target.value})}/></td>
                 </tr>
               </table>
             </div>
