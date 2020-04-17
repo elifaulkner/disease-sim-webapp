@@ -36,7 +36,7 @@ function App() {
       })
     }
 
-    fetch('/simulate', requestOptions)
+    fetch('/api/simulate', requestOptions)
       .then(response => response.json())
       .then(data => setSimulation(data));
   }

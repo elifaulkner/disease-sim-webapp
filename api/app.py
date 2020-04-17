@@ -14,27 +14,18 @@ def build_json(t, sim):
         'dead':list(sim[:,4])
         })
 
-@app.route('/')
-def home():
-    return render_template("index.html")
-
-@app.route('/hello/', methods=['GET'])
+@app.route('/api/hello/', methods=['GET'])
 def hello():
     print('Hello')
     return 'Hello'
 
-@app.route('/sim/<int:avg_days_infected>/', methods=['GET'])
-def sim(avg_days_infected):
-    print(avg_days_infected)
-    return jsonify(avg_days_infected)
-
-@app.route('/simulate/<float:R0>/<float:avg_days_infected>/<float:avg_days_hospitalized>/<float:avg_days_immune>/<float:p_hospitalization_given_infection>/<float:p_death_given_hospitalization>/<int:max_time>/<int:num_time_points>/<float:init_infection>', methods=['GET'])
+@app.route('/api/simulate/<float:R0>/<float:avg_days_infected>/<float:avg_days_hospitalized>/<float:avg_days_immune>/<float:p_hospitalization_given_infection>/<float:p_death_given_hospitalization>/<int:max_time>/<int:num_time_points>/<float:init_infection>', methods=['GET'])
 def simulate(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization,max_time, num_time_points, init_infection):
     model = DiseaseModel(float(R0), float(avg_days_infected), float(avg_days_hospitalized), avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization)
     t, sim = model.simulate(max_time, num_time_points, init_infection)
     return build_json(t, sim)
 
-@app.route('/simulate', methods=['POST'])
+@app.route('/api/simulate', methods=['POST'])
 def simulate_post():
     R0 = float(request.json['disease_parameters']['R0'])
     avg_days_infected = float(request.json['disease_parameters']['avg_days_infected'])
@@ -49,7 +40,6 @@ def simulate_post():
     model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization)
     t, sim = model.simulate(max_time, num_time_points, init_infection)
     return build_json(t, sim)
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
