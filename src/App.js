@@ -1,10 +1,11 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import DiseaseParameters from './DiseaseParameters'
-import SimulationParameters from './SimulationParameters'
 import DiseaseGraph from './DiseaseGraph'
 import MorbidityAndMortalityGraph from './MorbidityAndMortalityGraph'
-import ModelDescription from './ModelDescription'
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { useConstCallback } from '@uifabric/react-hooks';
+import ModelConfigurationPanel from './ModelConfigurationPanel'
+import ModelDescriptionPanel from './ModelDescriptionPanel'
 
 function App() {
 
@@ -40,21 +41,24 @@ function App() {
       .then(data => setSimulation(data));
   }
 
-  useEffect(simulate, [diseaseParameters, simParameters]);
+  const [isConfigOpen, setIsConfigOpen] = React.useState(false);
+  const [isDescriptionOpen, setIsDescriptionOpen] = React.useState(false);
 
+  const openConfigPanel = useConstCallback(() => setIsConfigOpen(true));
+  const openDescriptionPanel = useConstCallback(() => setIsDescriptionOpen(true));
+
+  useEffect(simulate, [diseaseParameters, simParameters]);
+  
   return (
     <div className="App">
-      <table>
-        <tr>
-          <td><DiseaseParameters parameters={diseaseParameters} onChange={setDiseaseParameters}/></td>
-          <td><SimulationParameters parameters={simParameters} onChange={setSimParameters} /></td>
-        </tr>
-      </table>
+      <ModelConfigurationPanel isOpen={isConfigOpen} setIsOpen={setIsConfigOpen} diseaseParameters={diseaseParameters} setDiseaseParameters={setDiseaseParameters} simParameters={simParameters} setSimParameters={setSimParameters} simulate={simulate}/>
+      <ModelDescriptionPanel isOpen={isDescriptionOpen} setIsOpen={setIsDescriptionOpen} />
 
       <DiseaseGraph parameters={simulation} />
       <MorbidityAndMortalityGraph parameters={simulation} />
 
-      <ModelDescription />
+      <DefaultButton text="Open model configuration" onClick={openConfigPanel} />
+      <DefaultButton text="Open model description" onClick={openDescriptionPanel} />
     </div>
   );
 }

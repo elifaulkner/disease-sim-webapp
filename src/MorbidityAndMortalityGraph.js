@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import CanvasJSReact from './canvasjs.react';
 //var CanvasJSReact = require('./canvasjs.react');
-var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 class MorbidityAndMortalityGraph extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   build_data_series(x, y) {
     var list = []

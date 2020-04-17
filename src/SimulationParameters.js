@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { Stack } from 'office-ui-fabric-react/lib/Stack';
+import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
 
 class SimulationParameters extends Component {
     constructor(props) {
@@ -14,17 +16,44 @@ class SimulationParameters extends Component {
     render() {
         return (
             <div>
-              <table>
-                <tr>
-                  <td># Days to Simulation</td> <td><input type="text" value={this.state.max_time} onChange={(event) => this.onInputChange({max_time: event.target.value})}/></td>
-                </tr>
-                <tr>
-                  <td>Simulation Data points</td> <td><input type="text" value={this.state.num_time_points}  onChange={(event) => this.onInputChange({num_time_points:event.target.value})}/></td>
-                </tr>
-                <tr>
-                  <td>Initial Infection Rate</td> <td><input type="text" value={this.state.init_infection}  onChange={(event) => this.onInputChange({init_infection:event.target.value})}/></td>
-                </tr>
-              </table>
+              <Stack verticle>
+              <SpinButton
+                label="# Days to Simulation"
+                min={1}
+                max={1825}
+                step={1}
+                defaultValue={this.state.max_time}
+                showValue={true}
+                snapToStep
+                value={this.state.max_time} onChanged={(event) => this.onInputChange({max_time: event.target.value})}/>
+              <SpinButton
+                label="Simulation Data points"
+                min={100}
+                max={10000}
+                step={1}
+                defaultValue={this.state.num_time_points}
+                showValue={true}
+                snapToStep
+                value={this.state.num_time_points} onChanged={(event) => this.onInputChange({num_time_points: event.target.value})}/>
+              <SpinButton
+                label="# Days to Simulation"
+                min={1}
+                max={1825}
+                step={1}
+                defaultValue={this.state.max_time}
+                showValue={true}
+                snapToStep
+                value={this.state.max_time} onChanged={(event) => this.onInputChange({max_time: event.target.value})}/>
+              <SpinButton
+                label="Initial Infection Rate"
+                min={0}
+                max={1}
+                step={0.0000001}
+                defaultValue={this.state.init_infection}
+                showValue={true}
+                snapToStep
+                value={this.state.init_infection} onChanged={(event) => this.onInputChange({init_infection: event.target.value})}/>
+              </Stack>
             </div>
           );
     }
