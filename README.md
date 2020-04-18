@@ -2,20 +2,22 @@
 ## Initialize
 
 ```
-$cd api
-$pip install -r requirements.txt
-$cd ..
+$ cd api
+$ virtualenv .env
+$ source .env/Scripts/activate
+$ pip install -r requirements.txt
+$ cd ..
 
 ```
 
 ## Start
 
 ```
-$yarn start-api
+$ yarn start-api
 ```
 
 ## Frontend
 
 ```
-$yarn start
+$ yarn start
 ```
