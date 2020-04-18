@@ -18,10 +18,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "docker-build": "docker build --rm -f Dockerfile -t diseasesimwebapp:$npm_package_version .",
-    "docker-start": "docker run --rm -it  -p 80:80/tcp diseasesimwebapp:$npm_package_version",
-    "docket-tag": "docker tag diseasesimwebapp:$npm_package_version elifaulkner/diseasesimwebapp:$npm_package_version",
-    "docker-push": "docker push elifaulkner/diseasesimwebapp:$npm_package_version"
+    "version": "echo %npm_package_version%",
+    "docker-build": "docker build --rm -f Dockerfile -t diseasesimwebapp:0.0.2 .",
+    "docker-start": "docker run --rm -it  -p 80:80/tcp diseasesimwebapp:0.0.2",
+    "docker-tag": "docker tag diseasesimwebapp:0.0.2 elifaulkner/diseasesimwebapp:0.0.2",
+    "docker-push": "docker push elifaulkner/diseasesimwebapp:0.0.2"
   },
   "eslintConfig": {
     "extends": "react-app"
