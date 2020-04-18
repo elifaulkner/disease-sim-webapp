@@ -17,6 +17,7 @@ RUN pip install numpy scipy pandas matplotlib
 WORKDIR /app/
 
 COPY api/ /app/
+COPY api/.flaskenv.prod /app/.flaskenv
 
 RUN pip install flask
 RUN pip install -r /app/requirements.txt
