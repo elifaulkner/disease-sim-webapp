@@ -24,8 +24,8 @@ function ModelDescriptionPanel(props) {
           closeButtonAriaLabel="Close"
         >
           <div>
-            <p>The SIR model (https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology) is a common model for epidemiological analysis for infectionus diseases, particularly influenza. 
-                A well mixed population is broken into three categories: Susceptible, Ifectious, and Revovered. This model is well suited for influenza because after infection there is a long period of immunity to reinfectin.
+            <p>The SIR model (https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology) is a common model for epidemiological analysis for infectious diseases, particularly influenza. 
+                A well mixed population is broken into three categories: Susceptible, Infectious, and Recovered. This model is well suited for influenza because after infection there is a long period of immunity to reinfection.
             </p>
             <p>
                 To analyze SARS-Cov-2 I have built an extention of the standard SIR model to include two new states (Hospitalized ad Dead), and several new trantitions including temporary immunity

@@ -41,7 +41,7 @@ class DiseaseGraph extends Component {
         maximum: 1
 			},
 			axisX: {
-				title: "Days Since Simulation Began",
+				title: "Days Since Infection Began",
         includeZero: true
 			},
       data: [{				

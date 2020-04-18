@@ -31,7 +31,7 @@ class MorbidityAndMortalityGraph extends Component {
         title: "% pf population"
 			},
 			axisX: {
-				title: "Days Since Simulation Began",
+				title: "Days Since Infection Began",
         includeZero: true
 			},
       data: [{				
