@@ -6,6 +6,8 @@ import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { useConstCallback } from '@uifabric/react-hooks';
 import ModelConfigurationPanel from './ModelConfigurationPanel'
 import ModelDescriptionPanel from './ModelDescriptionPanel'
+import InterventionsPanel from './InterventionsPanel'
+
 
 function App() {
 
@@ -24,6 +26,15 @@ function App() {
     init_infection: 0.0001
   });
 
+  const [interventions, setInterventions] = useState({
+      infection_rate: [],
+      infection_time: [],
+      hospitilization_time: [],
+      immunity_time: [],
+      hospitilization_rate: [],
+      death_rate: []
+    });
+
   const [simulation, setSimulation] = useState({});
 
   const simulate = () => {
@@ -32,7 +43,8 @@ function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         disease_parameters: diseaseParameters,
-        sim_parameters: simParameters
+        sim_parameters: simParameters,
+        interventions: interventions
       })
     }
 
@@ -43,8 +55,10 @@ function App() {
 
   const [isConfigOpen, setIsConfigOpen] = React.useState(false);
   const [isDescriptionOpen, setIsDescriptionOpen] = React.useState(false);
+  const [isInterventionOpen, setisInterventionOpen] = React.useState(false);
 
   const openConfigPanel = useConstCallback(() => setIsConfigOpen(true));
+  const openInterventionsPanel = useConstCallback(() => setisInterventionOpen(true));
   const openDescriptionPanel = useConstCallback(() => setIsDescriptionOpen(true));
 
   useEffect(simulate, [diseaseParameters, simParameters]);
@@ -53,11 +67,13 @@ function App() {
     <div className="App">
       <ModelConfigurationPanel isOpen={isConfigOpen} setIsOpen={setIsConfigOpen} diseaseParameters={diseaseParameters} setDiseaseParameters={setDiseaseParameters} simParameters={simParameters} setSimParameters={setSimParameters} simulate={simulate}/>
       <ModelDescriptionPanel isOpen={isDescriptionOpen} setIsOpen={setIsDescriptionOpen} />
+      <InterventionsPanel isOpen={isInterventionOpen} setIsOpen={setisInterventionOpen} interventions={interventions} setInterventions={setInterventions} simulate={simulate}/>
 
       <DiseaseGraph parameters={simulation} />
       <MorbidityAndMortalityGraph parameters={simulation} />
 
       <DefaultButton text="Open model configuration" onClick={openConfigPanel} />
+      <DefaultButton text="Open interventions" onClick={openInterventionsPanel} />
       <DefaultButton text="Open model description" onClick={openDescriptionPanel} />
     </div>
   );
