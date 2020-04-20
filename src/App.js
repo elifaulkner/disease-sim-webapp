@@ -56,7 +56,7 @@ function App() {
   const openDescriptionPanel = useConstCallback(() => setIsDescriptionOpen(true));
   const openStatsPanel = useConstCallback(() => setisStatsOpen(true));
 
-  useEffect(simulate, [diseaseParameters, simParameters]);
+  useEffect(simulate, [diseaseParameters, simParameters, interventions]);
   
   return (
     <div className="App">

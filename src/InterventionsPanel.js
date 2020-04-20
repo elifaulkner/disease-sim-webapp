@@ -11,10 +11,10 @@ import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Selection, SelectionZone, SelectionMode } from 'office-ui-fabric-react/lib/Selection';
 
 function InterventionsPanel(props) {
-    const dismissPanel = useConstCallback(() => {
+    const dismissPanel = () => {
         props.simulate()
         props.setIsOpen(false);
-    });
+    };
 
     const [currentIntervention, setCurrentIntervention] = useState({ name: '', start: 0, end: 3650, effectiveness: 1, type: '' })
     const [currentType, setCurrentType] = useState('infection_rate')
