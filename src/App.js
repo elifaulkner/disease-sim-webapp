@@ -65,9 +65,9 @@ function App() {
       <DiseaseGraph parameters={simulation} />
       <MorbidityAndMortalityGraph parameters={simulation} />
 
-      <DefaultButton text="Open model configuration" onClick={openConfigPanel} />
-      <DefaultButton text="Open interventions" onClick={openInterventionsPanel} />
-      <DefaultButton text="Open model description" onClick={openDescriptionPanel} />
+      <DefaultButton text="Model Configuration" onClick={openConfigPanel} />
+      <DefaultButton text="Interventions" onClick={openInterventionsPanel} />
+      <DefaultButton text="Model Description" onClick={openDescriptionPanel} />
     </div>
   );
 }

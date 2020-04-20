@@ -8,10 +8,10 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
-import { SelectionZone, SelectionMode } from 'office-ui-fabric-react/lib/Selection';
+import { Selection, SelectionZone, SelectionMode } from 'office-ui-fabric-react/lib/Selection';
 
 function InterventionsPanel(props) {
-    var selection
+    const [selection, setSelection] = useState(null)
 
     const dismissPanel = useConstCallback(() => {
         props.simulate()
@@ -19,21 +19,22 @@ function InterventionsPanel(props) {
     });
 
     const [interventions, setInterventions] = useState(props.interventions)    
-    const [currentIntervention, setCurrentIntervention] = useState({name:'', start:0, end:3650, scale:1, type:''})
+    const [currentIntervention, setCurrentIntervention] = useState({name:'', start:0, end:3650, effectiveness:1, type:''})
     const [currentType, setCurrentType] = useState('infection_rate')
 
     const columns = [
         { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
-        { key: 'column2', name: 'Start', fieldName: 'start', minWidth: 100, maxWidth: 200, isResizable: true },
-        { key: 'column2', name: 'End', fieldName: 'end', minWidth: 100, maxWidth: 200, isResizable: true },
-        { key: 'column2', name: 'Scale', fieldName: 'scale', minWidth: 100, maxWidth: 200, isResizable: true },
+        { key: 'column2', name: 'Type', fieldName: 'type', minWidth: 100, maxWidth: 200, isResizable: true },
+        { key: 'column3', name: 'Start', fieldName: 'start', minWidth: 50, maxWidth: 200, isResizable: true },
+        { key: 'column4', name: 'End', fieldName: 'end', minWidth: 50, maxWidth: 200, isResizable: true },
+        { key: 'column5', name: 'Effectiveness', fieldName: 'effectiveness', minWidth:50, maxWidth: 200, isResizable: true },
     ];
 
     const confirm = () => {
         currentIntervention.type = currentType
         interventions.push(currentIntervention)
         props.setInterventions(interventions)
-        setCurrentIntervention({name:'', start:0, end:3650, scale:1, type:''})
+        setCurrentIntervention({name:'', start:0, end:3650, effectiveness:1, type:''})
     }
 
     const options: IDropdownOption[] = [
@@ -44,6 +45,17 @@ function InterventionsPanel(props) {
         { key: 'hospitilization_rate', text: 'Hospitilization Rate' },
         { key: 'death_rate', text: 'Death Rate' },
       ];
+
+    const deleteSelected = () => {
+        alert(selection)
+        if(selection != null) {
+            interventions.delete(selection)
+        }
+    }
+
+    const selectionInvoked = (s) => {
+        setSelection(s)
+    }
 
     return (
         <div>
@@ -90,17 +102,21 @@ function InterventionsPanel(props) {
                         value={currentIntervention.end}
                         onValidate={(v) => setCurrentIntervention(prevState => {return {...prevState, end: v}})}/>
                     <SpinButton
-                        label="Scale"
+                        label="Effectiveness"
                         labelPosition="Top"
                         min={0}
                         max={100}
                         step={0.0001}
                         showValue={true}
                         snapToStep
-                        value={currentIntervention.scale}
-                        onValidate={(v) => setCurrentIntervention(prevState => {return {...prevState, scale: v}})}/>
+                        value={currentIntervention.effectiveness}
+                        onValidate={(v) => setCurrentIntervention(prevState => {return {...prevState, effectiveness: v}})}/>
                     <Label/>
-                    <DefaultButton text="Add" onClick={confirm}/>
+                    <Stack horizontal>
+                        <DefaultButton text="Add Intervention" onClick={confirm}/>
+                        <DefaultButton text="Delete Selected" onClick={deleteSelected}/>
+                        <DefaultButton text="Return to Main Page" onClick={dismissPanel}/>
+                    </Stack>
                 </Stack>
             </div>
                 <DetailsList
@@ -114,7 +130,6 @@ function InterventionsPanel(props) {
                     ariaLabelForSelectAllCheckbox="Toggle selection for all items"
                     checkButtonAriaLabel="Row checkbox"
                 />
-            <DefaultButton text="Done" onClick={dismissPanel}/>
             </Panel>
         </div>
     );
