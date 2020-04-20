@@ -48,8 +48,8 @@ class DiseaseModel:
             S, I, H, R, D, CI, CH = X
             a = a*self.get_active_intervention_scale(interventions.infection_rate, t)
             b = b*self.get_active_intervention_scale(interventions.infection_time, t)*self.get_active_intervention_scale(interventions.hospitilization_rate, t)
-            c = c*self.get_active_intervention_scale(interventions.infection_time, t)/self.get_active_intervention_scale(interventions.hospitilization_rate, t)
-            d = d*self.get_active_intervention_scale(interventions.hospitilization_time, t)/self.get_active_intervention_scale(interventions.death_rate, t)
+            c = c*self.get_active_intervention_scale(interventions.infection_time, t)
+            d = d*self.get_active_intervention_scale(interventions.hospitilization_time, t)
             e = e*self.get_active_intervention_scale(interventions.hospitilization_time, t)*self.get_active_intervention_scale(interventions.death_rate, t)
             f = f*self.get_active_intervention_scale(interventions.immunity_time, t)
             return [-a*S*I+f*R, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R, e*H, a*S*I, b*I]
