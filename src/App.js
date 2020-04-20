@@ -7,13 +7,14 @@ import { useConstCallback } from '@uifabric/react-hooks';
 import ModelConfigurationPanel from './ModelConfigurationPanel'
 import ModelDescriptionPanel from './ModelDescriptionPanel'
 import InterventionsPanel from './InterventionsPanel'
+import CumulativeStatisticsPanel from './CumulativeStatisticePanel';
 
 
 function App() {
 
   const [diseaseParameters, setDiseaseParameters] = useState({
-    R0: 2.5,
-    avg_days_infected: 10.0,
+    R0: 2.2,
+    avg_days_infected: 6.0,
     avg_days_hospitalized: 14.0,
     avg_days_immune: 183.0,
     p_hospitalization_given_infection: 0.01,
@@ -22,8 +23,7 @@ function App() {
 
   const [simParameters, setSimParameters] = useState({
     max_time: 730,
-    num_time_points: 730*2,
-    init_infection: 0.0001
+    init_infection: 0.000001
   });
 
   const [interventions, setInterventions] = useState([]);
@@ -49,10 +49,12 @@ function App() {
   const [isConfigOpen, setIsConfigOpen] = React.useState(false);
   const [isDescriptionOpen, setIsDescriptionOpen] = React.useState(false);
   const [isInterventionOpen, setisInterventionOpen] = React.useState(false);
+  const [isStatsOpen, setisStatsOpen] = React.useState(false);
 
   const openConfigPanel = useConstCallback(() => setIsConfigOpen(true));
   const openInterventionsPanel = useConstCallback(() => setisInterventionOpen(true));
   const openDescriptionPanel = useConstCallback(() => setIsDescriptionOpen(true));
+  const openStatsPanel = useConstCallback(() => setisStatsOpen(true));
 
   useEffect(simulate, [diseaseParameters, simParameters]);
   
@@ -61,12 +63,13 @@ function App() {
       <ModelConfigurationPanel isOpen={isConfigOpen} setIsOpen={setIsConfigOpen} diseaseParameters={diseaseParameters} setDiseaseParameters={setDiseaseParameters} simParameters={simParameters} setSimParameters={setSimParameters} simulate={simulate}/>
       <ModelDescriptionPanel isOpen={isDescriptionOpen} setIsOpen={setIsDescriptionOpen} />
       <InterventionsPanel isOpen={isInterventionOpen} setIsOpen={setisInterventionOpen} interventions={interventions} setInterventions={setInterventions} simulate={simulate}/>
-
+      <CumulativeStatisticsPanel isOpen={isStatsOpen} setIsOpen={setisStatsOpen} sim={simulation}/>
       <DiseaseGraph parameters={simulation} />
       <MorbidityAndMortalityGraph parameters={simulation} />
 
       <DefaultButton text="Model Configuration" onClick={openConfigPanel} />
       <DefaultButton text="Interventions" onClick={openInterventionsPanel} />
+      <DefaultButton text="Cumulative Statistics" onClick={openStatsPanel} />
       <DefaultButton text="Model Description" onClick={openDescriptionPanel} />
     </div>
   );

@@ -45,17 +45,17 @@ class DiseaseModel:
             return (a, b, c, d, e, f)
 
         def scir(X, t, a, b, c, d, e, f):
-            S, I, H, R, D = X
+            S, I, H, R, D, CI, CH = X
             a = a*self.get_active_intervention_scale(interventions.infection_rate, t)
             b = b*self.get_active_intervention_scale(interventions.infection_time, t)*self.get_active_intervention_scale(interventions.hospitilization_rate, t)
             c = c*self.get_active_intervention_scale(interventions.infection_time, t)/self.get_active_intervention_scale(interventions.hospitilization_rate, t)
             d = d*self.get_active_intervention_scale(interventions.hospitilization_time, t)/self.get_active_intervention_scale(interventions.death_rate, t)
             e = e*self.get_active_intervention_scale(interventions.hospitilization_time, t)*self.get_active_intervention_scale(interventions.death_rate, t)
             f = f*self.get_active_intervention_scale(interventions.immunity_time, t)
-            return [-a*S*I+f*R, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R, e*H]
+            return [-a*S*I+f*R, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R, e*H, a*S*I, b*I]
 
         t = np.linspace(0, max_time, num_time_points)
-        sol = odeint(scir, [1-init_infection, init_infection, 0, 0, 0], t, args=build_scir_parameters()) 
+        sol = odeint(scir, [1-init_infection, init_infection, 0, 0, 0, 0, 0], t, args=build_scir_parameters()) 
         return [t, sol]       
 
 if __name__ == '__main__':
