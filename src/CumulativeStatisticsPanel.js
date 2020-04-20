@@ -3,6 +3,7 @@ import { Panel } from 'office-ui-fabric-react/lib/Panel';
 import { useConstCallback } from '@uifabric/react-hooks';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
 import { Label } from 'office-ui-fabric-react/lib/Label';
+import { Text } from 'office-ui-fabric-react/lib/Text';
 import { getMaxHeight } from 'office-ui-fabric-react/lib/utilities/positioning';
 
 function CumulativeStatisticsPanel(props) {
@@ -36,7 +37,7 @@ function CumulativeStatisticsPanel(props) {
             isLightDismiss
             headerText="Cumulative Statistics"
             isOpen={props.isOpen}
-            type={3}
+            type={1}
             onDismiss={dismissPanel}
             onLightDismissClick={dismissPanel}
             // You MUST provide this prop! Otherwise screen readers will just say "button" with no label.
@@ -54,27 +55,28 @@ function CumulativeStatisticsPanel(props) {
                 value={population}
                 onValidate={(v) => setPopulation(v)}/>
         
-            <table>
+            <table width="100%">
                 <tr>
-                    <td>Max Infectious</td> <td>{formatNumber(Math.ceil(maxInfectious*population))}</td>
+                    
+                    <td><Label>Max Infectious</Label></td> <td>{formatNumber(Math.ceil(maxInfectious*population))}</td>
                 </tr>
                 <tr>
-                    <td>Max Infectious Time</td> <td>Day {maxInfectiousTime}</td>
+                    <td><Label>Max Infectious Time</Label></td> <td>Day {maxInfectiousTime}</td>
                 </tr>
                 <tr>
-                    <td>Max Hospitalized</td> <td>{formatNumber(Math.ceil(maxHospitalized*population))}</td>
+                    <td><Label>Max Hospitalized</Label></td> <td>{formatNumber(Math.ceil(maxHospitalized*population))}</td>
                 </tr>
                 <tr>
-                    <td>Max Hospitalized Time</td> <td>Day {maxHospitalizedTime}</td>
+                    <td><Label>Max Hospitalized Time</Label></td> <td>Day {maxHospitalizedTime}</td>
                 </tr>
                 <tr>
-                    <td>Cumulative Infected</td> <td>{formatNumber(Math.ceil(cumInfectious*population))}</td>
+                    <td><Label>Cumulative Infected</Label></td> <td>{formatNumber(Math.ceil(cumInfectious*population))}</td>
                 </tr>
                 <tr>
-                    <td>Cumulative Hospitalized</td> <td>{formatNumber(Math.ceil(cumHospitalized*population))}</td>
+                    <td><Label>Cumulative Hospitalized</Label></td> <td>{formatNumber(Math.ceil(cumHospitalized*population))}</td>
                 </tr>
                 <tr>
-                    <td>Cumulative Dead</td> <td>{formatNumber(Math.ceil(dead*population))}</td>
+                    <td><Label>Cumulative Dead</Label></td> <td>{formatNumber(Math.ceil(dead*population))}</td>
                 </tr>
             </table>
             <Label> </Label>
