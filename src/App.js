@@ -7,7 +7,7 @@ import { useConstCallback } from '@uifabric/react-hooks';
 import ModelConfigurationPanel from './ModelConfigurationPanel'
 import ModelDescriptionPanel from './ModelDescriptionPanel'
 import InterventionsPanel from './InterventionsPanel'
-import CumulativeStatisticsPanel from './CumulativeStatisticePanel';
+import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
 
 
 function App() {
