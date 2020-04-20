@@ -8,15 +8,18 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
+import { SelectionZone, SelectionMode } from 'office-ui-fabric-react/lib/Selection';
 
 function InterventionsPanel(props) {
+    var selection
+
     const dismissPanel = useConstCallback(() => {
         props.simulate()
         props.setIsOpen(false);
     });
 
     const [interventions, setInterventions] = useState(props.interventions)    
-    const [currentIntervention, setCurrentIntervention] = useState({name:'', start:0, end:3650, scale:1})
+    const [currentIntervention, setCurrentIntervention] = useState({name:'', start:0, end:3650, scale:1, type:''})
     const [currentType, setCurrentType] = useState('infection_rate')
 
     const columns = [
@@ -26,37 +29,11 @@ function InterventionsPanel(props) {
         { key: 'column2', name: 'Scale', fieldName: 'scale', minWidth: 100, maxWidth: 200, isResizable: true },
     ];
 
-    const add_intervention_to_list = () => {
-        console.log(currentType)
-        switch(currentType) {
-            case 'infection_rate':
-                interventions.infection_rate.push(currentIntervention);
-                return interventions;
-            case 'infection_time':
-                interventions.infection_time.push(currentIntervention);
-                return interventions;
-            case 'hospitilization_time':
-                interventions.hospitilization_time.push(currentIntervention);
-                return interventions;
-            case 'immunity_time':
-                interventions.immunity_time.push(currentIntervention);
-                return interventions;
-            case 'hospitilization_rate':
-                interventions.hospitilization_rate.push(currentIntervention);
-                return interventions;
-            case 'death_rate':
-                interventions.death_rate.push(currentIntervention);
-                return interventions;
-            default:
-                return interventions;
-            }
-    }
-
     const confirm = () => {
-        const interventions = add_intervention_to_list()
-        setInterventions(interventions)
+        currentIntervention.type = currentType
+        interventions.push(currentIntervention)
         props.setInterventions(interventions)
-        setCurrentIntervention({name:'', start:0, end:3650, scale:1})
+        setCurrentIntervention({name:'', start:0, end:3650, scale:1, type:''})
     }
 
     const options: IDropdownOption[] = [
@@ -67,8 +44,6 @@ function InterventionsPanel(props) {
         { key: 'hospitilization_rate', text: 'Hospitilization Rate' },
         { key: 'death_rate', text: 'Death Rate' },
       ];
-
-
 
     return (
         <div>
@@ -91,6 +66,7 @@ function InterventionsPanel(props) {
                     <Dropdown
                         label="Intervention Type"
                         options={options}
+                        value={currentIntervention.type}
                         onChanged={(v) => setCurrentType(v.key)}
                     />
                     <SpinButton
@@ -128,62 +104,7 @@ function InterventionsPanel(props) {
                 </Stack>
             </div>
                 <DetailsList
-                    items={interventions.infection_rate}
-                    columns={columns}
-                    label="Infection Rate Intenventions"
-                    setKey="set"
-                    layoutMode={DetailsListLayoutMode.justified}
-                    selectionPreservedOnEmptyClick={true}
-                    ariaLabelForSelectionColumn="Toggle selection"
-                    ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                    checkButtonAriaLabel="Row checkbox"
-                />
-                <DetailsList
-                    items={interventions.infection_time}
-                    columns={columns}
-                    label="Infection Rate Intenventions"
-                    setKey="set"
-                    layoutMode={DetailsListLayoutMode.justified}
-                    selectionPreservedOnEmptyClick={true}
-                    ariaLabelForSelectionColumn="Toggle selection"
-                    ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                    checkButtonAriaLabel="Row checkbox"
-                />
-                <DetailsList
-                    items={interventions.hospitilization_time}
-                    columns={columns}
-                    label="Infection Rate Intenventions"
-                    setKey="set"
-                    layoutMode={DetailsListLayoutMode.justified}
-                    selectionPreservedOnEmptyClick={true}
-                    ariaLabelForSelectionColumn="Toggle selection"
-                    ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                    checkButtonAriaLabel="Row checkbox"
-                />
-                <DetailsList
-                    items={interventions.immunity_time}
-                    columns={columns}
-                    label="Infection Rate Intenventions"
-                    setKey="set"
-                    layoutMode={DetailsListLayoutMode.justified}
-                    selectionPreservedOnEmptyClick={true}
-                    ariaLabelForSelectionColumn="Toggle selection"
-                    ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                    checkButtonAriaLabel="Row checkbox"
-                />
-                <DetailsList
-                    items={interventions.hospitilization_rate}
-                    columns={columns}
-                    label="Infection Rate Intenventions"
-                    setKey="set"
-                    layoutMode={DetailsListLayoutMode.justified}
-                    selectionPreservedOnEmptyClick={true}
-                    ariaLabelForSelectionColumn="Toggle selection"
-                    ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                    checkButtonAriaLabel="Row checkbox"
-                />
-                <DetailsList
-                    items={interventions.death_rate}
+                    items={interventions}
                     columns={columns}
                     label="Infection Rate Intenventions"
                     setKey="set"

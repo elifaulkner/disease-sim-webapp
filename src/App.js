@@ -26,14 +26,7 @@ function App() {
     init_infection: 0.0001
   });
 
-  const [interventions, setInterventions] = useState({
-      infection_rate: [],
-      infection_time: [],
-      hospitilization_time: [],
-      immunity_time: [],
-      hospitilization_rate: [],
-      death_rate: []
-    });
+  const [interventions, setInterventions] = useState([]);
 
   const [simulation, setSimulation] = useState({});
 

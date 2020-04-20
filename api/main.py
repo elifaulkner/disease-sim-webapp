@@ -28,14 +28,14 @@ def simulate(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_ho
 def intervention_from_dict(dict):
     return Intervention(dict['name'], float(dict['start']), float(dict['end']), float(dict['scale']))
 
-def interventions_from_dict(dict):
+def interventions_from_list(list):
     interventions = Interventions()
-    interventions.infection_rate = [intervention_from_dict(x) for x in dict['infection_rate']]
-    interventions.infection_time = [intervention_from_dict(x) for x in dict['infection_time']]
-    interventions.hospitilization_time = [intervention_from_dict(x) for x in dict['hospitilization_time']]
-    interventions.immunity_time = [intervention_from_dict(x) for x in dict['immunity_time']]
-    interventions.hospitilization_rate = [intervention_from_dict(x) for x in dict['hospitilization_rate']]
-    interventions.death_rate = [intervention_from_dict(x) for x in dict['death_rate']]
+    interventions.infection_rate = [intervention_from_dict(x) for x in list if x['type'] == 'infection_rate']
+    interventions.infection_time = [intervention_from_dict(x) for x in list if x['type'] == 'infection_time']
+    interventions.hospitilization_time = [intervention_from_dict(x) for x in list if x['type'] == 'hospitilization_time']
+    interventions.immunity_time = [intervention_from_dict(x) for x in list if x['type'] == 'immunity_time']
+    interventions.hospitilization_rate = [intervention_from_dict(x) for x in list if x['type'] == 'hospitilization_rate']
+    interventions.death_rate = [intervention_from_dict(x) for x in list if x['type'] == 'death_rate']
     return interventions
 
 @app.route('/api/simulate', methods=['POST'])
@@ -50,7 +50,7 @@ def simulate_post():
     num_time_points = int(request.json['sim_parameters']['num_time_points'])
     init_infection = float(request.json['sim_parameters']['init_infection'])
 
-    interventions = interventions_from_dict(request.json['interventions'])
+    interventions = interventions_from_list(request.json['interventions'])
     model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization)
     t, sim = model.simulate(max_time, max_time*4, init_infection, interventions)
     return build_json(t, sim)
