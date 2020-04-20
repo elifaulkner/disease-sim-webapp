@@ -14,7 +14,7 @@ function App() {
 
   const [diseaseParameters, setDiseaseParameters] = useState({
     R0: 2.2,
-    avg_days_infected: 6.0,
+    avg_days_infected: 14.0,
     avg_days_hospitalized: 14.0,
     avg_days_immune: 183.0,
     p_hospitalization_given_infection: 0.01,
@@ -23,7 +23,7 @@ function App() {
 
   const [simParameters, setSimParameters] = useState({
     max_time: 730,
-    init_infection: 0.000001
+    init_infection: 0.00001
   });
 
   const [interventions, setInterventions] = useState([]);

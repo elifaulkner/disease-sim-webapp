@@ -28,7 +28,7 @@ class MorbidityAndMortalityGraph extends Component {
         text: "Morbidity and Mortality"
       },
 			axisY: {
-        title: "% pf population",
+        title: "% of population",
         minimum: 0
 			},
 			axisX: {

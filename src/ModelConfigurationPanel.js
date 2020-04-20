@@ -99,15 +99,6 @@ function ModelConfigurationPanel(props) {
         value={simParameters.max_time} 
         onValidate={(v) => setSimParameters(prevState => {return {...prevState, max_time: v}})}/>
     <SpinButton
-        label="Simulation Data points"
-        min={100}
-        max={10000}
-        step={1}
-        value={simParameters.num_time_points}
-        showValue={true}
-        snapToStep
-        onValidate={(v) => setSimParameters(prevState => {return {...prevState, num_time_points: v}})}/>
-    <SpinButton
         label="Initial Infection Rate"
         min={0}
         max={1}

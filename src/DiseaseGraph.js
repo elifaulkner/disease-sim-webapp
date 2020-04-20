@@ -36,7 +36,7 @@ class DiseaseGraph extends Component {
         text: "Disease Profile"
       },
 			axisY: {
-        title: "% pf population",
+        title: "% of population",
         minimum: 0,
         maximum: 100
 			},

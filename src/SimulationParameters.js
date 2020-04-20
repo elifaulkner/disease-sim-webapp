@@ -27,15 +27,6 @@ class SimulationParameters extends Component {
                 snapToStep
                 value={this.state.max_time} onChanged={(event) => this.onInputChange({max_time: event.target.value})}/>
               <SpinButton
-                label="# Days to Simulation"
-                min={1}
-                max={1825}
-                step={1}
-                defaultValue={this.state.max_time}
-                showValue={true}
-                snapToStep
-                value={this.state.max_time} onChanged={(event) => this.onInputChange({max_time: event.target.value})}/>
-              <SpinButton
                 label="Initial Infection Rate"
                 min={0}
                 max={1}
