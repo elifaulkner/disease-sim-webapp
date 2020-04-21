@@ -23,7 +23,7 @@ function InterventionsPanel(props) {
         { key: 'column2', name: 'Type', fieldName: 'type', minWidth: 100, maxWidth: 200, isResizable: true },
         { key: 'column3', name: 'Start', fieldName: 'start', minWidth: 50, maxWidth: 200, isResizable: true },
         { key: 'column4', name: 'End', fieldName: 'end', minWidth: 50, maxWidth: 200, isResizable: true },
-        { key: 'column5', name: 'Effectiveness', fieldName: 'effectiveness', minWidth: 50, maxWidth: 200, isResizable: true },
+        { key: 'column5', name: 'Effectiveness', fieldName: 'effectiveness', minWidth: 100, maxWidth: 200, isResizable: true, onRender:(v)=>{return v.effectiveness*100+' %'}}
     ];
 
     const confirm = () => {
@@ -49,7 +49,7 @@ function InterventionsPanel(props) {
         { key: 'death_rate', text: 'Death Rate' },
     ];
 
-    const selection = React.useMemo(() => new Selection({ getKey: i => i.name }), []);
+    const selection = React.useMemo(() => new Selection({ getKey: i => i.name}), []);
 
     const deleteSelected = () => {
         if (selection.getSelectedCount() > 0) {
@@ -61,6 +61,7 @@ function InterventionsPanel(props) {
             alert('nothing selected to delete')
         }
     }
+
 
     return (
         <div>
@@ -95,6 +96,7 @@ function InterventionsPanel(props) {
                             step={1}
                             showValue={true}
                             snapToStep
+                            iconProps={{ iconName: 'IncreaseIndentLegacy' }}
                             value={currentIntervention.start}
                             onValidate={(v) => setCurrentIntervention(prevState => { return { ...prevState, start: v } })} />
                         <SpinButton
@@ -112,11 +114,12 @@ function InterventionsPanel(props) {
                             labelPosition="Top"
                             min={0}
                             max={1}
+                            ariaLabel="Percentage of the effectiveness of the intervention. 0% has no effect and 100% is a maximum effect"
                             step={0.0001}
                             showValue={true}
                             snapToStep
-                            value={currentIntervention.effectiveness}
-                            onValidate={(v) => setCurrentIntervention(prevState => { return { ...prevState, effectiveness: v } })} />
+                            value={currentIntervention.effectiveness*100+' %'}
+                            onValidate={(v) => setCurrentIntervention(prevState => { return { ...prevState, effectiveness: parseFloat(v)/100 } })} />
                         <Label />
                         <Stack horizontal>
                             <DefaultButton text="Add Intervention" onClick={confirm} />
