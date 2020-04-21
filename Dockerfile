@@ -12,7 +12,7 @@ RUN which nginx
 
 RUN pip install --upgrade pip
 
-RUN pip install numpy scipy pandas matplotlib
+RUN pip install numpy scipy pandas matplotlib gunicorn
 
 WORKDIR /app/
 
