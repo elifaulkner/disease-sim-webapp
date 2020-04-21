@@ -24,10 +24,3 @@ jobs:
       uses: azure/appservice-build@v1
       with:
         platform: python
-
-    - name: 'Deploy to Azure Web App'
-      uses: azure/webapps-deploy@v1
-      with:
-        app-name: 'diseasesimulation'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7af6b71c377048a595b274af80aa038b }}
