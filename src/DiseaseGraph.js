@@ -15,7 +15,7 @@ class DiseaseGraph extends Component {
     var list = []
 
     x.forEach(function (o, i) {
-      list.push({"x":x[i], "y":y[i]})
+      list.push({"x":x[i], "y":100*y[i]})
     });
 
     return list
@@ -36,9 +36,9 @@ class DiseaseGraph extends Component {
         text: "Disease Profile"
       },
 			axisY: {
-        title: "% pf population",
+        title: "% of population",
         minimum: 0,
-        maximum: 1
+        maximum: 100
 			},
 			axisX: {
 				title: "Days Since Infection Began",
@@ -46,15 +46,15 @@ class DiseaseGraph extends Component {
 			},
       data: [{				
                 type: "line",
-                toolTipContent: "Suseptible {x}: {y}",
+                toolTipContent: "{y}% Susceptible on day {x}",
                 dataPoints: sdata
               }, {				
                 type: "line",
-                toolTipContent: "Infectious {x}: {y}",
+                toolTipContent: "{y}% Infectious on day {x}",
                 dataPoints: idata
               },{				
                 type: "line",
-                toolTipContent: "Recovered {x}: {y}",
+                toolTipContent: "{y}% Recovered on day {x}",
                 dataPoints: rdata
               },]
    }

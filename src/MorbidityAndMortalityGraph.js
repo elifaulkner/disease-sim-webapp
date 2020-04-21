@@ -9,7 +9,7 @@ class MorbidityAndMortalityGraph extends Component {
     var list = []
 
     x.forEach(function (o, i) {
-      list.push({"x":x[i], "y":y[i]})
+      list.push({"x":x[i], "y":y[i]*100})
     });
 
     return list
@@ -28,7 +28,8 @@ class MorbidityAndMortalityGraph extends Component {
         text: "Morbidity and Mortality"
       },
 			axisY: {
-        title: "% pf population"
+        title: "% of population",
+        minimum: 0
 			},
 			axisX: {
 				title: "Days Since Infection Began",
@@ -36,11 +37,11 @@ class MorbidityAndMortalityGraph extends Component {
 			},
       data: [{				
                 type: "line",
-                toolTipContent: "Hospitalized {x}: {y}",
+                toolTipContent: "{y}% Hospitalized on day {x}",
                 dataPoints: hdata
               }, {				
                 type: "line",
-                toolTipContent: "Dead {x}: {y}",
+                toolTipContent: "{y}% Dead on day {x}",
                 dataPoints: ddata
               }]
    }
