@@ -3,12 +3,11 @@ import './App.css';
 import { Panel } from 'office-ui-fabric-react/lib/Panel';
 import { DetailsList, DetailsListLayoutMode } from 'office-ui-fabric-react/lib/DetailsList';
 import { DefaultButton, Label } from 'office-ui-fabric-react';
-import { useConstCallback } from '@uifabric/react-hooks';
 import { Stack } from 'office-ui-fabric-react/lib/Stack';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
-import { Selection, SelectionZone, SelectionMode } from 'office-ui-fabric-react/lib/Selection';
+import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
+import { Selection } from 'office-ui-fabric-react/lib/Selection';
 
 function InterventionsPanel(props) {
     const dismissPanel = () => {
@@ -16,7 +15,7 @@ function InterventionsPanel(props) {
         props.setIsOpen(false);
     };
 
-    const [currentIntervention, setCurrentIntervention] = useState({ name: '', start: 0, end: 3650, effectiveness: 1, type: '' })
+    const [currentIntervention, setCurrentIntervention] = useState({ name: '', start: 0, end: 3650, effectiveness: 0, type: '' })
     const [currentType, setCurrentType] = useState('infection_rate')
 
     const columns = [
@@ -28,7 +27,7 @@ function InterventionsPanel(props) {
     ];
 
     const confirm = () => {
-        if (props.interventions.some(i => i.name == currentIntervention.name)) {
+        if (props.interventions.some(i => i.name === currentIntervention.name)) {
             alert('duplicate name, choose another')
             return
         }
@@ -38,7 +37,7 @@ function InterventionsPanel(props) {
             type: currentType
         }])
 
-        setCurrentIntervention({ name: '', start: 0, end: 3650, effectiveness: 1, type: '' })
+        setCurrentIntervention({ name: '', start: 0, end: 3650, effectiveness: 0, type: '' })
     }
 
     const options = [
@@ -89,7 +88,7 @@ function InterventionsPanel(props) {
                             onChanged={(v) => setCurrentType(v.key)}
                         />
                         <SpinButton
-                            label="Start"
+                            label="Start Day"
                             labelPosition="Top"
                             min={0}
                             max={3650}
@@ -99,7 +98,7 @@ function InterventionsPanel(props) {
                             value={currentIntervention.start}
                             onValidate={(v) => setCurrentIntervention(prevState => { return { ...prevState, start: v } })} />
                         <SpinButton
-                            label="End"
+                            label="End Day"
                             labelPosition="Top"
                             min={0}
                             max={3650}
@@ -109,7 +108,7 @@ function InterventionsPanel(props) {
                             value={currentIntervention.end}
                             onValidate={(v) => setCurrentIntervention(prevState => { return { ...prevState, end: v } })} />
                         <SpinButton
-                            label="Effectiveness"
+                            label="Intervention Effectiveness"
                             labelPosition="Top"
                             min={0}
                             max={1}

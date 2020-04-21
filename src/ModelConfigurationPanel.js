@@ -107,7 +107,7 @@ function ModelConfigurationPanel(props) {
         showValue={true}
         snapToStep
         onValidate={(v) => setSimParameters(prevState => {return {...prevState, init_infection: v}})}/>
-    <DefaultButton text="Done" onClick={dismissPanel}/>
+    <DefaultButton text="Return To Main Page" onClick={dismissPanel}/>
     </Stack>
     </Panel>
     </div>

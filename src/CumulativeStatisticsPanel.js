@@ -3,8 +3,7 @@ import { Panel } from 'office-ui-fabric-react/lib/Panel';
 import { useConstCallback } from '@uifabric/react-hooks';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
 import { Label } from 'office-ui-fabric-react/lib/Label';
-import { Text } from 'office-ui-fabric-react/lib/Text';
-import { getMaxHeight } from 'office-ui-fabric-react/lib/utilities/positioning';
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 
 function CumulativeStatisticsPanel(props) {
     const [population, setPopulation] = useState(1000000)
@@ -16,7 +15,7 @@ function CumulativeStatisticsPanel(props) {
     const getMax = (sim, field) => {
         if(sim && sim[field]) {
             var max = Math.max(...sim[field]);
-            var maxTime = sim['time'][props.sim[field].findIndex(x=>x==max)]
+            var maxTime = sim['time'][props.sim[field].findIndex(x=>x===max)]
             return [max, maxTime]
         }
         return [0, 0];
@@ -28,9 +27,9 @@ function CumulativeStatisticsPanel(props) {
 
     const [maxInfectious, maxInfectiousTime] = getMax(props.sim, 'infectious')
     const [maxHospitalized, maxHospitalizedTime] = getMax(props.sim, 'hospitalized')
-    const [cumInfectious, cumInfectiousTime] = getMax(props.sim, 'cumulative_infectious')
-    const [cumHospitalized, cumHospitalizedTime] = getMax(props.sim, 'cumulative_hospitalized')
-    const [dead, deadTime] = getMax(props.sim, 'dead')
+    const [cumInfectious] = getMax(props.sim, 'cumulative_infectious')
+    const [cumHospitalized] = getMax(props.sim, 'cumulative_hospitalized')
+    const [dead] = getMax(props.sim, 'dead')
 
     return(<div>
         <Panel
@@ -79,6 +78,7 @@ function CumulativeStatisticsPanel(props) {
                     <td><Label>Cumulative Dead</Label></td> <td>{formatNumber(Math.ceil(dead*population))}</td>
                 </tr>
             </table>
+            <DefaultButton text="Return To Main Page" onClick={dismissPanel}/>  
             <Label> </Label>
         </Panel>
     </div>)

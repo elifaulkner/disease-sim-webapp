@@ -41,7 +41,7 @@ function ModelDescriptionPanel(props) {
             </p>
             <img src={parameters} alt=""/>  
             </div>
-            <DefaultButton text="Done" onClick={dismissPanel}/>  
+            <DefaultButton text="Return To Main Page" onClick={dismissPanel}/>  
           </Panel>
         </div>
         );
