@@ -112,7 +112,7 @@ function InterventionsPanel(props) {
                             label="Effectiveness"
                             labelPosition="Top"
                             min={0}
-                            max={100}
+                            max={1}
                             step={0.0001}
                             showValue={true}
                             snapToStep
