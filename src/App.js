@@ -13,8 +13,8 @@ import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
 function App() {
 
   const [diseaseParameters, setDiseaseParameters] = useState({
-    R0: 2.2,
-    avg_days_infected: 14.0,
+    R0: 2.5,
+    avg_days_infected: 10.0,
     avg_days_hospitalized: 14.0,
     avg_days_immune: 183.0,
     p_hospitalization_given_infection: 0.01,
@@ -43,7 +43,10 @@ function App() {
 
     fetch('/api/simulate', requestOptions)
       .then(response => response.json())
-      .then(data => setSimulation(data));
+      .then(data => setSimulation(data), (error) => {
+        alert(error);
+        setSimulation({})
+      });
   }
 
   const [isConfigOpen, setIsConfigOpen] = React.useState(false);

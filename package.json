@@ -1,6 +1,6 @@
 {
   "name": "disease-sim-webapp",
-  "version": "0.1.0-prerelease",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -19,10 +19,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "version": "echo %npm_package_version%",
-    "docker-build": "docker build --rm -f Dockerfile -t diseasesimwebapp:0.1.0-prerelease .",
-    "docker-start": "docker run --rm -it  -p 80:80/tcp diseasesimwebapp:0.1.0-prerelease",
-    "docker-tag": "docker tag diseasesimwebapp:0.1.0-prerelease elifaulkner/diseasesimwebapp:0.1.0-prerelease",
-    "docker-push": "docker push elifaulkner/diseasesimwebapp:0.1.0-prerelease"
+    "docker-build": "docker build --rm -f Dockerfile -t diseasesimwebapp:0.1.0 .",
+    "docker-start": "docker run --rm -it  -p 80:80/tcp diseasesimwebapp:0.1.0",
+    "docker-tag": "docker tag diseasesimwebapp:0.1.0 elifaulkner/diseasesimwebapp:0.1.0",
+    "docker-push": "docker push elifaulkner/diseasesimwebapp:0.1.0"
   },
   "eslintConfig": {
     "extends": "react-app"
