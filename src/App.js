@@ -3,6 +3,7 @@ import './App.css';
 import DiseaseGraph from './DiseaseGraph'
 import MorbidityAndMortalityGraph from './MorbidityAndMortalityGraph'
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { useConstCallback } from '@uifabric/react-hooks';
 import ModelConfigurationPanel from './ModelConfigurationPanel'
 import ModelDescriptionPanel from './ModelDescriptionPanel'
@@ -71,10 +72,12 @@ function App() {
       <DiseaseGraph parameters={simulation} />
       <MorbidityAndMortalityGraph parameters={simulation} />
 
+      <Separator/>
+
       <DefaultButton text="Model Configuration" onClick={openConfigPanel} />
       <DefaultButton text="Interventions" onClick={openInterventionsPanel} />
       <DefaultButton text="Cumulative Statistics" onClick={openStatsPanel} />
-      
+
       <FooterMenu/>
     </div>
 
