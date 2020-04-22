@@ -34,28 +34,23 @@ class DiseaseModel:
         return scale
 
     def simulate(self, max_time, num_time_points, init_infection, interventions):
-        def build_scir_parameters():
-            a = self.R0/self.avg_days_infected
-            b = self.p_hospitalization_given_infection/self.avg_days_infected
-            c = (1-self.p_hospitalization_given_infection)/self.avg_days_infected
-            d = (1-self.p_death_given_hospitalization)/self.avg_days_hospitalized
-            e = self.p_death_given_hospitalization/self.avg_days_hospitalized
-            f = 1.0/self.avg_days_immune
+        def build_scir_parameters(t):
+            a = self.R0*self.get_active_intervention_scale(interventions.infection_rate, t)/(self.avg_days_infected*self.get_active_intervention_scale(interventions.infection_time, t))
+            b = self.p_hospitalization_given_infection*self.get_active_intervention_scale(interventions.hospitilization_rate, t)/(self.avg_days_infected*self.get_active_intervention_scale(interventions.infection_time, t))
+            c = (1-self.p_hospitalization_given_infection*self.get_active_intervention_scale(interventions.hospitilization_rate, t))/(self.avg_days_infected*self.get_active_intervention_scale(interventions.infection_time, t))
+            d = (1-self.p_death_given_hospitalization*self.get_active_intervention_scale(interventions.death_rate, t))/(self.avg_days_hospitalized*self.get_active_intervention_scale(interventions.hospitilization_time, t))
+            e = self.p_death_given_hospitalization*self.get_active_intervention_scale(interventions.death_rate, t)/(self.avg_days_hospitalized*self.get_active_intervention_scale(interventions.hospitilization_time, t))
+            f = 1.0/self.avg_days_immune*self.get_active_intervention_scale(interventions.immunity_time, t)
 
             return (a, b, c, d, e, f)
 
-        def scir(X, t, a, b, c, d, e, f):
+        def scir(X, t):
             S, I, H, R, D, CI, CH = X
-            a = a*self.get_active_intervention_scale(interventions.infection_rate, t)
-            b = b*self.get_active_intervention_scale(interventions.infection_time, t)*self.get_active_intervention_scale(interventions.hospitilization_rate, t)
-            c = c*self.get_active_intervention_scale(interventions.infection_time, t)
-            d = d*self.get_active_intervention_scale(interventions.hospitilization_time, t)
-            e = e*self.get_active_intervention_scale(interventions.hospitilization_time, t)*self.get_active_intervention_scale(interventions.death_rate, t)
-            f = f*self.get_active_intervention_scale(interventions.immunity_time, t)
+            [a, b, c, d, e, f] = build_scir_parameters(t)
             return [-a*S*I+f*R, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R, e*H, a*S*I, b*I]
 
         t = np.linspace(0, max_time, num_time_points)
-        sol = odeint(scir, [1-init_infection, init_infection, 0, 0, 0, 0, 0], t, args=build_scir_parameters()) 
+        sol = odeint(scir, [1-init_infection, init_infection, 0, 0, 0, 0, 0], t) 
         return [t, sol]       
 
 if __name__ == '__main__':
