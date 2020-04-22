@@ -8,7 +8,7 @@ import ModelConfigurationPanel from './ModelConfigurationPanel'
 import ModelDescriptionPanel from './ModelDescriptionPanel'
 import InterventionsPanel from './InterventionsPanel'
 import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
-
+import FooterMenu from './FooterMenu';
 
 function App() {
 
@@ -74,7 +74,10 @@ function App() {
       <DefaultButton text="Interventions" onClick={openInterventionsPanel} />
       <DefaultButton text="Cumulative Statistics" onClick={openStatsPanel} />
       <DefaultButton text="Model Description" onClick={openDescriptionPanel} />
+
+      <FooterMenu/>
     </div>
+
   );
 }
 
