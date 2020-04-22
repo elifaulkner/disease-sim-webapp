@@ -50,10 +50,11 @@ def simulate_post():
     p_death_given_hospitalization = float(request.json['disease_parameters']['p_death_given_hospitalization'])
     max_time = int(request.json['sim_parameters']['max_time'])
     init_infection = float(request.json['sim_parameters']['init_infection'])
+    init_recovered = float(request.json['sim_parameters']['init_recovered'])
 
     interventions = interventions_from_list(request.json['interventions'])
     model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization)
-    t, sim = model.simulate(max_time, max_time+1, init_infection, interventions)
+    t, sim = model.simulate(max_time, max_time+1, init_infection, init_recovered, interventions)
     return build_json(t, sim)
 
 if __name__ == '__main__':

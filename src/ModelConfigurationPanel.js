@@ -107,6 +107,15 @@ function ModelConfigurationPanel(props) {
         showValue={true}
         snapToStep
         onValidate={(v) => setSimParameters(prevState => {return {...prevState, init_infection: v}})}/>
+    <SpinButton
+        label="Initial Recovered Rate"
+        min={0}
+        max={1}
+        step={0.0000001}
+        value={simParameters.init_recovered}
+        showValue={true}
+        snapToStep
+        onValidate={(v) => setSimParameters(prevState => {return {...prevState, init_recovered: v}})}/>
     <DefaultButton text="Return To Main Page" onClick={dismissPanel}/>
     </Stack>
     </Panel>

@@ -33,7 +33,7 @@ class DiseaseModel:
                 scale*= i.scale
         return scale
 
-    def simulate(self, max_time, num_time_points, init_infection, interventions):
+    def simulate(self, max_time, num_time_points, init_infection, init_recovered, interventions):
         def build_scir_parameters(t):
             a = self.R0*self.get_active_intervention_scale(interventions.infection_rate, t)/(self.avg_days_infected*self.get_active_intervention_scale(interventions.infection_time, t))
             b = self.p_hospitalization_given_infection*self.get_active_intervention_scale(interventions.hospitilization_rate, t)/(self.avg_days_infected*self.get_active_intervention_scale(interventions.infection_time, t))
@@ -50,19 +50,19 @@ class DiseaseModel:
             return [-a*S*I+f*R, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R, e*H, a*S*I, b*I]
 
         t = np.linspace(0, max_time, num_time_points)
-        sol = odeint(scir, [1-init_infection, init_infection, 0, 0, 0, 0, 0], t) 
+        sol = odeint(scir, [1-init_infection-init_recovered, init_infection, 0, init_recovered, 0, 0, 0], t) 
         return [t, sol]       
 
 if __name__ == '__main__':
     pop = 325000000
-    model = DiseaseModel(2.5, 10.0, 14.0, 183.0, .01, .05)
+    model = DiseaseModel(2.5, 10.0, 14.0, 183.0, .01,.05)
     interventions = Interventions()
     interventions.infection_rate.append(Intervention("Social Distancing", 45, 150, .8))
     interventions.infection_rate.append(Intervention("Handwashing Media", 20, 200, .95))
     interventions.infection_rate.append(Intervention("Public Facemasks", 60, 150, .9))
     interventions.death_rate.append(Intervention("Ventilators", 60, 150, .8))
 
-    t, sol = model.simulate( 365*2, 2*365*24, 100.0/pop, interventions)
+    t, sol = model.simulate( 365*2, 2*365*24, 100.0/pop, 0, interventions)
 
     print("# Hospitalized ")
     print(int(sol[365*24*2-1][2]*pop))

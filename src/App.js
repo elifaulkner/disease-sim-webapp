@@ -23,7 +23,8 @@ function App() {
 
   const [simParameters, setSimParameters] = useState({
     max_time: 730,
-    init_infection: 0.00001
+    init_infection: 0.00001,
+    init_recovered: 0
   });
 
   const [interventions, setInterventions] = useState([]);
@@ -56,7 +57,7 @@ function App() {
 
   const openConfigPanel = useConstCallback(() => setIsConfigOpen(true));
   const openInterventionsPanel = useConstCallback(() => setisInterventionOpen(true));
-  const openDescriptionPanel = useConstCallback(() => setIsDescriptionOpen(true));
+  //const openDescriptionPanel = useConstCallback(() => setIsDescriptionOpen(true));
   const openStatsPanel = useConstCallback(() => setisStatsOpen(true));
 
   useEffect(simulate, [diseaseParameters, simParameters, interventions]);
@@ -73,8 +74,7 @@ function App() {
       <DefaultButton text="Model Configuration" onClick={openConfigPanel} />
       <DefaultButton text="Interventions" onClick={openInterventionsPanel} />
       <DefaultButton text="Cumulative Statistics" onClick={openStatsPanel} />
-      <DefaultButton text="Model Description" onClick={openDescriptionPanel} />
-
+      
       <FooterMenu/>
     </div>
 
