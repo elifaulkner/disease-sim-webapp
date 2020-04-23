@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "canvasjs": "^1.8.3",
     "chart.js": "^2.9.3",
+    "highcharts": "^8.0.4",
     "office-ui-fabric-react": "^7.107.0",
     "plottable": "^3.8.6",
     "react": "^16.13.1",
