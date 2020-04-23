@@ -6,8 +6,8 @@ const MorbidityAndMortalityGraph = (props) => {
 
     return(<div>
         <IDMGraphHighcharts title="Morbidity And Mortality"> 
-          <IDMCurve times={props.simulation.time} values={props.simulation.hospitalized} name="Hospitalized" init_y={0} color="Blue"/>
-          <IDMCurve times={props.simulation.time} values={props.simulation.dead} name="Dead" init_y={0} color="Red"/>          
+          <IDMCurve times={props.simulation.time} values={props.simulation.hospitalized} name="Hospitalized" color="Blue"/>
+          <IDMCurve times={props.simulation.time} values={props.simulation.dead} name="Dead" color="Red"/>          
         </IDMGraphHighcharts>
       </div>)
 }

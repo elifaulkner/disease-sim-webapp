@@ -17,7 +17,7 @@ const IDMGraphHighcharts = (props) => {
     const build_child_data_sets = useCallback(() => {
         setCurves(props.children
             .map((child)=> {
-                var data = [{'x':0, 'y':child.props.init_y}]
+                var data = []
                 if(child.props.times != null) {
                     child.props.times.forEach((x, i) => {
                         data.push({'x':child.props.times[i], 'y':Math.round(child.props.values[i]*1.0E6)/1.0E4})
@@ -41,7 +41,8 @@ const IDMGraphHighcharts = (props) => {
             title: {
                 text: props.title,
                 style: {
-                    fontSize: 32
+                    fontSize: 32,
+                    fontFamily: 'Impact'
                 }
             },
             xAxis: {
