@@ -7,7 +7,9 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "canvasjs": "^1.8.3",
+    "chart.js": "^2.9.3",
     "office-ui-fabric-react": "^7.107.0",
+    "plottable": "^3.8.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1"

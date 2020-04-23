@@ -1,14 +1,14 @@
 import React, {} from 'react';
 import IDMCurve from './IDMCurve';
-import IDMGraph from './IDMGraph'
+import IDMGraphPlottable from './IDMGraphPlottable';
 
 const MorbidityAndMortalityGraph = (props) => {
 
     return(<div>
-          <IDMGraph title="Morbidity And Mprtality">
-            <IDMCurve times={props.simulation.time} values={props.simulation.hospitalized} name="Hospitalized" init_y={0}/>
-            <IDMCurve times={props.simulation.time} values={props.simulation.dead} name="Dead" init_y={0}/>
-          </IDMGraph>
+        <IDMGraphPlottable title="Morbidity And Mortality"> 
+          <IDMCurve times={props.simulation.time} values={props.simulation.hospitalized} name="Hospitalized" init_y={0} color="Blue"/>
+          <IDMCurve times={props.simulation.time} values={props.simulation.dead} name="Dead" init_y={0} color="Red"/>          
+        </IDMGraphPlottable>
       </div>)
 }
 
