@@ -8,6 +8,7 @@ import { useConstCallback } from '@uifabric/react-hooks';
 import ModelConfigurationPanel from './ModelConfigurationPanel'
 import ModelDescriptionPanel from './ModelDescriptionPanel'
 import InterventionsPanel from './InterventionsPanel'
+import InterventionsChart from './InterventionsChart'
 import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
 import FooterMenu from './FooterMenu';
 
@@ -72,12 +73,14 @@ function App() {
       
       <DiseaseGraph simulation={simulation} />
       <MorbidityAndMortalityGraph simulation={simulation}/>
-      
+
       <Separator/>
 
       <DefaultButton text="Model Configuration" onClick={openConfigPanel} />
       <DefaultButton text="Interventions" onClick={openInterventionsPanel} />
       <DefaultButton text="Cumulative Statistics" onClick={openStatsPanel} />
+
+      <InterventionsChart title="Active Interventions" interventions={interventions} max={simParameters.max_time}/>
 
       <FooterMenu/>
     </div>

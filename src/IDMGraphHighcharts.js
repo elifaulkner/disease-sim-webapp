@@ -1,11 +1,13 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import Highcharts from 'highcharts';
 import HighchartsExporting from 'highcharts/modules/exporting';
+import HighchartsExportData from 'highcharts/modules/export-data';
 
 const IDMGraphHighcharts = (props) => {
 
     HighchartsExporting(Highcharts)
-
+    HighchartsExportData(Highcharts)
+    
     const makeGuid = () => {
         var s4 = () => (((1+Math.random())*0x10000)|0).toString(32)
         return s4()+'-'+s4()+'-'+s4()+'-'+s4()
