@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import Chart from 'chart.js';
 
-const IDMGraphPlottable = (props) => {
+const IDMGraphChartjs = (props) => {
     const chartRef = React.createRef();
 
     const [curves, setCurves] = useState([]);
@@ -77,4 +77,4 @@ const IDMGraphPlottable = (props) => {
         </div>)
 }
 
-export default IDMGraphPlottable
+export default IDMGraphChartjs

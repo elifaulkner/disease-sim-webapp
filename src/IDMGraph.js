@@ -3,7 +3,7 @@ import CanvasJSReact from './canvasjs.react';
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const IDMGraph = (props) => {
-    const build_child_data_sets = useCallback(() => {
+    const buildChildDataSets = useCallback(() => {
         return props.children
             .map((child)=> {
                 var data = [{'x':0, 'y':child.props.init_y}]
@@ -20,7 +20,7 @@ const IDMGraph = (props) => {
             })
     }, [props.children]);
 
-    const [curves, setCurves] = useState(build_child_data_sets(props.children))
+    const [curves, setCurves] = useState(buildChildDataSets(props.children))
 
     const buildOptions = useCallback(() => {
         return {
@@ -42,9 +42,9 @@ const IDMGraph = (props) => {
     const [options, setOptions] = useState(buildOptions())
 
     useEffect(() => {
-        setCurves(build_child_data_sets())
+        setCurves(buildChildDataSets())
         setOptions(buildOptions())
-    }, [props.children, build_child_data_sets, buildOptions])
+    }, [props.children, buildChildDataSets, buildOptions])
 
 
     return (<div>
