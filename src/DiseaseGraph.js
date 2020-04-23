@@ -1,67 +1,18 @@
-import React, {Component} from 'react';
-import CanvasJSReact from './canvasjs.react';
-//var CanvasJSReact = require('./canvasjs.react');
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+import React, {} from 'react';
+import IDMCurve from './IDMCurve';
+import IDMGraph from './IDMGraph'
 
-class DiseaseGraph extends Component {
-  constructor(props) {
-    super(props);
-    if(props.parameters.time != null) {
-      this.state.sdata = this.build_data_series(props.parameters.time, props.parameters.suseptible)
-    }
-  }
+const DiseaseGraph = (props) =>  {
 
-  build_data_series(x, y) {
-    var list = []
-
-    x.forEach(function (o, i) {
-      list.push({"x":x[i], "y":100*y[i]})
-    });
-
-    return list
-  }
-
-  render() {
-    var sdata = [{x: 0, y:1}]
-    var idata = [{x: 0, y:0}]
-    var rdata = [{x: 0, y:0}]
-    if(this.props.parameters.time != null) {
-      sdata = this.build_data_series(this.props.parameters.time, this.props.parameters.suseptible)
-      idata = this.build_data_series(this.props.parameters.time, this.props.parameters.infectious)
-      rdata = this.build_data_series(this.props.parameters.time, this.props.parameters.recovered)
-    }
-    
-    const options = {
-      title: {
-        text: "Disease Profile"
-      },
-			axisY: {
-        title: "% of population",
-        minimum: 0,
-        maximum: 100
-			},
-			axisX: {
-				title: "Days Since Infection Began",
-        includeZero: true
-			},
-      data: [{				
-                type: "line",
-                toolTipContent: "{y}% Susceptible on day {x}",
-                dataPoints: sdata
-              }, {				
-                type: "line",
-                toolTipContent: "{y}% Infectious on day {x}",
-                dataPoints: idata
-              },{				
-                type: "line",
-                toolTipContent: "{y}% Recovered on day {x}",
-                dataPoints: rdata
-              },]
-   }
-    return(<div>
-      <CanvasJSChart options = {options}/>
-      </div>)
-  }
+    return (
+        <div>
+          <IDMGraph title="Disease Profile">
+            <IDMCurve times={props.simulation.time} values={props.simulation.suseptible} name="Suseptible" init_y={1}/>
+            <IDMCurve times={props.simulation.time} values={props.simulation.infectious} name="Infectious" init_y={0}/>
+            <IDMCurve times={props.simulation.time} values={props.simulation.recovered} name="Recovered" init_y={0}/>
+          </IDMGraph>
+        </div>
+    )
 }
 
 export default DiseaseGraph;

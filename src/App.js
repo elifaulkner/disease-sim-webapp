@@ -69,9 +69,10 @@ function App() {
       <ModelDescriptionPanel isOpen={isDescriptionOpen} setIsOpen={setIsDescriptionOpen} />
       <InterventionsPanel isOpen={isInterventionOpen} setIsOpen={setisInterventionOpen} interventions={interventions} setInterventions={setInterventions} simulate={simulate}/>
       <CumulativeStatisticsPanel isOpen={isStatsOpen} setIsOpen={setisStatsOpen} sim={simulation}/>
-      <DiseaseGraph parameters={simulation} />
-      <MorbidityAndMortalityGraph parameters={simulation} />
-
+      
+      <DiseaseGraph simulation={simulation} />
+      <MorbidityAndMortalityGraph simulation={simulation}/>
+      
       <Separator/>
 
       <DefaultButton text="Model Configuration" onClick={openConfigPanel} />

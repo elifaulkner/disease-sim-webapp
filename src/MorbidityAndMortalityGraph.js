@@ -1,54 +1,15 @@
-import React, {Component} from 'react';
-import CanvasJSReact from './canvasjs.react';
-//var CanvasJSReact = require('./canvasjs.react');
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+import React, {} from 'react';
+import IDMCurve from './IDMCurve';
+import IDMGraph from './IDMGraph'
 
-class MorbidityAndMortalityGraph extends Component {
+const MorbidityAndMortalityGraph = (props) => {
 
-  build_data_series(x, y) {
-    var list = []
-
-    x.forEach(function (o, i) {
-      list.push({"x":x[i], "y":y[i]*100})
-    });
-
-    return list
-  }
-
-  render() {
-    var hdata = [{x: 0, y:1}]
-    var ddata = [{x: 0, y:0}]
-    if(this.props.parameters.time != null) {
-      hdata = this.build_data_series(this.props.parameters.time, this.props.parameters.hospitalized)
-      ddata = this.build_data_series(this.props.parameters.time, this.props.parameters.dead)
-    }
-    
-    const options = {
-      title: {
-        text: "Morbidity and Mortality"
-      },
-			axisY: {
-        title: "% of population",
-        minimum: 0
-			},
-			axisX: {
-				title: "Days Since Infection Began",
-        includeZero: true
-			},
-      data: [{				
-                type: "line",
-                toolTipContent: "{y}% Hospitalized on day {x}",
-                dataPoints: hdata
-              }, {				
-                type: "line",
-                toolTipContent: "{y}% Dead on day {x}",
-                dataPoints: ddata
-              }]
-   }
     return(<div>
-      <CanvasJSChart options = {options}/>
+          <IDMGraph title="Morbidity And Mprtality">
+            <IDMCurve times={props.simulation.time} values={props.simulation.hospitalized} name="Hospitalized" init_y={0}/>
+            <IDMCurve times={props.simulation.time} values={props.simulation.dead} name="Dead" init_y={0}/>
+          </IDMGraph>
       </div>)
-  }
 }
 
 export default MorbidityAndMortalityGraph;
