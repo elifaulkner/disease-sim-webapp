@@ -49,12 +49,20 @@ const IDMGraphHighcharts = (props) => {
             },
             xAxis: {
                 title: {
-                    text: 'Day'
+                    text: 'Days Since Infection Began',
+                    style: {
+                        fontSize: 18,
+                        fontFamily: 'Verdana'
+                    }
                 }
             },
             yAxis: {
                 title: {
-                    text: '% of Population'
+                    text: '% of Population',
+                    style: {
+                        fontSize: 18,
+                        fontFamily: 'Verdana'
+                    }
                 }
             },
             series: curves,

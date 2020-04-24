@@ -80,11 +80,8 @@ function App() {
       <DefaultButton text="Interventions" onClick={openInterventionsPanel} />
       <DefaultButton text="Cumulative Statistics" onClick={openStatsPanel} />
 
-      <InterventionsChart title="Active Interventions" interventions={interventions} max={simParameters.max_time}/>
-
       <FooterMenu/>
     </div>
-
   );
 }
 

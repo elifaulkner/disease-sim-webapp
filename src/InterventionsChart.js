@@ -73,7 +73,13 @@ const InterventionsChart = (props) => {
                 categories: ['Infection Rate', 'Infection Time', 'Hospitilization Rate', 'Hospitilization Time', 'Death Rate', 'Immunity Time'],
                 min: 0,
                 max: 5,
-                reversed: true
+                reversed: true,
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                enable: false
             },
             series: [
                 {
