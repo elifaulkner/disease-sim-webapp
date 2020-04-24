@@ -55,7 +55,8 @@ const IDMGraphHighcharts = (props) => {
                         fontSize: 18,
                         fontFamily: 'Verdana'
                     }
-                }
+                },
+                lineWidth: 2
             },
             yAxis: {
                 title: {
@@ -64,7 +65,12 @@ const IDMGraphHighcharts = (props) => {
                         fontSize: 18,
                         fontFamily: 'Verdana'
                     }
-                }
+                } ,
+                lineWidth: 2,
+                max: props.max,
+                tickInterval: props.yTickInterval,
+                tickWidth: 2,
+                gridLineWidth: 2
             },
             series: curves,
             plotOptions: {
