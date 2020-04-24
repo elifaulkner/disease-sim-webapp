@@ -92,7 +92,7 @@ const IDMGraphHighcharts = (props) => {
                 pointFormat: '<span style="color:{point.color}">●</span> {point.y}% {series.name} on day {point.x}<br/>'
             }
         });
-    }, [curves, props.title, guid])
+    }, [curves, props.title, guid, props.max, props.yTickInterval])
     useEffect(() => {
         build_child_data_sets();
     }, [props.children, build_child_data_sets])
