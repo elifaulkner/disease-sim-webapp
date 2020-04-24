@@ -8,7 +8,7 @@ const FooterMenu = (props) => {
             key:'blog',
             text:'Blog',
             target:"_blank",
-            href:"https://medium.com/@elifaulkner"
+            href:"https://medium.com/infectious-disease-model"
         }, {
             key:'email',
             text:'Email Support',
