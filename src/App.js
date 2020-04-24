@@ -8,6 +8,7 @@ import { useConstCallback } from '@uifabric/react-hooks';
 import ModelConfigurationPanel from './ModelConfigurationPanel'
 import ModelDescriptionPanel from './ModelDescriptionPanel'
 import InterventionsPanel from './InterventionsPanel'
+import InterventionsChart from './InterventionsChart'
 import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
 import FooterMenu from './FooterMenu';
 
@@ -69,8 +70,9 @@ function App() {
       <ModelDescriptionPanel isOpen={isDescriptionOpen} setIsOpen={setIsDescriptionOpen} />
       <InterventionsPanel isOpen={isInterventionOpen} setIsOpen={setisInterventionOpen} interventions={interventions} setInterventions={setInterventions} simulate={simulate}/>
       <CumulativeStatisticsPanel isOpen={isStatsOpen} setIsOpen={setisStatsOpen} sim={simulation}/>
-      <DiseaseGraph parameters={simulation} />
-      <MorbidityAndMortalityGraph parameters={simulation} />
+      
+      <DiseaseGraph simulation={simulation} />
+      <MorbidityAndMortalityGraph simulation={simulation}/>
 
       <Separator/>
 
@@ -80,7 +82,6 @@ function App() {
 
       <FooterMenu/>
     </div>
-
   );
 }
 
