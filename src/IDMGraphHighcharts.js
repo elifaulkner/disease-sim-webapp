@@ -30,7 +30,8 @@ const IDMGraphHighcharts = (props) => {
                     data: data,
                     type: 'line',
                     color: child.props.color,
-                    showInLegend: false
+                    showInLegend: false,
+                    animation: false
                 }
             }))
     }, [props.children]);
