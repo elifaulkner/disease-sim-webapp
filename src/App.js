@@ -2,17 +2,16 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import DiseaseGraph from './DiseaseGraph'
 import MorbidityAndMortalityGraph from './MorbidityAndMortalityGraph'
-import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
-import { Separator } from 'office-ui-fabric-react/lib/Separator';
-import { useConstCallback } from '@uifabric/react-hooks';
 import ModelConfigurationPanel from './ModelConfigurationPanel'
-import ModelDescriptionPanel from './ModelDescriptionPanel'
 import InterventionsPanel from './InterventionsPanel'
 import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
 import FooterMenu from './FooterMenu';
+import InterventionsChart from './InterventionsChart'
+import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
+import CalibrationPanel from './CalibrationPanel';
+import CalibrationGraph from './CalibrationGraph';
 
 function App() {
-
   const [diseaseParameters, setDiseaseParameters] = useState({
     R0: 2.5,
     avg_days_infected: 10.0,
@@ -29,8 +28,11 @@ function App() {
   });
 
   const [interventions, setInterventions] = useState([]);
-
   const [simulation, setSimulation] = useState({});
+
+  const [population, setPopulation] = useState(1000000);
+  const [calibrationData, setCalibrationData] = useState([]);
+
 
   const simulate = () => {
     const requestOptions = {
@@ -51,36 +53,62 @@ function App() {
       });
   }
 
-  const [isConfigOpen, setIsConfigOpen] = React.useState(false);
-  const [isDescriptionOpen, setIsDescriptionOpen] = React.useState(false);
-  const [isInterventionOpen, setisInterventionOpen] = React.useState(false);
-  const [isStatsOpen, setisStatsOpen] = React.useState(false);
-
-  const openConfigPanel = useConstCallback(() => setIsConfigOpen(true));
-  const openInterventionsPanel = useConstCallback(() => setisInterventionOpen(true));
-  //const openDescriptionPanel = useConstCallback(() => setIsDescriptionOpen(true));
-  const openStatsPanel = useConstCallback(() => setisStatsOpen(true));
-
   useEffect(simulate, [diseaseParameters, simParameters, interventions]);
-  
+
   return (
+
     <div className="App">
-      <ModelConfigurationPanel isOpen={isConfigOpen} setIsOpen={setIsConfigOpen} diseaseParameters={diseaseParameters} setDiseaseParameters={setDiseaseParameters} simParameters={simParameters} setSimParameters={setSimParameters} simulate={simulate}/>
-      <ModelDescriptionPanel isOpen={isDescriptionOpen} setIsOpen={setIsDescriptionOpen} />
-      <InterventionsPanel isOpen={isInterventionOpen} setIsOpen={setisInterventionOpen} interventions={interventions} setInterventions={setInterventions} simulate={simulate}/>
-      <CumulativeStatisticsPanel isOpen={isStatsOpen} setIsOpen={setisStatsOpen} sim={simulation}/>
-      
-      <DiseaseGraph simulation={simulation} />
-      <MorbidityAndMortalityGraph simulation={simulation}/>
-
-      <Separator/>
-
-      <DefaultButton text="Model Configuration" onClick={openConfigPanel} />
-      <DefaultButton text="Interventions" onClick={openInterventionsPanel} />
-      <DefaultButton text="Cumulative Statistics" onClick={openStatsPanel} />
-
-      <FooterMenu/>
+        <Pivot>
+          <PivotItem headerText="Model Configuration">
+            <div class="container">
+              <div class="content">
+                <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+                <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+              </div>
+              <div class="sidebar">
+                <ModelConfigurationPanel diseaseParameters={diseaseParameters} setDiseaseParameters={setDiseaseParameters} simParameters={simParameters} setSimParameters={setSimParameters} simulate={simulate} />
+              </div>
+            </div>
+          </PivotItem>
+          <PivotItem headerText="Interventions">
+            <div class="container">
+              <div class="content">
+                <InterventionsChart title="Active Interventions" interventions={interventions} max={simParameters.max_time} />
+                <div class="container">
+                  <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+                  <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+                </div>
+              </div>
+              <div class="sidebar">
+                <InterventionsPanel interventions={interventions} setInterventions={setInterventions} simulate={simulate} />
+              </div>
+            </div>
+          </PivotItem>
+          <PivotItem headerText="Cumulative Statistics">
+            <div class="container">
+              <div class="content">
+                <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+                <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+              </div>
+              <div class="sidebar">
+                <CumulativeStatisticsPanel sim={simulation} population={population} setPopulation={setPopulation} />
+              </div>
+            </div>
+          </PivotItem>
+          <PivotItem headerText="Calibration">
+            <div class="container">
+              <div class="content">
+                <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+              </div>
+              <div class="sidebar">
+                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} />
+              </div>
+            </div>
+          </PivotItem>
+        </Pivot>
+        <FooterMenu class="footer" />
     </div>
+
   );
 }
 

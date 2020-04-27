@@ -3,6 +3,8 @@
   "version": "0.1.1",
   "private": true,
   "dependencies": {
+    "@fluentui/react": "^7.107.5",
+    "@fluentui/react-northstar": "^0.48.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -10,9 +12,11 @@
     "chart.js": "^2.9.3",
     "highcharts": "^8.0.4",
     "office-ui-fabric-react": "^7.107.0",
+    "papaparse": "^5.2.0",
     "plottable": "^3.8.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-papaparse": "^3.1.1",
     "react-scripts": "3.4.1"
   },
   "scripts": {

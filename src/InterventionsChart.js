@@ -101,7 +101,7 @@ const InterventionsChart = (props) => {
         build_child_data_sets();
     }, [props.children, build_child_data_sets])
 
-    return(<div id={'container'+guid}></div>)
+    return(<div id={'container'+guid} class="graph"></div>)
 }
 
 export default InterventionsChart;

@@ -15,8 +15,8 @@ const FooterMenu = (props) => {
             href:"mailto:support@infectiousdiseasemodel.com"
         }];
  
-    return(<div>
-      <CommandBar className='Footer-Menu'
+    return(<div class="Footer-Menu">
+      <CommandBar
         align="right"
         items={items}
         ariaLabel="Use left and right arrow keys to navigate between commands"
