@@ -21,8 +21,8 @@ def hello():
     print('Hello')
     return 'Hello'
 
-@app.route('/api/upload/calibration', methods=['GET'])
-def calibration_upload():
+@app.route('/api/calibrate', methods=['POST'])
+def calibrate():
     print('Hello')
     return 'Hello'
 

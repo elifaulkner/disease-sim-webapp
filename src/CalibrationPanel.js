@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { DetailsList, DetailsListLayoutMode } from 'office-ui-fabric-react/lib/DetailsList';
-import { DefaultButton, ButtonType } from 'office-ui-fabric-react';
+import { DefaultButton } from 'office-ui-fabric-react';
 import { Stack } from 'office-ui-fabric-react/lib/Stack';
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
@@ -25,7 +25,6 @@ const CalibrationPanel = (props) => {
     ];
 
     const selection = React.useMemo(() => new Selection({ getKey: i => i.name }), []);
-    const buttonRef = React.createRef()
 
     const deleteSelected = () => {
         if (selection.getSelectedCount() > 0) {
@@ -36,6 +35,10 @@ const CalibrationPanel = (props) => {
         } else {
             alert('nothing selected to delete')
         }
+    }
+
+    const deleteAll = () => {
+        props.setCalibrationData([])
     }
 
     const confirm = () => {
@@ -87,6 +90,7 @@ const CalibrationPanel = (props) => {
             <Stack horizontal>
                 <DefaultButton text="Add Data" onClick={confirm} />
                 <DefaultButton text="Delete Selected" onClick={deleteSelected} />
+                <DefaultButton text="Delete All" onClick={deleteAll} />
             </Stack>
         </Stack>
         <Separator/>

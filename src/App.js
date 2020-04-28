@@ -7,7 +7,7 @@ import InterventionsPanel from './InterventionsPanel'
 import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
 import FooterMenu from './FooterMenu';
 import InterventionsChart from './InterventionsChart'
-import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
+import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 import CalibrationPanel from './CalibrationPanel';
 import CalibrationGraph from './CalibrationGraph';
 
@@ -23,14 +23,14 @@ function App() {
 
   const [simParameters, setSimParameters] = useState({
     max_time: 730,
-    init_infection: 0.00001,
+    population: 1000000,
+    init_infection: 10,
     init_recovered: 0
   });
 
   const [interventions, setInterventions] = useState([]);
   const [simulation, setSimulation] = useState({});
 
-  const [population, setPopulation] = useState(1000000);
   const [calibrationData, setCalibrationData] = useState([]);
 
 
@@ -40,7 +40,9 @@ function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         disease_parameters: diseaseParameters,
-        sim_parameters: simParameters,
+        sim_parameters: {max_time: simParameters.max_time,
+          init_infection: simParameters.init_infection/simParameters.population,
+          init_recovered: simParameters.init_recovered/simParameters.population},
         interventions: interventions
       })
     }
@@ -58,15 +60,15 @@ function App() {
   return (
 
     <div className="App">
-        <Pivot>
-          <PivotItem headerText="Model Configuration">
+        <Pivot linkSize={PivotLinkSize.large}>
+          <PivotItem headerText="Model Configuration" linkFormat={PivotLinkFormat.tabs}>
             <div class="container">
               <div class="content">
-                <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={population} />
-                <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+                <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
+                <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
               </div>
               <div class="sidebar">
-                <ModelConfigurationPanel diseaseParameters={diseaseParameters} setDiseaseParameters={setDiseaseParameters} simParameters={simParameters} setSimParameters={setSimParameters} simulate={simulate} />
+                <ModelConfigurationPanel diseaseParameters={diseaseParameters} setDiseaseParameters={setDiseaseParameters} simParameters={simParameters} setSimParameters={setSimParameters} simulate={simulate}/>
               </div>
             </div>
           </PivotItem>
@@ -75,8 +77,8 @@ function App() {
               <div class="content">
                 <InterventionsChart title="Active Interventions" interventions={interventions} max={simParameters.max_time} />
                 <div class="container">
-                  <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={population} />
-                  <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+                  <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
+                  <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
                 </div>
               </div>
               <div class="sidebar">
@@ -87,18 +89,18 @@ function App() {
           <PivotItem headerText="Cumulative Statistics">
             <div class="container">
               <div class="content">
-                <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={population} />
-                <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+                <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
+                <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
               </div>
               <div class="sidebar">
-                <CumulativeStatisticsPanel sim={simulation} population={population} setPopulation={setPopulation} />
+                <CumulativeStatisticsPanel sim={simulation} population={simParameters.population} />
               </div>
             </div>
           </PivotItem>
           <PivotItem headerText="Calibration">
             <div class="container">
               <div class="content">
-                <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={population} />
+                <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
               </div>
               <div class="sidebar">
                 <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} />

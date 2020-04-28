@@ -17,6 +17,10 @@
   height: 4em;
 }
 
+.menu {
+  font-size: 48px
+}
+
 .container {
   display: flex;
   flex-direction: row;

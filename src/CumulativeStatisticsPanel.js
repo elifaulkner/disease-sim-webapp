@@ -1,5 +1,4 @@
 import React from 'react';
-import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
 import { Label } from 'office-ui-fabric-react/lib/Label';
 
 function CumulativeStatisticsPanel(props) {
@@ -24,17 +23,6 @@ function CumulativeStatisticsPanel(props) {
     const [dead] = getMax(props.sim, 'dead')
 
     return(<div>
-            <SpinButton
-                label="Population"
-                labelPosition="Top"
-                min={0}
-                max={10000000000000}
-                step={1}
-                showValue={true}
-                snapToStep
-                value={props.population}
-                onValidate={(v) => props.setPopulation(v)}/>
-        
             <table width="100%">
                 <tr>
                     
