@@ -41,6 +41,7 @@ function InterventionsPanel(props) {
         { key: 'immunity_time', text: 'Immunity Time' },
         { key: 'hospitilization_rate', text: 'Hospitilization Rate' },
         { key: 'death_rate', text: 'Death Rate' },
+        { key: 'confirmed_case_percentage', text: 'Confirmed Case Percentage' }
     ];
 
     const selection = React.useMemo(() => new Selection({ getKey: i => i.name}), []);
@@ -55,7 +56,6 @@ function InterventionsPanel(props) {
             alert('nothing selected to delete')
         }
     }
-
 
     return (
             <div>

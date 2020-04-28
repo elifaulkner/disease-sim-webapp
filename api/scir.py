@@ -42,7 +42,7 @@ class DiseaseModel:
             d = (1-self.p_death_given_hospitalization*self.get_active_intervention_scale(interventions.death_rate, t))/(self.avg_days_hospitalized*self.get_active_intervention_scale(interventions.hospitilization_time, t))
             e = self.p_death_given_hospitalization*self.get_active_intervention_scale(interventions.death_rate, t)/(self.avg_days_hospitalized*self.get_active_intervention_scale(interventions.hospitilization_time, t))
             f = 1.0/self.avg_days_immune*self.get_active_intervention_scale(interventions.immunity_time, t)
-            g = self.confirmed_case_percentage
+            g = self.confirmed_case_percentage*self.get_active_intervention_scale(interventions.confirmed_case_percentage, t)
 
             return (a, b, c, d, e, f, g)
 

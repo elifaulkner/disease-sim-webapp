@@ -44,6 +44,7 @@ def interventions_from_list(list):
     interventions.immunity_time = [intervention_from_dict(x, -1) for x in list if x['type'] == 'immunity_time']
     interventions.hospitilization_rate = [intervention_from_dict(x, -1) for x in list if x['type'] == 'hospitilization_rate']
     interventions.death_rate = [intervention_from_dict(x, -1) for x in list if x['type'] == 'death_rate']
+    interventions.confirmed_case_percentage = [intervention_from_dict(x, 1) for x in list if x['type'] == 'confirmed_case_percentage']
     return interventions
 
 @app.route('/api/simulate', methods=['POST'])
