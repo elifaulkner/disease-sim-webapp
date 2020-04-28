@@ -9,7 +9,7 @@ const MorbidityAndMortalityGraph = (props) => {
     
     useEffect(() => {
       setHospitalizedtimes(props.calibrationData.filter(d=>d.state==='hospitalized').map(d=>d.day));
-      setHospitalizedCounts(props.calibrationData.filter(d=>d.state==='hospitalized').map(d=>d.count/props.population));
+      setHospitalizedCounts(props.calibrationData.filter(d=>d.state==='hospitalized').map(d=>parseInt(d.count)/props.population));
     }, [props.calibrationData, props.population]);
 
     const [deathTimes, setDeathtimes] = useState([])
@@ -17,21 +17,21 @@ const MorbidityAndMortalityGraph = (props) => {
 
     useEffect(() => {
       setDeathtimes(props.calibrationData.filter(d=>d.state==='deaths').map(d=>d.day));
-      setDeathCounts(props.calibrationData.filter(d=>d.state==='deaths').map(d=>d.count/props.population));
+      setDeathCounts(props.calibrationData.filter(d=>d.state==='deaths').map(d=>parseInt(d.count)/props.population));
     }, [props.calibrationData, props.population]);
 
     const [infectiousTimes, setInfectiousTimes] = useState([])
     const [infectiousCounts, setInfectiousCounts] = useState([])
     
     useEffect(() => {
-      setInfectiousTimes(props.calibrationData.filter(d=>d.state==='infectious').map(d=>d.day));
-      setInfectiousCounts(props.calibrationData.filter(d=>d.state==='infectious').map(d=>d.count/props.population));
+      setInfectiousTimes(props.calibrationData.filter(d=>d.state==='confirmed').map(d=>d.day));
+      setInfectiousCounts(props.calibrationData.filter(d=>d.state==='confirmed').map(d=>parseInt(d.count)/props.population));
     }, [props.calibrationData, props.population]);
 
     return(<div class="graph">
-        <IDMGraphHighcharts title="Cumulative Infectious"> 
-          <IDMCurve times={props.simulation.time} values={props.simulation.cumulative_infectious} name="Cumulative Infectious" color="Red" type='line'/>
-          <IDMCurve times={infectiousTimes} values={infectiousCounts} name="Observed Infectious" color="Red" type="scatter"/>
+        <IDMGraphHighcharts title="Cumulative Confirmed"> 
+          <IDMCurve times={props.simulation.time} values={props.simulation.cumulative_confirmed} name="Cumulative Confirmed" color="Red" type='line'/>
+          <IDMCurve times={infectiousTimes} values={infectiousCounts} name="Observed Confirmed" color="Red" type="scatter"/>
         </IDMGraphHighcharts>
         <IDMGraphHighcharts title="Cumulative Hospitalized"> 
           <IDMCurve times={props.simulation.time} values={props.simulation.cumulative_hospitalized} name="Hospitalized" color="Blue" type='line'/>

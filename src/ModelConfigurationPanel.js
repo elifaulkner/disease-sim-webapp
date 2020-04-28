@@ -74,6 +74,16 @@ function ModelConfigurationPanel(props) {
                     snapToStep
                     onValidate={(v) => setDiseaseParameters(prevState => { return { ...prevState, p_death_given_hospitalization: v } })} />
                 <SpinButton
+                    label="Confirmed Case Percentage"
+                    labelPosition="Top"
+                    min={0}
+                    max={1}
+                    step={0.0001}
+                    value={diseaseParameters.confirmed_case_percentage}
+                    showValue={true}
+                    snapToStep
+                    onValidate={(v) => setDiseaseParameters(prevState => { return { ...prevState, confirmed_case_percentage: v } })} />
+                <SpinButton
                     label="# Days to Simulation"
                     labelPosition="Top"
                     min={1}

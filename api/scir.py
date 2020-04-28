@@ -18,13 +18,14 @@ class Intervention:
         self.scale = scale
 
 class DiseaseModel:
-    def __init__(self, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization):
+    def __init__(self, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage):
         self.R0 = R0
         self.avg_days_infected = avg_days_infected
         self.avg_days_hospitalized = avg_days_hospitalized
         self.avg_days_immune = avg_days_immune
         self.p_hospitalization_given_infection = p_hospitalization_given_infection
         self.p_death_given_hospitalization = p_death_given_hospitalization
+        self.confirmed_case_percentage = confirmed_case_percentage
 
     def get_active_intervention_scale(self, interventions, t):
         scale = 1
@@ -41,16 +42,17 @@ class DiseaseModel:
             d = (1-self.p_death_given_hospitalization*self.get_active_intervention_scale(interventions.death_rate, t))/(self.avg_days_hospitalized*self.get_active_intervention_scale(interventions.hospitilization_time, t))
             e = self.p_death_given_hospitalization*self.get_active_intervention_scale(interventions.death_rate, t)/(self.avg_days_hospitalized*self.get_active_intervention_scale(interventions.hospitilization_time, t))
             f = 1.0/self.avg_days_immune*self.get_active_intervention_scale(interventions.immunity_time, t)
+            g = self.confirmed_case_percentage
 
-            return (a, b, c, d, e, f)
+            return (a, b, c, d, e, f, g)
 
         def scir(X, t):
-            S, I, H, R, D, CI, CH = X
-            [a, b, c, d, e, f] = build_scir_parameters(t)
-            return [-a*S*I+f*R, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R, e*H, a*S*I, b*I]
+            S, I, H, R, D, CI, CC, CH = X
+            [a, b, c, d, e, f, g] = build_scir_parameters(t)
+            return [-a*S*I+f*R, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R, e*H, a*S*I, a*S*I*g, b*I]
 
         t = np.linspace(0, max_time, num_time_points)
-        sol = odeint(scir, [1-init_infection-init_recovered, init_infection, 0, init_recovered, 0, 0, 0], t) 
+        sol = odeint(scir, [1-init_infection-init_recovered, init_infection, 0, init_recovered, 0, 0, 0, 0], t) 
         return [t, sol]       
 
 if __name__ == '__main__':

@@ -18,7 +18,8 @@ function App() {
     avg_days_hospitalized: 14.0,
     avg_days_immune: 183.0,
     p_hospitalization_given_infection: 0.01,
-    p_death_given_hospitalization: 0.05
+    p_death_given_hospitalization: 0.05,
+    confirmed_case_percentage: .1
   });
 
   const [simParameters, setSimParameters] = useState({
@@ -100,7 +101,7 @@ function App() {
           <PivotItem headerText="Calibration">
             <div class="container">
               <div class="content">
-                <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
+                <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} confirmed_case_percentage={diseaseParameters.confirmed_case_percentage}/>
               </div>
               <div class="sidebar">
                 <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} />

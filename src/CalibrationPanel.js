@@ -10,7 +10,7 @@ import { Selection } from 'office-ui-fabric-react/lib/Selection';
 import { CSVReader } from 'react-papaparse'
 
 const CalibrationPanel = (props) => {
-    const [currentData, setCurrentData] = useState({ state: 'infectious', day: 1, count: 0 })
+    const [currentData, setCurrentData] = useState({ state: 'confirmed', day: 1, count: 0 })
 
     const columns = [
         { key: 'column1', name: 'State', fieldName: 'state', minWidth: 75, maxWidth: 75, isResizable: true },
@@ -19,7 +19,7 @@ const CalibrationPanel = (props) => {
     ];
 
     const options = [
-        { key: 'infectious', text: 'Infectious' },
+        { key: 'confirmed', text: 'Donfirmed' },
         { key: 'hospitalized', text: 'Hospitalized' },
         { key: 'deaths', text: 'Deaths' }
     ];
@@ -44,7 +44,7 @@ const CalibrationPanel = (props) => {
     const confirm = () => {
         props.setCalibrationData(props.calibrationData.concat([currentData]))
 
-        setCurrentData({ state: 'infectious', day: 1, count: 0 })
+        setCurrentData({ state: 'confirmed', day: 1, count: 0 })
     }
 
     const handleOnDrop = (data) => {
@@ -111,7 +111,7 @@ const CalibrationPanel = (props) => {
         <DetailsList
             items={props.calibrationData}
             columns={columns}
-            label="Infection Rate Intenventions"
+            label="Calibration Data"
             layoutMode={DetailsListLayoutMode.justified}
             selectionPreservedOnEmptyClick={true}
             ariaLabelForSelectionColumn="Toggle selection"

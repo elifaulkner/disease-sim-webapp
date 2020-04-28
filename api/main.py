@@ -13,7 +13,8 @@ def build_json(t, sim):
         'recovered':list(sim[:,3]),
         'dead':list(sim[:,4]),
         'cumulative_infectious':list(sim[:,5]),
-        'cumulative_hospitalized':list(sim[:,6])
+        'cumulative_confirmed':list(sim[:,6]),
+        'cumulative_hospitalized':list(sim[:,7])
         })
 
 @app.route('/api/hello/', methods=['GET'])
@@ -53,12 +54,14 @@ def simulate_post():
     avg_days_immune = float(request.json['disease_parameters']['avg_days_immune'])
     p_hospitalization_given_infection = float(request.json['disease_parameters']['p_hospitalization_given_infection'])
     p_death_given_hospitalization = float(request.json['disease_parameters']['p_death_given_hospitalization'])
+    confirmed_case_percentage = float(request.json['disease_parameters']['confirmed_case_percentage'])
     max_time = int(request.json['sim_parameters']['max_time'])
     init_infection = float(request.json['sim_parameters']['init_infection'])
     init_recovered = float(request.json['sim_parameters']['init_recovered'])
 
+    
     interventions = interventions_from_list(request.json['interventions'])
-    model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization)
+    model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage)
     t, sim = model.simulate(max_time, max_time+1, init_infection, init_recovered, interventions)
     return build_json(t, sim)
 
