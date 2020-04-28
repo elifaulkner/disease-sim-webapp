@@ -41,9 +41,7 @@ function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         disease_parameters: diseaseParameters,
-        sim_parameters: {max_time: simParameters.max_time,
-          init_infection: simParameters.init_infection/simParameters.population,
-          init_recovered: simParameters.init_recovered/simParameters.population},
+        sim_parameters: simParameters,
         interventions: interventions
       })
     }
@@ -53,6 +51,33 @@ function App() {
       .then(data => setSimulation(data), (error) => {
         alert(error);
         setSimulation({})
+      });
+  }
+
+  const calibrate = () => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        disease_parameters: diseaseParameters,
+        sim_parameters: simParameters,
+        interventions: interventions,
+        calibration_data: calibrationData
+      })
+    }
+
+    fetch('/api/calibrate', requestOptions)
+      .then(response => response.json())
+      .then(data => setDiseaseParameters({
+        R0: data['R0'],
+        avg_days_infected: diseaseParameters.avg_days_infected,
+        p_hospitalization_given_infection: data['p_hospitalization_given_infection'],
+        p_death_given_hospitalization: data['p_death_given_hospitalization'],
+        confirmed_case_percentage: diseaseParameters.confirmed_case_percentage,
+        avg_days_hospitalized: diseaseParameters.avg_days_hospitalized,
+        avg_days_immune: diseaseParameters.avg_days_immune
+      }), (error) => {
+        alert(error);
       });
   }
 
@@ -104,7 +129,7 @@ function App() {
                 <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} confirmed_case_percentage={diseaseParameters.confirmed_case_percentage}/>
               </div>
               <div class="sidebar">
-                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} />
+                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate}/>
               </div>
             </div>
           </PivotItem>

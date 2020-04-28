@@ -19,7 +19,7 @@ const CalibrationPanel = (props) => {
     ];
 
     const options = [
-        { key: 'confirmed', text: 'Donfirmed' },
+        { key: 'confirmed', text: 'Confirmed' },
         { key: 'hospitalized', text: 'Hospitalized' },
         { key: 'deaths', text: 'Deaths' }
     ];
@@ -92,6 +92,7 @@ const CalibrationPanel = (props) => {
                 <DefaultButton text="Delete Selected" onClick={deleteSelected} />
                 <DefaultButton text="Delete All" onClick={deleteAll} />
             </Stack>
+        <DefaultButton text="Auto Calibrate" onClick={props.calibrate} />
         </Stack>
         <Separator/>
         <CSVReader

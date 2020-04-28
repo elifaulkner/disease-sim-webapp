@@ -9,6 +9,7 @@ class Interventions:
         self.immunity_time = []
         self.hospitilization_rate = []
         self.death_rate = []
+        self.confirmed_case_percentage = []
 
 class Intervention:
     def __init__(self, name, start, end, scale):

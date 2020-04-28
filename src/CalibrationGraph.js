@@ -3,7 +3,6 @@ import IDMCurve from './IDMCurve';
 import IDMGraphHighcharts from './IDMGraphHighcharts';
 
 const MorbidityAndMortalityGraph = (props) => {
-
     const [hospitalizedTimes, setHospitalizedtimes] = useState([])
     const [hospitalizedCounts, setHospitalizedCounts] = useState([])
     
