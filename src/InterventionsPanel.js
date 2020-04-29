@@ -105,13 +105,14 @@ function InterventionsPanel(props) {
                             value={currentIntervention.effectiveness*100+' %'}
                             onValidate={(v) => setCurrentIntervention(prevState => { return { ...prevState, effectiveness: parseFloat(v)/100 } })} />
                         <Label />
-                        <Stack horizontal>
+                        <Stack horizontal horizontalAlign="center">
                             <DefaultButton text="Add Intervention" onClick={confirm} />
                             <DefaultButton text="Delete Selected" onClick={deleteSelected} />
                         </Stack>
                     </Stack>
                 </div>
                 <DetailsList
+                    className="panel-list"
                     items={props.interventions}
                     columns={columns}
                     label="Infection Rate Intenventions"

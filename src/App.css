@@ -38,12 +38,18 @@
 
 .sidebar {
   padding: 20px;
-  padding-top: 100px;
+  padding-top: 75px;
   order: 1;
   flex-grow: 0;
   flex-basis: 15%;
   width: 15%;
 }
+
+.csv-reader {
+  min-height: 300px;
+  min-width: 90%;
+}
+
 
 .footer {
   height: 4em;
@@ -59,4 +65,14 @@
 .Footer-Menu {
   position: relative;
   float: right;
+}
+
+.panel-button {
+  min-width: 50%;
+  max-width: 90%;
+}
+
+.panel-list {
+  min-height: 40%;
+  max-height: 40%;
 }
