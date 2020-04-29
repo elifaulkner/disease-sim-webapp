@@ -73,6 +73,7 @@ const CalibrationPanel = (props) => {
         setHideDialog(false)
     }
 
+
     return (<div>
         <Pivot>
             <PivotItem headerText="Upload Data">
@@ -81,15 +82,20 @@ const CalibrationPanel = (props) => {
                     onDrop={handleOnDrop}
                     onError={handleOnError}
                     noClick
+                    id="csv-reader"
                     config={{
-                        delimiter: ",",	
+                        delimiter: ",",
                         newline: "",
                         quoteChar: '"',
                         escapeChar: '"',
                         header: true
                     }}
                 >
-                    <span>Drop CSV file here to upload</span>
+                    <span>Drop CSV file here to upload</span> <br/>
+                    <span>state,day,count</span>
+                    <span>confirmed,10,120</span>
+                    <span>hospitalized,10,24</span>
+                    <span>deaths,10,3</span>
                 </CSVReader>
             </PivotItem>
             <PivotItem headerText="Add Manual Data">
@@ -121,19 +127,19 @@ const CalibrationPanel = (props) => {
                         snapToStep
                         value={currentData.count}
                         onValidate={(v) => setCurrentData(prevState => { return { ...prevState, count: parseInt(v) } })} />
-                    <Stack horizontal horizontalAlign="center" style={{paddingTop:20}}>
-                        <DefaultButton text="Add Data" onClick={confirm} className="panel-button"/>
+                    <Stack horizontal horizontalAlign="center" style={{ paddingTop: 20 }}>
+                        <DefaultButton text="Add Data" onClick={confirm} className="panel-button" />
                     </Stack>
                 </Stack>
             </PivotItem>
         </Pivot>
         <Separator />
-        <DefaultButton text="Auto Calibrate" onClick={autoCalibrationHandler} id="calibrate-button" disabled={!autoCalibrateEnabled} className="panel-button"/>
+        <DefaultButton text="Auto Calibrate" onClick={autoCalibrationHandler} id="calibrate-button" disabled={!autoCalibrateEnabled} className="panel-button" />
         <CalibrationCallout hideDialog={hideDialog} setHideDialog={setHideDialog} calibrate={props.calibrate} />
         <Separator />
         <Stack horizontal horizontalAlign="center">
-            <DefaultButton text="Delete Selected" onClick={deleteSelected} className="panel-button"/>
-            <DefaultButton text="Delete All" onClick={deleteAll} className="panel-button"/>
+            <DefaultButton text="Delete Selected" onClick={deleteSelected} className="panel-button" />
+            <DefaultButton text="Delete All" onClick={deleteAll} className="panel-button" />
         </Stack>
         <Separator />
         <DetailsList
