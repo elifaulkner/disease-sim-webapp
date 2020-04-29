@@ -1,16 +1,8 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  min-height: 100vh; 
+  display: flex;
+  flex-direction: column;
 }
 
 .App-header {
@@ -22,22 +14,65 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  height: 4em;
 }
 
-.App-link {
-  color: #61dafb;
+.menu {
+  font-size: 48px
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.content {
+  order: 0;
+  flex-grow: 4;
+  flex-shrink: 4;
+  width: 85%;
+  padding: 20px;
+}
+
+.sidebar {
+  padding: 20px;
+  padding-top: 75px;
+  order: 1;
+  flex-grow: 0;
+  flex-basis: 15%;
+  width: 15%;
+}
+
+.csv-reader {
+  min-height: 300px;
+  min-width: 90%;
+}
+
+
+.footer {
+  height: 4em;
+  position: relative;
+  float: right;
+  align-items: flex-end;
+}
+
+.graph {
+  width: 100%;
 }
 
 .Footer-Menu {
   position: relative;
   float: right;
+}
+
+.panel-button {
+  min-width: 50%;
+  max-width: 90%;
+}
+
+.panel-list {
+  min-height: 40%;
+  max-height: 40%;
 }

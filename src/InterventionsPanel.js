@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './App.css';
-import { Panel } from 'office-ui-fabric-react/lib/Panel';
 import { DetailsList, DetailsListLayoutMode } from 'office-ui-fabric-react/lib/DetailsList';
 import { DefaultButton, Label } from 'office-ui-fabric-react';
 import { Stack } from 'office-ui-fabric-react/lib/Stack';
@@ -10,11 +9,6 @@ import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 import { Selection } from 'office-ui-fabric-react/lib/Selection';
 
 function InterventionsPanel(props) {
-    const dismissPanel = () => {
-        props.simulate()
-        props.setIsOpen(false);
-    };
-
     const [currentIntervention, setCurrentIntervention] = useState({ name: '', start: 0, end: 3650, effectiveness: 0, type: '' })
     const [currentType, setCurrentType] = useState('infection_rate')
 
@@ -47,6 +41,7 @@ function InterventionsPanel(props) {
         { key: 'immunity_time', text: 'Immunity Time' },
         { key: 'hospitilization_rate', text: 'Hospitilization Rate' },
         { key: 'death_rate', text: 'Death Rate' },
+        { key: 'confirmed_case_percentage', text: 'Confirmed Case Percentage' }
     ];
 
     const selection = React.useMemo(() => new Selection({ getKey: i => i.name}), []);
@@ -62,24 +57,13 @@ function InterventionsPanel(props) {
         }
     }
 
-
     return (
-        <div>
-            <Panel
-                isLightDismiss
-                headerText="Intervention Strategies"
-                isOpen={props.isOpen}
-                type={3}
-                onDismiss={dismissPanel}
-                onLightDismissClick={dismissPanel}
-                // You MUST provide this prop! Otherwise screen readers will just say "button" with no label.
-                closeButtonAriaLabel="Close"
-                hasCloseButton="true"
-            >
+            <div>
                 <div>
                     <Stack vertical>
                         <TextField
                             label="Name"
+                            labelPosition="Left"
                             value={currentIntervention.name}
                             onChange={(v) => setCurrentIntervention(prevState => { return { ...prevState, name: v.target.value } })} />
                         <Dropdown
@@ -121,14 +105,14 @@ function InterventionsPanel(props) {
                             value={currentIntervention.effectiveness*100+' %'}
                             onValidate={(v) => setCurrentIntervention(prevState => { return { ...prevState, effectiveness: parseFloat(v)/100 } })} />
                         <Label />
-                        <Stack horizontal>
+                        <Stack horizontal horizontalAlign="center">
                             <DefaultButton text="Add Intervention" onClick={confirm} />
                             <DefaultButton text="Delete Selected" onClick={deleteSelected} />
-                            <DefaultButton text="Return to Main Page" onClick={dismissPanel} />
                         </Stack>
                     </Stack>
                 </div>
                 <DetailsList
+                    className="panel-list"
                     items={props.interventions}
                     columns={columns}
                     label="Infection Rate Intenventions"
@@ -140,8 +124,7 @@ function InterventionsPanel(props) {
                     selection={selection}
                     setKey="name"
                 />
-            </Panel>
-        </div>
+            </div>
     );
 }
 

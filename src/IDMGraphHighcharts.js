@@ -28,10 +28,14 @@ const IDMGraphHighcharts = (props) => {
                 return {
                     name: child.props.name,
                     data: data,
-                    type: 'line',
+                    type: child.props.type,
                     color: child.props.color,
                     showInLegend: false,
-                    animation: false
+                    animation: false,
+                    marker: {
+                        radius: 3,
+                        //enabled: (child.props.type === 'scatter')
+                    }
                 }
             }))
     }, [props.children]);
@@ -77,10 +81,31 @@ const IDMGraphHighcharts = (props) => {
                 series: [{
                     // specific options for this series instance
                     type: 'line'
+                }, {
+                    type: 'scatter',
                 }],
-                scatter: {
+                line: {
                     marker: false,
-                    lineWidth: 1
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            enabled: false
+                        }
+                    }
+                },
+                scatter: {
+                    marker: {
+                        radius: 5
+                    },
+                    lineWidth: 0,
+                    tooltip: {
+                        enables:false
+                    },
+                    states: {
+                        hover: {
+                            enabled: false
+                        }
+                    }
                 }
             },
             legend: {

@@ -21,6 +21,7 @@ const InterventionsChart = (props) => {
             case 'immunity_time': return 5
             case 'hospitilization_rate': return 2
             case 'death_rate': return 4
+            case 'confirmed_case_percentage': return 6
             default: return 0;
         }
     }, []);
@@ -70,9 +71,9 @@ const InterventionsChart = (props) => {
                 max: props.max
             },
             yAxis: {
-                categories: ['Infection Rate', 'Infection Time', 'Hospitilization Rate', 'Hospitilization Time', 'Death Rate', 'Immunity Time'],
+                categories: ['Infection Rate', 'Infection Time', 'Hospitilization Rate', 'Hospitilization Time', 'Death Rate', 'Immunity Time', 'Confirmed Case Percentage'],
                 min: 0,
-                max: 5,
+                max: 6,
                 reversed: true,
                 title: {
                     text: ''
@@ -101,7 +102,7 @@ const InterventionsChart = (props) => {
         build_child_data_sets();
     }, [props.children, build_child_data_sets])
 
-    return(<div id={'container'+guid}></div>)
+    return(<div id={'container'+guid} class="graph"></div>)
 }
 
 export default InterventionsChart;
