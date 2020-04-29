@@ -40,8 +40,8 @@ def calibrate():
     interventions = interventions_from_list(request.json['interventions'])
 
     calibration_data = request.json['calibration_data']
-
-    sln = cal.calibrate(calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
+    calibration_variables = request.json['calibration_variables']
+    [sln, factory, sol] = cal.calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
 
     return jsonify(sln)
 

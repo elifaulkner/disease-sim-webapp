@@ -50,6 +50,7 @@ class DiseaseModel:
         def scir(X, t):
             S, I, H, R, D, CI, CC, CH = X
             [a, b, c, d, e, f, g] = build_scir_parameters(t)
+
             return [-a*S*I+f*R, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R, e*H, a*S*I, a*S*I*g, b*I]
 
         t = np.linspace(0, max_time, num_time_points)

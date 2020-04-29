@@ -54,7 +54,7 @@ function App() {
       });
   }
 
-  const calibrate = () => {
+  const calibrate = (variables) => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -62,20 +62,21 @@ function App() {
         disease_parameters: diseaseParameters,
         sim_parameters: simParameters,
         interventions: interventions,
-        calibration_data: calibrationData
+        calibration_data: calibrationData,
+        calibration_variables: variables
       })
     }
 
     fetch('/api/calibrate', requestOptions)
       .then(response => response.json())
       .then(data => setDiseaseParameters({
-        R0: data['R0'],
-        avg_days_infected: diseaseParameters.avg_days_infected,
-        p_hospitalization_given_infection: data['p_hospitalization_given_infection'],
-        p_death_given_hospitalization: data['p_death_given_hospitalization'],
-        confirmed_case_percentage: diseaseParameters.confirmed_case_percentage,
-        avg_days_hospitalized: diseaseParameters.avg_days_hospitalized,
-        avg_days_immune: diseaseParameters.avg_days_immune
+        R0: data['R0'] || diseaseParameters.R0,
+        avg_days_infected:  data['avg_days_infected'] || diseaseParameters.avg_days_infected,
+        p_hospitalization_given_infection:  data['p_hospitalization_given_infection'] || diseaseParameters.p_hospitalization_given_infection,
+        p_death_given_hospitalization:  data['p_death_given_hospitalization'] || diseaseParameters.p_death_given_hospitalization,
+        confirmed_case_percentage:  data['confirmed_case_percentage'] || diseaseParameters.confirmed_case_percentage,
+        avg_days_hospitalized:  data['avg_days_hospitalized'] || diseaseParameters.avg_days_hospitalized,
+        avg_days_immune:  data['avg_days_immune'] || diseaseParameters.avg_days_immune
       }), (error) => {
         alert(error);
       });
