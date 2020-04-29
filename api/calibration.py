@@ -79,8 +79,6 @@ class CalibrationVariable:
 def calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population):
     max_date = max([int(x['day']) for x in calibration_data])
     factory = CalibrationFactory(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
-    print(factory.get_variable_names())
-    print(factory.get_variable_indices())
 
     def get_error(d, sim):
         simdata = []
@@ -101,8 +99,7 @@ def calibrate(calibration_variables, calibration_data, interventions, R0, avg_da
     
     bounds = factory.build_bounds()
     ic = factory.build_initial_conditions()
-    print(ic)
-    print(bounds)
+
     sln = optimize.least_squares(optim_function, ic,  bounds=bounds)
 
     return [factory.build_return_value(sln.x), factory, sln]
