@@ -37,14 +37,22 @@ class DiseaseModel:
 
     def simulate(self, max_time, num_time_points, init_infection, init_recovered, interventions):
         def build_scir_parameters(t):
-            a = self.R0*self.get_active_intervention_scale(interventions.infection_rate, t)/(self.avg_days_infected*self.get_active_intervention_scale(interventions.infection_time, t))
-            b = self.p_hospitalization_given_infection*self.get_active_intervention_scale(interventions.hospitilization_rate, t)/(self.avg_days_infected*self.get_active_intervention_scale(interventions.infection_time, t))
-            c = (1-self.p_hospitalization_given_infection*self.get_active_intervention_scale(interventions.hospitilization_rate, t))/(self.avg_days_infected*self.get_active_intervention_scale(interventions.infection_time, t))
-            d = (1-self.p_death_given_hospitalization*self.get_active_intervention_scale(interventions.death_rate, t))/(self.avg_days_hospitalized*self.get_active_intervention_scale(interventions.hospitilization_time, t))
-            e = self.p_death_given_hospitalization*self.get_active_intervention_scale(interventions.death_rate, t)/(self.avg_days_hospitalized*self.get_active_intervention_scale(interventions.hospitilization_time, t))
-            f = 1.0/self.avg_days_immune*self.get_active_intervention_scale(interventions.immunity_time, t)
-            g = self.confirmed_case_percentage*self.get_active_intervention_scale(interventions.confirmed_case_percentage, t)
+            R = self.R0*self.get_active_intervention_scale(interventions.infection_rate, t)
+            avg_days_infected = self.avg_days_infected*self.get_active_intervention_scale(interventions.infection_time, t)
+            avg_days_hospitalized = self.avg_days_hospitalized*self.get_active_intervention_scale(interventions.hospitilization_time, t)
+            p_hospitalization_given_infection = self.p_hospitalization_given_infection*self.get_active_intervention_scale(interventions.hospitilization_rate, t)
+            p_death_given_hospitalization = self.p_death_given_hospitalization*self.get_active_intervention_scale(interventions.death_rate, t)
+            avg_days_immune = self.avg_days_immune*self.get_active_intervention_scale(interventions.immunity_time, t)
+            confirmed_case_percentage = self.confirmed_case_percentage*self.get_active_intervention_scale(interventions.confirmed_case_percentage, t)
 
+            a = R/avg_days_infected
+            b = p_hospitalization_given_infection/avg_days_infected
+            c = (1-p_hospitalization_given_infection)/avg_days_infected
+            d = (1-p_death_given_hospitalization)/avg_days_hospitalized
+            e = p_death_given_hospitalization/avg_days_hospitalized
+            f = 1.0/avg_days_immune
+            g = confirmed_case_percentage
+            
             return (a, b, c, d, e, f, g)
 
         def scir(X, t):

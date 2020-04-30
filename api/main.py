@@ -57,8 +57,8 @@ def intervention_from_dict(dict, sign):
 def interventions_from_list(list):
     interventions = Interventions()
     interventions.infection_rate = [intervention_from_dict(x, -1) for x in list if x['type'] == 'infection_rate']
-    interventions.infection_time = [intervention_from_dict(x, 1) for x in list if x['type'] == 'infection_time']
-    interventions.hospitilization_time = [intervention_from_dict(x, 1) for x in list if x['type'] == 'hospitilization_time']
+    interventions.infection_time = [intervention_from_dict(x, -1) for x in list if x['type'] == 'infection_time']
+    interventions.hospitilization_time = [intervention_from_dict(x, -1) for x in list if x['type'] == 'hospitilization_time']
     interventions.immunity_time = [intervention_from_dict(x, -1) for x in list if x['type'] == 'immunity_time']
     interventions.hospitilization_rate = [intervention_from_dict(x, -1) for x in list if x['type'] == 'hospitilization_rate']
     interventions.death_rate = [intervention_from_dict(x, -1) for x in list if x['type'] == 'death_rate']
