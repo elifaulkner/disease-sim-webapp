@@ -54,6 +54,24 @@ function App() {
       });
   }
 
+  const [calibrationResults, setCalibrationResults] = useState({})
+
+  const setParameterValues = () => {
+    setDiseaseParameters({
+      R0: calibrationResults['R0'] || diseaseParameters.R0,
+      avg_days_infected:  calibrationResults['avg_days_infected'] || diseaseParameters.avg_days_infected,
+      p_hospitalization_given_infection:  calibrationResults['p_hospitalization_given_infection'] || diseaseParameters.p_hospitalization_given_infection,
+      p_death_given_hospitalization:  calibrationResults['p_death_given_hospitalization'] || diseaseParameters.p_death_given_hospitalization,
+      confirmed_case_percentage:  calibrationResults['confirmed_case_percentage'] || diseaseParameters.confirmed_case_percentage,
+      avg_days_hospitalized:  calibrationResults['avg_days_hospitalized'] || diseaseParameters.avg_days_hospitalized,
+      avg_days_immune:  calibrationResults['avg_days_immune'] || diseaseParameters.avg_days_immune
+    });
+  }
+  
+  useEffect(() => {
+    setCalibrationResults({});
+  }, [diseaseParameters])
+
   const calibrate = (variables) => {
     const requestOptions = {
       method: 'POST',
@@ -69,15 +87,7 @@ function App() {
 
     fetch('/api/calibrate', requestOptions)
       .then(response => response.json())
-      .then(data => setDiseaseParameters({
-        R0: data['R0'] || diseaseParameters.R0,
-        avg_days_infected:  data['avg_days_infected'] || diseaseParameters.avg_days_infected,
-        p_hospitalization_given_infection:  data['p_hospitalization_given_infection'] || diseaseParameters.p_hospitalization_given_infection,
-        p_death_given_hospitalization:  data['p_death_given_hospitalization'] || diseaseParameters.p_death_given_hospitalization,
-        confirmed_case_percentage:  data['confirmed_case_percentage'] || diseaseParameters.confirmed_case_percentage,
-        avg_days_hospitalized:  data['avg_days_hospitalized'] || diseaseParameters.avg_days_hospitalized,
-        avg_days_immune:  data['avg_days_immune'] || diseaseParameters.avg_days_immune
-      }), (error) => {
+      .then(data => setCalibrationResults(data), (error) => {
         alert(error);
       });
   }
@@ -87,6 +97,7 @@ function App() {
   return (
 
     <div className="App">
+        <FooterMenu class="footer" />
         <Pivot linkSize={PivotLinkSize.large}>
           <PivotItem headerText="Model Configuration" linkFormat={PivotLinkFormat.tabs}>
             <div class="container">
@@ -109,7 +120,7 @@ function App() {
                 </div>
               </div>
               <div class="sidebar">
-                <InterventionsPanel interventions={interventions} setInterventions={setInterventions} simulate={simulate} />
+                <InterventionsPanel interventions={interventions} setInterventions={setInterventions} simulate={simulate} setParameterValues={setParameterValues}/>
               </div>
             </div>
           </PivotItem>
@@ -130,12 +141,12 @@ function App() {
                 <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} confirmed_case_percentage={diseaseParameters.confirmed_case_percentage}/>
               </div>
               <div class="sidebar">
-                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate}/>
+                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues}/>
               </div>
             </div>
           </PivotItem>
         </Pivot>
-        <FooterMenu class="footer" />
+
     </div>
 
   );

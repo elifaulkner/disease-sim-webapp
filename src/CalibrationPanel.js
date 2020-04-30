@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { DetailsList, DetailsListLayoutMode } from 'office-ui-fabric-react/lib/DetailsList';
+import { DetailsList, DetailsListLayoutMode, SelectionMode } from 'office-ui-fabric-react/lib/DetailsList';
 import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react';
 import { Stack } from 'office-ui-fabric-react/lib/Stack';
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
@@ -15,6 +15,7 @@ import { Pivot, PivotItem } from 'office-ui-fabric-react';
 const CalibrationPanel = (props) => {
     const [currentData, setCurrentData] = useState({ state: 'confirmed', day: 1, count: 0 })
     const [hideDialog, setHideDialog] = useState(true)
+    const [hideCalibrationConfirm, setHideCalibrationConfirm] = useState(true)
     const [autoCalibrateEnabled, setAutoCalibrateEnabled] = useState(false)
 
     const columns = [
@@ -72,6 +73,20 @@ const CalibrationPanel = (props) => {
     const autoCalibrationHandler = () => {
         setHideDialog(false)
     }
+
+    const isEmpty = (x) => {
+        for(var key in x) {
+            if(x.hasOwnProperty(key))
+                return false;
+        }
+        return true;
+    }
+
+    useEffect(() => {
+        if(!isEmpty(props.calibrationResults)) {
+            setHideCalibrationConfirm(false)
+        }
+    }, [props.calibrationResults])
 
 
     return (<div>
@@ -135,7 +150,8 @@ const CalibrationPanel = (props) => {
         </Pivot>
         <Separator />
         <DefaultButton text="Auto Calibrate" onClick={autoCalibrationHandler} id="calibrate-button" disabled={!autoCalibrateEnabled} className="panel-button" />
-        <CalibrationCallout hideDialog={hideDialog} setHideDialog={setHideDialog} calibrate={props.calibrate} />
+        <CalibrationCallout hideDialog={hideDialog} setHideDialog={setHideDialog} calibrate={props.calibrate} setHideConfirm={setHideCalibrationConfirm}/>
+        <CalibrationVerification setHideDialog={setHideCalibrationConfirm} hideDialog={hideCalibrationConfirm} data={props.data} setParameterValues={props.setParameterValues} calibrationResults={props.calibrationResults}/>
         <Separator />
         <Stack horizontal horizontalAlign="center">
             <DefaultButton text="Delete Selected" onClick={deleteSelected} className="panel-button" />
@@ -157,6 +173,76 @@ const CalibrationPanel = (props) => {
     </div>)
 }
 
+
+const CalibrationVerification = (props) => {
+    const [items, setItems] = useState([{'key':0, 'value':0}])
+    const rejectCallback = () => {
+        props.setHideDialog(true)
+    }
+
+    const acceptCallback = () => {
+        props.setParameterValues()
+        props.setHideDialog(true)
+    }
+
+    const isEmpty = (x) => {
+        for(var key in x) {
+            if(x.hasOwnProperty(key))
+                return false;
+        }
+        return true;
+    }
+
+    useEffect(() =>
+    {
+        if(!isEmpty(props.calibrationResults)) {
+            var items = Object.entries(props.calibrationResults).map((k)=>{
+                return {'key':k[0], 
+                        'value':k[1]}});
+            setItems(items)
+            }
+     }, [props.calibrationResults])
+
+    const columns = [
+        { key: 'column1', name: 'Parameter', fieldName: 'key', minWidth: 150, maxWidth: 400, isResizable: true },
+        { key: 'column2', name: 'Value', fieldName: 'value', minWidth: 150, maxWidth: 400, isResizable: true }
+    ];
+
+    return(<div>
+                <Dialog
+                maxWidth={600}
+            hidden={props.hideDialog}
+            dialogContentProps={{
+                type: DialogType.normal,
+                title: 'Calibration Configuration',
+                closeButtonAriaLabel: 'Close',
+            }}
+            modalProps={{
+                isBlocking: false,
+                styles: { main: { maxWidth: 450 } }
+            }}
+        >
+            <DetailsList
+            items={items}
+            columns={columns}
+            selectionMode={SelectionMode.none}
+            label="Calibration Results"
+            layoutMode={DetailsListLayoutMode.justified}
+            selectionPreservedOnEmptyClick={true}
+            ariaLabelForSelectionColumn="Toggle selection"
+            ariaLabelForSelectAllCheckbox="Toggle selection for all items"
+            checkButtonAriaLabel="Row checkbox"
+            setKey="name"
+        />
+
+            <DialogFooter>
+                <DefaultButton onClick={rejectCallback} text="Reject" />
+                <PrimaryButton onClick={acceptCallback} text="Accept" />
+            </DialogFooter>
+        </Dialog>
+    </div>)
+}
+
 const CalibrationCallout = (props) => {
     const [calibrationVariables, setCalibrationVariables] = useState([])
 
@@ -164,6 +250,8 @@ const CalibrationCallout = (props) => {
         props.setHideDialog(true)
 
         props.calibrate(calibrationVariables)
+
+        setCalibrationVariables([])
     }
 
     const exitCallback = () => {

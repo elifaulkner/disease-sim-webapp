@@ -17,6 +17,7 @@ const FooterMenu = (props) => {
  
     return(<div class="Footer-Menu">
       <CommandBar
+        className="Footer-Menu"
         align="right"
         items={items}
         ariaLabel="Use left and right arrow keys to navigate between commands"
