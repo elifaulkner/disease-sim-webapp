@@ -21,8 +21,6 @@ class CalibrationFactory:
         self.confirmed_case_percentage =  CalibrationVariable('confirmed_case_percentage', confirmed_case_percentage, get_index('confirmed_case_percentage'), [0, 1])
 
         self.variables = [self.R0, self.avg_days_infected, self.avg_days_hospitalized, self.avg_days_immune, self.p_hospitalization_given_infection, self.p_death_given_hospitalization, self.confirmed_case_percentage]
-        
-        print(calibration_variables)
 
         for intervention in interventions:
             if ('Intervention:'+intervention.name in calibration_variables):
@@ -138,6 +136,9 @@ def calibrate(calibration_variables, calibration_data, interventions, R0, avg_da
             simdata = sim[:,2]
         if d['state'] == 'deaths':
             simdata = sim[:,4]
+        
+        if(len(simdata) == 0):
+            return [0]
         return simdata[int(d['day'])]*population - int(d['count'])
 
     def optim_function(x):

@@ -20,13 +20,10 @@ def get_state_data(state_code):
         if 'hospitalizedCumulative' in x and x['hospitalizedCumulative'] is not None:
             data.append({'day':days, 'state': 'hospitalized', 'count': x['hospitalizedCumulative']})
         elif 'hospitalizedCurrently' in x and x['hospitalizedCurrently'] is not None:
-            data.append({'day':days, 'state': 'hospitalize_current', 'count': x['hospitalizedCurrently']})
+            data.append({'day':days, 'state': 'hospitalized_current', 'count': x['hospitalizedCurrently']})
         if 'death' in x and x['death'] is not None:
             data.append({'day':days, 'state': 'deaths', 'count': x['death']})
 
-            
-
-    print(data)
     return data
 
 def split_date(string):

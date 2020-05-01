@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { DetailsList, DetailsListLayoutMode, SelectionMode } from 'office-ui-fabric-react/lib/DetailsList';
-import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react';
+import { DefaultButton, PrimaryButton, IconButton } from 'office-ui-fabric-react';
 import { Stack } from 'office-ui-fabric-react/lib/Stack';
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
@@ -10,7 +10,7 @@ import { Selection } from 'office-ui-fabric-react/lib/Selection';
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { CSVReader } from 'react-papaparse'
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
-import { Pivot, PivotItem } from 'office-ui-fabric-react';
+import { Pivot, PivotItem, PivotLinkFormat } from 'office-ui-fabric-react';
 
 const CalibrationPanel = (props) => {
     const [currentData, setCurrentData] = useState({ state: 'confirmed', day: 1, count: 0 })
@@ -88,10 +88,9 @@ const CalibrationPanel = (props) => {
         }
     }, [props.calibrationResults])
 
-
     return (<div>
-        <Pivot>
-            <PivotItem headerText="Upload Data">
+        <Pivot linkFormat={PivotLinkFormat.tabs} styles={{ root: { display: 'flex', flexWrap: 'wrap' } }}>
+            <PivotItem headerText="Upload Data" itemKey="csv-reader">
                 <CSVReader
                     className="csv-reader"
                     onDrop={handleOnDrop}
@@ -113,7 +112,7 @@ const CalibrationPanel = (props) => {
                     <span>deaths,10,3</span>
                 </CSVReader>
             </PivotItem>
-            <PivotItem headerText="Add Manual Data">
+            <PivotItem headerText="Add Manual Data" itemKey="manual"> 
                 <Stack vertical>
                     <Dropdown
                         label="State"
@@ -146,6 +145,9 @@ const CalibrationPanel = (props) => {
                         <DefaultButton text="Add Data" onClick={confirm} className="panel-button" />
                     </Stack>
                 </Stack>
+            </PivotItem>
+            <PivotItem headerText="covidtracking.com State" itemKey="covid-state">
+                <StatePanel setCalibrationData={props.setCalibrationData}/>
             </PivotItem>
         </Pivot>
         <Separator />
@@ -308,6 +310,87 @@ const CalibrationCallout = (props) => {
             </DialogFooter>
         </Dialog>
     )
+}
+
+const StatePanel = (props) => {
+    const states = [{ key: 'AK', text: 'Alaska' },
+    { key: 'AL', text: 'Alabama' },
+    { key: 'AR', text: 'Arkansas' },
+    { key: 'AS', text: 'American Samoa' },
+    { key: 'AZ', text: 'Arizona' },
+    { key: 'CA', text: 'California' },
+    { key: 'CO', text: 'Colorado' },
+    { key: 'CT', text: 'Connecticut' },
+    { key: 'DC', text: 'District Of Columbia' },
+    { key: 'DE', text: 'Delaware' },
+    { key: 'FL', text: 'Florida' },
+    { key: 'GA', text: 'Georgia' },
+    { key: 'GU', text: 'Guam' },
+    { key: 'HI', text: 'Hawaii' },
+    { key: 'IA', text: 'Iowa' },
+    { key: 'ID', text: 'Idaho' },
+    { key: 'IL', text: 'Illinois' },
+    { key: 'IN', text: 'Indiana' },
+    { key: 'KS', text: 'Kansas' },
+    { key: 'KY', text: 'Kentucky' },
+    { key: 'LA', text: 'Louisiana' },
+    { key: 'MA', text: 'Massachusetts' },
+    { key: 'MD', text: 'Maryland' },
+    { key: 'ME', text: 'Maine' },
+    { key: 'MI', text: 'Michigan' },
+    { key: 'MN', text: 'Minnesota' },
+    { key: 'MO', text: 'Missouri' },
+    { key: 'MP', text: 'Northern Mariana Islands' },
+    { key: 'MS', text: 'Mississippi' },
+    { key: 'MT', text: 'Montana' },
+    { key: 'NC', text: 'North Carolina' },
+    { key: 'ND', text: 'North Dakota' },
+    { key: 'NE', text: 'Nebraska' },
+    { key: 'NH', text: 'New Hampshire' },
+    { key: 'NJ', text: 'New Jersey' },
+    { key: 'NM', text: 'New Mexico' },
+    { key: 'NV', text: 'Nevada' },
+    { key: 'NY', text: 'New York' },
+    { key: 'OH', text: 'Ohio' },
+    { key: 'OK', text: 'Oklahoma' },
+    { key: 'OR', text: 'Oregon' },
+    { key: 'PA', text: 'Pennsylvania' },
+    { key: 'PR', text: 'Puerto Rico' },
+    { key: 'RI', text: 'Rhode Island' },
+    { key: 'SC', text: 'South Carolina' },
+    { key: 'SD', text: 'South Dakota' },
+    { key: 'TN', text: 'Tennessee' },
+    { key: 'TX', text: 'Texas' },
+    { key: 'UT', text: 'Utah' },
+    { key: 'VA', text: 'Virginia' },
+    { key: 'VI', text: 'US Virgin Islands' },
+    { key: 'VT', text: 'Vermont' },
+    { key: 'WA', text: 'Washington' },
+    { key: 'WI', text: 'Wisconsin' },
+    { key: 'WV', text: 'West Virginia' },
+    { key: 'WY', text: 'Wyoming' }]
+
+
+    const stateStateSelected = (state) => {
+        if(state !== '') {
+            const requestOptions = {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            }
+        
+            fetch('/api/data/covid/state/'+state.key, requestOptions)
+                .then(response => response.json())
+                .then(data => props.setCalibrationData(data), (error) => {
+                    alert(error);
+                });    
+        }
+    }
+    
+    return(
+        <div>
+            <Dropdown options={states} onChanged={stateStateSelected}/>
+        </div>
+    );
 }
 
 export default CalibrationPanel;
