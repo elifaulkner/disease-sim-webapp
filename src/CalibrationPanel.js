@@ -150,7 +150,7 @@ const CalibrationPanel = (props) => {
         </Pivot>
         <Separator />
         <DefaultButton text="Auto Calibrate" onClick={autoCalibrationHandler} id="calibrate-button" disabled={!autoCalibrateEnabled} className="panel-button" />
-        <CalibrationCallout hideDialog={hideDialog} setHideDialog={setHideDialog} calibrate={props.calibrate} setHideConfirm={setHideCalibrationConfirm}/>
+        <CalibrationCallout hideDialog={hideDialog} setHideDialog={setHideDialog} calibrate={props.calibrate} setHideConfirm={setHideCalibrationConfirm} interventions={props.interventions}/>
         <CalibrationVerification setHideDialog={setHideCalibrationConfirm} hideDialog={hideCalibrationConfirm} data={props.data} setParameterValues={props.setParameterValues} calibrationResults={props.calibrationResults}/>
         <Separator />
         <Stack horizontal horizontalAlign="center">
@@ -299,6 +299,9 @@ const CalibrationCallout = (props) => {
             <Checkbox label="P(hospitalization|infection)" onChange={(ev, v) => checkboxCallback(v, 'p_hospitalization_given_infection')} />
             <Checkbox label="P(death|hospitalization)" onChange={(ev, v) => checkboxCallback(v, 'p_death_given_hospitalization')} />
             <Checkbox label="Confirmed Case Percentage" onChange={(ev, v) => checkboxCallback(v, 'confirmed_case_percentage')} />
+            {props.interventions.map((i) => {
+                return <Checkbox label={"Intervention:"+i.name} onChange={(ev, v) => checkboxCallback(v, "Intervention:"+i.name)} />
+            })}
             <DialogFooter>
                 <DefaultButton onClick={exitCallback} text="Exit" />
                 <PrimaryButton onClick={calibrateCallback} text="Calibrate" />
