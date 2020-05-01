@@ -11,7 +11,7 @@ const FooterMenu = (props) => {
             href:"https://medium.com/infectious-disease-model"
         }, {
             key:'email',
-            text:'Email Support',
+            text:'Feedback',
             href:"mailto:support@infectiousdiseasemodel.com"
         }];
  
