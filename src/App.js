@@ -13,13 +13,13 @@ import CalibrationGraph from './CalibrationGraph';
 
 function App() {
   const [diseaseParameters, setDiseaseParameters] = useState({
-    R0: 2.5,
+    R0: 3.25,
     avg_days_infected: 10.0,
     avg_days_hospitalized: 14.0,
     avg_days_immune: 183.0,
-    p_hospitalization_given_infection: 0.01,
-    p_death_given_hospitalization: 0.05,
-    confirmed_case_percentage: .1
+    p_hospitalization_given_infection: 0.005,
+    p_death_given_hospitalization: 0.1,
+    confirmed_case_percentage: .01
   });
 
   const [simParameters, setSimParameters] = useState({
