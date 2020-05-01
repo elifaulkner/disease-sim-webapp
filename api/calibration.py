@@ -134,6 +134,8 @@ def calibrate(calibration_variables, calibration_data, interventions, R0, avg_da
             simdata = sim[:,6]
         if d['state'] == 'hospitalized':
             simdata = sim[:,7]
+        if d['state'] == 'hospitalized_current':
+            simdata = sim[:,2]
         if d['state'] == 'deaths':
             simdata = sim[:,4]
         return simdata[int(d['day'])]*population - int(d['count'])

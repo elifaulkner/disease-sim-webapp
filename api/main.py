@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request, render_template, jsonify
 from scir import DiseaseModel, Interventions, Intervention
 import calibration as cal
+import covid_tracking
 
 app = Flask(__name__)
 
@@ -84,5 +85,9 @@ def simulate_post():
     t, sim = model.simulate(max_time, max_time+1, init_infection/population, init_recovered/population, interventions)
     return build_json(t, sim)
 
+@app.route('/api/data/covid/state/<code>', methods=['GET'])
+def get_state_data(code):
+    return jsonify(covid_tracking.get_state_data(code))
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
