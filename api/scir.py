@@ -11,6 +11,34 @@ class Interventions:
         self.death_rate = []
         self.confirmed_case_percentage = []
 
+    def _get_active_intervention_scale(self, interventions, t):
+        scale = 1
+        for i in interventions:
+            if(i.start <= t and i.end > t):
+                scale*= i.scale
+        return scale
+
+    def get_infection_rate_scale(self, t):
+        return self._get_active_intervention_scale(self.infection_rate, t)
+
+    def get_infection_time_scale(self, t):
+        return self._get_active_intervention_scale(self.infection_time, t)
+
+    def get_hospitilization_rate_scale(self, t):
+        return self._get_active_intervention_scale(self.hospitilization_rate, t)
+
+    def get_hospitilization_time_scale(self, t):
+        return self._get_active_intervention_scale(self.hospitilization_time, t)
+
+    def get_confirmed_case_percentage_scale(self, t):
+        return self._get_active_intervention_scale(self.confirmed_case_percentage, t)
+
+    def get_death_rate_scale(self, t):
+        return self._get_active_intervention_scale(self.death_rate, t)
+
+    def get_immunity_time_scale(self, t):
+        return self._get_active_intervention_scale(self.immunity_time, t)
+
 class Intervention:
     def __init__(self, name, start, end, scale):
         self.name = name
@@ -67,7 +95,7 @@ class DiseaseModel:
 
 if __name__ == '__main__':
     pop = 325000000
-    model = DiseaseModel(2.5, 10.0, 14.0, 183.0, .01,.05)
+    model = DiseaseModel(2.5, 10.0, 14.0, 183.0, .01,.05, .01)
     interventions = Interventions()
     interventions.infection_rate.append(Intervention("Social Distancing", 45, 150, .8))
     interventions.infection_rate.append(Intervention("Handwashing Media", 20, 200, .95))
