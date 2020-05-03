@@ -17,7 +17,7 @@ function InterventionsPanel(props) {
         { key: 'column2', name: 'Type', fieldName: 'type', minWidth: 100, maxWidth: 200, isResizable: true },
         { key: 'column3', name: 'Start', fieldName: 'start', minWidth: 50, maxWidth: 200, isResizable: true },
         { key: 'column4', name: 'End', fieldName: 'end', minWidth: 50, maxWidth: 200, isResizable: true },
-        { key: 'column5', name: 'Effectiveness', fieldName: 'effectiveness', minWidth: 100, maxWidth: 200, isResizable: true, onRender:(v)=>{return v.effectiveness*100+' %'}}
+        { key: 'column5', name: 'Effectiveness', fieldName: 'effectiveness', minWidth: 100, maxWidth: 200, isResizable: true, onRender:(v)=>{return Math.round(v.effectiveness*1000000)/10000+' %'}}
     ];
 
     const confirm = () => {

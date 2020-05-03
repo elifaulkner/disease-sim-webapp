@@ -51,17 +51,17 @@ def simulate(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_ho
     t, sim = model.simulate(max_time, num_time_points, init_infection)
     return build_json(t, sim)
 
-def intervention_from_dict(dict, sign):
-    return Intervention(dict['name'], float(dict['start']), float(dict['end']), 1+sign*float(dict['effectiveness']))
+def intervention_from_dict(dict, sign=-1):
+    return Intervention(dict['name'], float(dict['start']), float(dict['end']), 1+sign*float(dict['effectiveness']), sign)
 
 def interventions_from_list(list):
     interventions = Interventions()
-    interventions.infection_rate = [intervention_from_dict(x, -1) for x in list if x['type'] == 'infection_rate']
-    interventions.infection_time = [intervention_from_dict(x, -1) for x in list if x['type'] == 'infection_time']
-    interventions.hospitilization_time = [intervention_from_dict(x, -1) for x in list if x['type'] == 'hospitilization_time']
-    interventions.immunity_time = [intervention_from_dict(x, -1) for x in list if x['type'] == 'immunity_time']
-    interventions.hospitilization_rate = [intervention_from_dict(x, -1) for x in list if x['type'] == 'hospitilization_rate']
-    interventions.death_rate = [intervention_from_dict(x, -1) for x in list if x['type'] == 'death_rate']
+    interventions.infection_rate = [intervention_from_dict(x) for x in list if x['type'] == 'infection_rate']
+    interventions.infection_time = [intervention_from_dict(x) for x in list if x['type'] == 'infection_time']
+    interventions.hospitilization_time = [intervention_from_dict(x) for x in list if x['type'] == 'hospitilization_time']
+    interventions.immunity_time = [intervention_from_dict(x) for x in list if x['type'] == 'immunity_time']
+    interventions.hospitilization_rate = [intervention_from_dict(x) for x in list if x['type'] == 'hospitilization_rate']
+    interventions.death_rate = [intervention_from_dict(x) for x in list if x['type'] == 'death_rate']
     interventions.confirmed_case_percentage = [intervention_from_dict(x, 1) for x in list if x['type'] == 'confirmed_case_percentage']
     return interventions
 

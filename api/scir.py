@@ -39,12 +39,19 @@ class Interventions:
     def get_immunity_time_scale(self, t):
         return self._get_active_intervention_scale(self.immunity_time, t)
 
+    def __iter__(self):
+        return iter([*self.infection_rate, *self.infection_time, *self.hospitilization_time, *self.hospitilization_rate, *self.confirmed_case_percentage, *self.death_rate, *self.immunity_time])
+
 class Intervention:
-    def __init__(self, name, start, end, scale):
+    def __init__(self, name, start, end, scale, sign=-1):
         self.name = name
         self.start = start
         self.end = end
         self.scale = scale
+        self.sign=sign
+
+    def to_effectiveness(self):
+        return (1-self.scale)*self.sign*-1
 
 class DiseaseModel:
     def __init__(self, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage):

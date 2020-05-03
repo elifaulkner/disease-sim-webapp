@@ -66,6 +66,8 @@ function App() {
       avg_days_hospitalized:  calibrationResults['avg_days_hospitalized'] || diseaseParameters.avg_days_hospitalized,
       avg_days_immune:  calibrationResults['avg_days_immune'] || diseaseParameters.avg_days_immune
     });
+
+    setInterventions(interventions.map((i) => {return {...i, 'effectiveness' : calibrationResults['Intervention:'+i.name] || i.effectiveness}}))
   }
   
   useEffect(() => {
@@ -141,7 +143,7 @@ function App() {
                 <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} confirmed_case_percentage={diseaseParameters.confirmed_case_percentage}/>
               </div>
               <div class="sidebar">
-                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues}/>
+                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues} interventions={interventions}/>
               </div>
             </div>
           </PivotItem>

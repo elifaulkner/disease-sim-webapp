@@ -13,8 +13,7 @@ COPY api/.flaskenv.prod /app/.flaskenv
 RUN pip install coverage
 RUN pip install -r /app/requirements.txt
 
-RUN python -m unittest discover -s /app/test/ -p Test_*.py
-RUN coverage run -m unittest discover -s /app/test/ -p Test_*.py
+RUN coverage run -m unittest discover -v -s /app/test/ -p Test_*.py
 RUN coverage report -m
 
 FROM node:latest as ui-build
