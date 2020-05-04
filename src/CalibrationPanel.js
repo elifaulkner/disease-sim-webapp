@@ -11,8 +11,6 @@ import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { CSVReader } from 'react-papaparse'
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { Pivot, PivotItem, PivotLinkFormat } from 'office-ui-fabric-react';
-import { registerIcons } from 'office-ui-fabric-react/lib/Styling';
-import { Icon } from 'office-ui-fabric-react/lib/Icon';
 
 const CalibrationPanel = (props) => {
     const [currentData, setCurrentData] = useState({ state: 'confirmed', day: 1, count: 0 })
@@ -31,14 +29,6 @@ const CalibrationPanel = (props) => {
         { key: 'hospitalized', text: 'Hospitalized' },
         { key: 'deaths', text: 'Deaths' }
     ];
-
-    registerIcons({
-        icons: {
-          'covid-tracking-project': (
-            <Icon icon={<object data="img/covid_tracking_project.svg" type="image/svg+xml">The COVID Tracking Project.</object>} imageErrorAs={<Label text="Failed"/>}/>
-          )}
-    });
-
     
     const selection = React.useMemo(() => new Selection({ getKey: i => i.name }), []);
 

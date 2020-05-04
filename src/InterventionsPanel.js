@@ -80,7 +80,6 @@ function InterventionsPanel(props) {
                             step={1}
                             showValue={true}
                             snapToStep
-                            iconProps={{ iconName: 'IncreaseIndentLegacy' }}
                             value={currentIntervention.start}
                             onValidate={(v) => setCurrentIntervention(prevState => { return { ...prevState, start: v } })} />
                         <SpinButton
