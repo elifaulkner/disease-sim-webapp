@@ -10,8 +10,11 @@ import InterventionsChart from './InterventionsChart'
 import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 import CalibrationPanel from './CalibrationPanel';
 import CalibrationGraph from './CalibrationGraph';
+import { initializeIcons } from '@uifabric/icons';
 
 function App() {
+  initializeIcons();
+
   const [diseaseParameters, setDiseaseParameters] = useState({
     R0: 3.25,
     avg_days_infected: 10.0,
@@ -29,6 +32,10 @@ function App() {
     init_recovered: 0
   });
 
+  const setPopulation = (p) => {
+    setSimParameters({...simParameters, population: p})
+  }
+  
   const [interventions, setInterventions] = useState([]);
   const [simulation, setSimulation] = useState({});
 
@@ -143,7 +150,7 @@ function App() {
                 <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} confirmed_case_percentage={diseaseParameters.confirmed_case_percentage}/>
               </div>
               <div class="sidebar">
-                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues} interventions={interventions}/>
+                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues} interventions={interventions} setPopulation={setPopulation}/>
               </div>
             </div>
           </PivotItem>

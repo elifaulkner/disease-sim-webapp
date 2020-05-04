@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { DetailsList, DetailsListLayoutMode, SelectionMode } from 'office-ui-fabric-react/lib/DetailsList';
-import { DefaultButton, PrimaryButton, IconButton } from 'office-ui-fabric-react';
+import { DefaultButton, PrimaryButton, Label } from 'office-ui-fabric-react';
 import { Stack } from 'office-ui-fabric-react/lib/Stack';
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
@@ -11,6 +11,8 @@ import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { CSVReader } from 'react-papaparse'
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { Pivot, PivotItem, PivotLinkFormat } from 'office-ui-fabric-react';
+import { registerIcons } from 'office-ui-fabric-react/lib/Styling';
+import { Icon } from 'office-ui-fabric-react/lib/Icon';
 
 const CalibrationPanel = (props) => {
     const [currentData, setCurrentData] = useState({ state: 'confirmed', day: 1, count: 0 })
@@ -30,6 +32,14 @@ const CalibrationPanel = (props) => {
         { key: 'deaths', text: 'Deaths' }
     ];
 
+    registerIcons({
+        icons: {
+          'covid-tracking-project': (
+            <Icon icon={<object data="img/covid_tracking_project.svg" type="image/svg+xml">The COVID Tracking Project.</object>} imageErrorAs={<Label text="Failed"/>}/>
+          )}
+    });
+
+    
     const selection = React.useMemo(() => new Selection({ getKey: i => i.name }), []);
 
     useEffect(() => {
@@ -112,7 +122,7 @@ const CalibrationPanel = (props) => {
                     <span>deaths,10,3</span>
                 </CSVReader>
             </PivotItem>
-            <PivotItem headerText="Add Manual Data" itemKey="manual"> 
+            <PivotItem headerText="Manual Data" itemKey="manual"> 
                 <Stack vertical>
                     <Dropdown
                         label="State"
@@ -146,8 +156,8 @@ const CalibrationPanel = (props) => {
                     </Stack>
                 </Stack>
             </PivotItem>
-            <PivotItem headerText="covidtracking.com State" itemKey="covid-state">
-                <StatePanel setCalibrationData={props.setCalibrationData}/>
+            <PivotItem itemKey="covid-state" headerText="COVID Tracking Project">
+                <StatePanel setCalibrationData={props.setCalibrationData} setPopulation={props.setPopulation}/>
             </PivotItem>
         </Pivot>
         <Separator />
@@ -313,62 +323,58 @@ const CalibrationCallout = (props) => {
 }
 
 const StatePanel = (props) => {
-    const states = [{ key: 'AK', text: 'Alaska' },
-    { key: 'AL', text: 'Alabama' },
-    { key: 'AR', text: 'Arkansas' },
-    { key: 'AS', text: 'American Samoa' },
-    { key: 'AZ', text: 'Arizona' },
-    { key: 'CA', text: 'California' },
-    { key: 'CO', text: 'Colorado' },
-    { key: 'CT', text: 'Connecticut' },
-    { key: 'DC', text: 'District Of Columbia' },
-    { key: 'DE', text: 'Delaware' },
-    { key: 'FL', text: 'Florida' },
-    { key: 'GA', text: 'Georgia' },
-    { key: 'GU', text: 'Guam' },
-    { key: 'HI', text: 'Hawaii' },
-    { key: 'IA', text: 'Iowa' },
-    { key: 'ID', text: 'Idaho' },
-    { key: 'IL', text: 'Illinois' },
-    { key: 'IN', text: 'Indiana' },
-    { key: 'KS', text: 'Kansas' },
-    { key: 'KY', text: 'Kentucky' },
-    { key: 'LA', text: 'Louisiana' },
-    { key: 'MA', text: 'Massachusetts' },
-    { key: 'MD', text: 'Maryland' },
-    { key: 'ME', text: 'Maine' },
-    { key: 'MI', text: 'Michigan' },
-    { key: 'MN', text: 'Minnesota' },
-    { key: 'MO', text: 'Missouri' },
-    { key: 'MP', text: 'Northern Mariana Islands' },
-    { key: 'MS', text: 'Mississippi' },
-    { key: 'MT', text: 'Montana' },
-    { key: 'NC', text: 'North Carolina' },
-    { key: 'ND', text: 'North Dakota' },
-    { key: 'NE', text: 'Nebraska' },
-    { key: 'NH', text: 'New Hampshire' },
-    { key: 'NJ', text: 'New Jersey' },
-    { key: 'NM', text: 'New Mexico' },
-    { key: 'NV', text: 'Nevada' },
-    { key: 'NY', text: 'New York' },
-    { key: 'OH', text: 'Ohio' },
-    { key: 'OK', text: 'Oklahoma' },
-    { key: 'OR', text: 'Oregon' },
-    { key: 'PA', text: 'Pennsylvania' },
-    { key: 'PR', text: 'Puerto Rico' },
-    { key: 'RI', text: 'Rhode Island' },
-    { key: 'SC', text: 'South Carolina' },
-    { key: 'SD', text: 'South Dakota' },
-    { key: 'TN', text: 'Tennessee' },
-    { key: 'TX', text: 'Texas' },
-    { key: 'UT', text: 'Utah' },
-    { key: 'VA', text: 'Virginia' },
-    { key: 'VI', text: 'US Virgin Islands' },
-    { key: 'VT', text: 'Vermont' },
-    { key: 'WA', text: 'Washington' },
-    { key: 'WI', text: 'Wisconsin' },
-    { key: 'WV', text: 'West Virginia' },
-    { key: 'WY', text: 'Wyoming' }]
+    const states = [{'population': 4903185, 'text':'Alabama', 'key':'AL'},
+    {'population': 731545, 'text':'Alaska', 'key':'AK'},
+    {'population': 7278717, 'text':'Arizona', 'key':'AZ'},
+    {'population': 3017804, 'text':'Arkansas', 'key':'AR'},
+    {'population': 39512223, 'text':'California', 'key':'CA'},
+    {'population': 5758736, 'text':'Colorado', 'key':'CO'},
+    {'population': 3565287, 'text':'Connecticut', 'key':'CT'},
+    {'population': 973764, 'text':'Delaware', 'key':'DE'},
+    {'population': 705749, 'text':'District of Columbia', 'key':'DC'},
+    {'population': 21477737, 'text':'Florida', 'key':'FL'},
+    {'population': 10617423, 'text':'Georgia', 'key':'GA'},
+    {'population': 1415872, 'text':'Hawaii', 'key':'HI'},
+    {'population': 1787065, 'text':'Idaho', 'key':'ID'},
+    {'population': 12671821, 'text':'Illinois', 'key':'IL'},
+    {'population': 6732219, 'text':'Indiana', 'key':'IN'},
+    {'population': 3155070, 'text':'Iowa', 'key':'IA'},
+    {'population': 2913314, 'text':'Kansas', 'key':'KS'},
+    {'population': 4467673, 'text':'Kentucky', 'key':'KY'},
+    {'population': 4648794, 'text':'Louisiana', 'key':'LA'},
+    {'population': 1344212, 'text':'Maine', 'key':'ME'},
+    {'population': 6045680, 'text':'Maryland', 'key':'MD'},
+    {'population': 6892503, 'text':'Massachusetts', 'key':'MA'},
+    {'population': 9986857, 'text':'Michigan', 'key':'MI'},
+    {'population': 5639632, 'text':'Minnesota', 'key':'MN'},
+    {'population': 2976149, 'text':'Mississippi', 'key':'MS'},
+    {'population': 6137428, 'text':'Missouri', 'key':'MO'},
+    {'population': 1068778, 'text':'Montana', 'key':'MT'},
+    {'population': 1934408, 'text':'Nebraska', 'key':'NE'},
+    {'population': 3080156, 'text':'Nevada', 'key':'NV'},
+    {'population': 1359711, 'text':'New Hampshire', 'key':'NH'},
+    {'population': 8882190, 'text':'New Jersey', 'key':'NJ'},
+    {'population': 2096829, 'text':'New Mexico', 'key':'NM'},
+    {'population': 19453561, 'text':'New York', 'key':'NY'},
+    {'population': 10488084, 'text':'North Carolina', 'key':'NC'},
+    {'population': 762062, 'text':'North Dakota', 'key':'ND'},
+    {'population': 11689100, 'text':'Ohio', 'key':'OH'},
+    {'population': 3956971, 'text':'Oklahoma', 'key':'OK'},
+    {'population': 4217737, 'text':'Oregon', 'key':'OR'},
+    {'population': 12801989, 'text':'Pennsylvania', 'key':'PA'},
+    {'population': 3193694, 'text':'Puerto Rico', 'key':'PR'},
+    {'population': 1059361, 'text':'Rhode Island', 'key':'RI'},
+    {'population': 5148714, 'text':'South Carolina', 'key':'SC'},
+    {'population': 884659, 'text':'South Dakota', 'key':'SD'},
+    {'population': 6829174, 'text':'Tennessee', 'key':'TN'},
+    {'population': 28995881, 'text':'Texas', 'key':'TX'},
+    {'population': 3205958, 'text':'Utah', 'key':'UT'},
+    {'population': 623989, 'text':'Vermont', 'key':'VT'},
+    {'population': 8535519, 'text':'Virginia', 'key':'VA'},
+    {'population': 7614893, 'text':'Washington', 'key':'WA'},
+    {'population': 1792147, 'text':'West Virginia', 'key':'WV'},
+    {'population': 5822434, 'text':'Wisconsin', 'key':'WI'},
+    {'population': 578759, 'text':'Wyoming', 'key':'WY'}]
 
 
     const stateStateSelected = (state) => {
@@ -383,6 +389,8 @@ const StatePanel = (props) => {
                 .then(data => props.setCalibrationData(data), (error) => {
                     alert(error);
                 });    
+
+            props.setPopulation(state['population'])
         }
     }
     
