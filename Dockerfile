@@ -1,3 +1,21 @@
+FROM python as unittest
+
+RUN pip install --upgrade pip
+
+RUN pip install numpy scipy pandas matplotlib gunicorn
+
+WORKDIR /app/
+
+COPY api/ /app/
+COPY api/test/ /app/test
+COPY api/.flaskenv.prod /app/.flaskenv
+
+RUN pip install coverage
+RUN pip install -r /app/requirements.txt
+
+RUN coverage run -m unittest discover -v -s /app/test/ -p Test_*.py
+RUN coverage report -m
+
 FROM node:latest as ui-build
 
 WORKDIR /usr/src/app/
