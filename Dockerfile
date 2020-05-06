@@ -1,20 +1,18 @@
-FROM python as unittest
-
-RUN pip install --upgrade pip
-
-RUN pip install numpy scipy pandas matplotlib gunicorn
+FROM continuumio/miniconda3 as unittest
 
 WORKDIR /app/
+
+COPY api/environment.yml /app/
+RUN conda env create -f environment.yml 
 
 COPY api/ /app/
 COPY api/test/ /app/test
 COPY api/.flaskenv.prod /app/.flaskenv
 
-RUN pip install coverage
-RUN pip install -r /app/requirements.txt
+RUN conda install -n idm coverage
 
-RUN coverage run -m unittest discover -v -s /app/test/ -p Test_*.py
-RUN coverage report -m
+RUN conda run -n idm coverage run -m unittest discover -v -s /app/test/ -p Test_*.py
+RUN conda run -n idm coverage report -m
 
 FROM node:latest as ui-build
 
@@ -26,7 +24,7 @@ RUN ls /usr/src/app/
 RUN npm install
 RUN yarn build
 
-FROM python
+FROM continuumio/miniconda3
 
 RUN apt-get update
 RUN apt-cache search nginx
@@ -37,17 +35,16 @@ COPY --from=ui-build /usr/src/app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
-RUN pip install --upgrade pip
-
-RUN pip install numpy scipy pandas matplotlib gunicorn
-
 WORKDIR /app/
+
+COPY api/environment.yml /app/
+RUN conda env create -f environment.yml 
+
 
 COPY api/ /app/
 COPY api/.flaskenv.prod /app/.flaskenv
 
-RUN pip install flask
-RUN pip install -r /app/requirements.txt
+SHELL ["conda", "run", "-n", "idm", "/bin/bash", "-c"]
 
 COPY docker_startup.sh /app/
 RUN chmod +x docker_startup.sh

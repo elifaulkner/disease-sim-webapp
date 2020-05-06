@@ -32,9 +32,6 @@
     ],
     "appService.defaultWebAppToDeploy": "/subscriptions/a28e742c-45d9-4046-9c73-5693339cfee3/resourceGroups/DiseaseSim/providers/Microsoft.Web/sites/diseasesimulation",
     "appService.deploySubpath": "",
-    //"python.pythonPath": "api\\.env\\Scripts\\python.exe",
-    //"python.pipenvPath": "api\\.env\\Scripts\\pip.exe",
-    "python.venvPath": "api\\.env",
     "python.testing.unittestArgs": [
         "-v",
         "-s",
@@ -45,5 +42,7 @@
     "python.testing.pytestEnabled": false,
     "python.testing.nosetestsEnabled": false,
     "python.testing.unittestEnabled": true,
-    "python.testing.cwd":"./api"
+    "python.testing.cwd": "./api",
+    "python.venvPath": ".env",
+    "python.pythonPath": ".env\\python.exe",
 }

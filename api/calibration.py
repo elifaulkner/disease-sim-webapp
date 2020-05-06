@@ -34,7 +34,7 @@ class CalibrationFactory:
     def build_disease_model(self, x):
         for iv in self.variables:
             iv.value(x)
-        return DiseaseModel(self.R0.value(x), self.avg_days_infected.value(x), self.avg_days_hospitalized.value(x), self.avg_days_immune.value(x), self.p_hospitalization_given_infection.value(x), self.p_death_given_hospitalization.value(x), self.confirmed_case_percentage.value(x))
+        return DiseaseModel(self.R0.value(x), self.avg_days_infected.value(x), self.avg_days_hospitalized.value(x), self.avg_days_immune.value(x), self.p_hospitalization_given_infection.value(x), self.p_death_given_hospitalization.value(x), self.confirmed_case_percentage.value(x), self.interventions)
 
     def build_interventions(self, x):
         return self.interventions
@@ -143,7 +143,7 @@ def calibrate(calibration_variables, calibration_data, interventions, R0, avg_da
 
     def optim_function(x):
         model = factory.build_disease_model(x)
-        t, sol = model.simulate(max_date+1, max_date+2, init_infection/population, init_recovered/population, factory.build_interventions(x))
+        t, sol = model.simulate(max_date+1, max_date+2, init_infection/population, init_recovered/population)
 
         err = [get_error(x, sol) for x in calibration_data]
         return err
@@ -189,7 +189,7 @@ if __name__ == '__main__':
 
     
     model = factory.build_disease_model(sln.x)
-    t, sol = model.simulate( 30, 31, 6/pop, 0, interventions)
+    t, sol = model.simulate( 30, 31, 6/pop, 0)
     import matplotlib.pyplot as plt
     plt.plot(t, sol[:, 6]*pop, 'r', label='Infected')
     plt.plot(t, sol[:, 7]*pop, 'y', label='Hospitalized')

@@ -26,5 +26,7 @@ api/.env
 api/__pycache__
 api/test/__pycache__/
 
+.env/
+
 .vscode
 .vscode/settings.json

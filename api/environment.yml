@@ -1,0 +1,13 @@
+name: idm
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - scipy
+  - matplotlib
+  - flask
+  - pymc3=3.8
+  - requests
+  - pip:
+    - gunicorn==20.0.4
+    - python-dotenv==0.13.0

@@ -48,7 +48,7 @@ def calibrate():
 
 @app.route('/api/simulate/<float:R0>/<float:avg_days_infected>/<float:avg_days_hospitalized>/<float:avg_days_immune>/<float:p_hospitalization_given_infection>/<float:p_death_given_hospitalization>/<int:max_time>/<int:num_time_points>/<float:init_infection>', methods=['GET'])
 def simulate(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization,max_time, num_time_points, init_infection):
-    model = DiseaseModel(float(R0), float(avg_days_infected), float(avg_days_hospitalized), avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization)
+    model = DiseaseModel(float(R0), float(avg_days_infected), float(avg_days_hospitalized), avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, Interventions())
     t, sim = model.simulate(max_time, num_time_points, init_infection)
     return build_json(t, sim)
 
@@ -81,8 +81,8 @@ def simulate_post():
     population = float(request.json['sim_parameters']['population'])
     
     interventions = interventions_from_list(request.json['interventions'])
-    model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage)
-    t, sim = model.simulate(max_time, max_time+1, init_infection/population, init_recovered/population, interventions)
+    model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, interventions)
+    t, sim = model.simulate(max_time, max_time+1, init_infection/population, init_recovered/population)
     return build_json(t, sim)
 
 @app.route('/api/data/covid/state/<code>', methods=['GET'])

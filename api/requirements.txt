@@ -1,5 +1,0 @@
-numpy
-scipy
-flask
-python-dotenv
-requests
