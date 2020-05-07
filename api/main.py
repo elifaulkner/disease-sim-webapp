@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request, render_template, jsonify
 from scir import DiseaseModel, Interventions, Intervention
 import calibration as cal
+import bayesian_calibration as bayesian_cal
 import covid_tracking
 
 app = Flask(__name__)
@@ -42,9 +43,17 @@ def calibrate():
 
     calibration_data = request.json['calibration_data']
     calibration_variables = request.json['calibration_variables']
-    [sln, factory, sol] = cal.calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
 
-    return jsonify(sln)
+    if(request.json['calibration_method'] == 'least_squares'):
+        [sln, factory, sol] = cal.calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
+        return jsonify(sln)
+
+    if(request.json['calibration_method'] == 'vi'):
+        sln = bayesian_cal.calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
+        print(sln)
+        return jsonify(sln)
+    
+    return jsonify({})
 
 @app.route('/api/simulate/<float:R0>/<float:avg_days_infected>/<float:avg_days_hospitalized>/<float:avg_days_immune>/<float:p_hospitalization_given_infection>/<float:p_death_given_hospitalization>/<int:max_time>/<int:num_time_points>/<float:init_infection>', methods=['GET'])
 def simulate(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization,max_time, num_time_points, init_infection):

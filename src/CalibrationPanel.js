@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { DetailsList, DetailsListLayoutMode, SelectionMode } from 'office-ui-fabric-react/lib/DetailsList';
-import { DefaultButton, PrimaryButton, Label } from 'office-ui-fabric-react';
+import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react';
 import { Stack } from 'office-ui-fabric-react/lib/Stack';
 import { Separator } from 'office-ui-fabric-react/lib/Separator';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
@@ -251,7 +251,7 @@ const CalibrationCallout = (props) => {
     const calibrateCallback = () => {
         props.setHideDialog(true)
 
-        props.calibrate(calibrationVariables)
+        props.calibrate(calibrationVariables, calibrationMethod.key)
 
         setCalibrationVariables([])
     }
@@ -260,10 +260,11 @@ const CalibrationCallout = (props) => {
         props.setHideDialog(true)
     }
 
-    const options = [{ key: 'least_squares', text: 'Least Squares' }]
 
-    const calibrationMethodChanged = () => {
-
+    const options = [{ key: 'least_squares', text: 'Least Squares' }, { key: 'vi', text: 'Bayesian Variational Inference' }]
+    const [calibrationMethod, setCalibrationMethod] = useState(options[0])
+    const calibrationMethodChanged = (m) => {
+        setCalibrationMethod(m)
     }
 
     const checkboxCallback = (checked, variable) => {
@@ -291,7 +292,6 @@ const CalibrationCallout = (props) => {
             <Dropdown
                 label="Calibration Method"
                 options={options}
-                defaultSelectedKey="least_squares"
                 onChanged={calibrationMethodChanged}
             />
             <Checkbox label="Basic Reproductive Number" onChange={(ev, v) => checkboxCallback(v, 'R0')} />
