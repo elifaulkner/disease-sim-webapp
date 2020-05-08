@@ -1,2 +1,4 @@
+echo "Starting nginx"
 /usr/sbin/nginx
-gunicorn --bind=0.0.0.0:5000 main:app
+echo "Starting API"
+conda run -n idm gunicorn --bind=0.0.0.0:5000 main:app

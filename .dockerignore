@@ -4,3 +4,4 @@ build/
 api/__pycache__/
 api/.env/
 api/test/__pycache__/
+.env/

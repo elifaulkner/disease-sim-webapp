@@ -81,7 +81,7 @@ function App() {
     setCalibrationResults({});
   }, [diseaseParameters])
 
-  const calibrate = (variables) => {
+  const calibrate = (variables, method) => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -90,7 +90,8 @@ function App() {
         sim_parameters: simParameters,
         interventions: interventions,
         calibration_data: calibrationData,
-        calibration_variables: variables
+        calibration_variables: variables,
+        calibration_method: method
       })
     }
 
