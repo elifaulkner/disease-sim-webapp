@@ -1,11 +1,15 @@
+import os
 from flask import Flask
-from flask import request, render_template, jsonify
+from flask import request, render_template, jsonify, redirect, session, make_response
 from scir import DiseaseModel, Interventions, Intervention
 import calibration as cal
 import bayesian_calibration as bayesian_cal
 import covid_tracking
+import requests
+from fusionauth.fusionauth_client import FusionAuthClient
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY') if os.environ.get('FLASK_SECRET_KEY') else 'lsdhfalwehflawehfla'
 
 def build_json(t, sim):
     return jsonify({
@@ -24,6 +28,26 @@ def build_json(t, sim):
 def hello():
     print('Hello')
     return 'Hello'
+
+@app.route('/api/callback', methods=['GET'])
+def callback():
+    api_key = os.environ.get('FUSION_API_KEY')
+    client_id = os.environ.get('FUSION_CLIENT_ID')
+    client_secret = os.environ.get('FUSION_CLIENT_SECRET')
+
+    fusion_client = FusionAuthClient(api_key, 'http://localhost:9011')
+    print(request.args.get('code'))
+    response = fusion_client.exchange_o_auth_code_for_access_token(request.args.get('code'), 'http://localhost:5000/api/callback', client_id=client_id, client_secret=client_secret)
+
+    print(response.status)
+    if(response.was_successful()):
+        session['userId'] = response.success_response['userId']
+        session['token_type'] = response.success_response['token_type']
+        session['access_token'] = response.success_response['access_token']
+        session['expires_in'] = response.success_response['expires_in']
+        return redirect(request.referrer)
+    else:
+        return jsonify(response.error_response)
 
 @app.route('/api/calibrate', methods=['POST'])
 def calibrate():
@@ -77,6 +101,7 @@ def interventions_from_list(list):
 
 @app.route('/api/simulate', methods=['POST'])
 def simulate_post():
+    print(session.get('userId'))
     R0 = float(request.json['disease_parameters']['R0'])
     avg_days_infected = float(request.json['disease_parameters']['avg_days_infected'])
     avg_days_hospitalized = float(request.json['disease_parameters']['avg_days_hospitalized'])
