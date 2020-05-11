@@ -46,5 +46,5 @@
     "python.venvPath": ".env",
     "python.pythonPath": ".env\\python.exe",
     //"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
-    "terminal.integrated.shellArgs.windows": ["--init-file", ".vscode/.bash_profile"]
+    //"terminal.integrated.shellArgs.windows": ["--init-file", ".vscode/.bash_profile"]
 }
