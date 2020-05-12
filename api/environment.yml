@@ -11,4 +11,4 @@ dependencies:
   - pip:
     - gunicorn==20.0.4
     - python-dotenv==0.13.0
-    - fusionauth-client=1.16.0
+    - fusionauth-client

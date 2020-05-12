@@ -1,9 +1,9 @@
 import os
 from flask import Flask
-from flask import request, render_template, jsonify, redirect, session, make_response
+from flask import request, render_template, jsonify, redirect, session, make_response, url_for
 from scir import DiseaseModel, Interventions, Intervention
 import calibration as cal
-import bayesian_calibration as bayesian_cal
+#import bayesian_calibration as bayesian_cal
 import covid_tracking
 import requests
 from fusionauth.fusionauth_client import FusionAuthClient
@@ -29,15 +29,31 @@ def hello():
     print('Hello')
     return 'Hello'
 
-@app.route('/api/callback', methods=['GET'])
-def callback():
+@app.route('/api/auth/login', methods=['GET'])
+def auth_login():
     api_key = os.environ.get('FUSION_API_KEY')
     client_id = os.environ.get('FUSION_CLIENT_ID')
     client_secret = os.environ.get('FUSION_CLIENT_SECRET')
+    fusion_url = os.environ.get('FUSION_URL')
 
-    fusion_client = FusionAuthClient(api_key, 'http://localhost:9011')
+    fusion_client = FusionAuthClient(api_key, fusion_url)
+    callback = request.host_url+'api/auth/callback'
+    print(fusion_url)
+
+    return redirect(fusion_url+'/oauth2/authorize?client_id='+client_id+'&response_type=code&redirect_uri='+callback, code=302)
+
+@app.route('/api/auth/callback', methods=['GET'])
+def auth_callback():
+    api_key = os.environ.get('FUSION_API_KEY')
+    client_id = os.environ.get('FUSION_CLIENT_ID')
+    client_secret = os.environ.get('FUSION_CLIENT_SECRET')
+    fusion_url = os.environ.get('FUSION_URL')
+
+    fusion_client = FusionAuthClient(api_key, fusion_url)
     print(request.args.get('code'))
-    response = fusion_client.exchange_o_auth_code_for_access_token(request.args.get('code'), 'http://localhost:5000/api/callback', client_id=client_id, client_secret=client_secret)
+    callback = request.base_url
+
+    response = fusion_client.exchange_o_auth_code_for_access_token(request.args.get('code'), callback, client_id=client_id, client_secret=client_secret)
 
     print(response.status)
     if(response.was_successful()):
@@ -49,6 +65,24 @@ def callback():
     else:
         return jsonify(response.error_response)
 
+@app.route('/api/auth/user', methods=['GET'])
+def auth_user():
+    if 'userId' in session:
+        return session['userId']
+    return ''
+
+@app.route('/api/auth/logout', methods=['GET'])
+def auth_logout():
+    api_key = os.environ.get('FUSION_API_KEY')
+    client_id = os.environ.get('FUSION_CLIENT_ID')
+    client_secret = os.environ.get('FUSION_CLIENT_SECRET')
+    fusion_url = os.environ.get('FUSION_URL')
+
+    fusion_client = FusionAuthClient(api_key, fusion_url)
+    fusion_client.logout(False)
+
+    return redirect(request.referrer)
+    
 @app.route('/api/calibrate', methods=['POST'])
 def calibrate():
     R0 = float(request.json['disease_parameters']['R0'])
@@ -72,10 +106,10 @@ def calibrate():
         [sln, factory, sol] = cal.calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
         return jsonify(sln)
 
-    if(request.json['calibration_method'] == 'vi'):
-        sln = bayesian_cal.calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
-        print(sln)
-        return jsonify(sln)
+    # if(request.json['calibration_method'] == 'vi'):
+    #     sln = bayesian_cal.calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
+    #     print(sln)
+    #     return jsonify(sln)
     
     return jsonify({})
 

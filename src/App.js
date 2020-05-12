@@ -40,7 +40,15 @@ function App() {
   const [simulation, setSimulation] = useState({});
 
   const [calibrationData, setCalibrationData] = useState([]);
+  const [user, setUser] = useState([])
 
+  useEffect(() => {
+    fetch('/api/auth/user')
+    .then(response => response.json())
+    .then(data => setUser(data), (error) => {
+      setUser('')
+    });
+  }, [])
 
   const simulate = () => {
     const requestOptions = {
@@ -105,8 +113,8 @@ function App() {
   useEffect(simulate, [diseaseParameters, simParameters, interventions]);
 
   return (
-
     <div className="App">
+        {user}
         <FooterMenu class="footer" />
         <Pivot linkSize={PivotLinkSize.large}>
           <PivotItem headerText="Model Configuration" linkFormat={PivotLinkFormat.tabs}>

@@ -30,3 +30,5 @@ api/test/__pycache__/
 
 .vscode
 .vscode/settings.json
+auth/.env
+docker/.env

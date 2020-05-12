@@ -1,6 +1,20 @@
 version: '3'
 
 services:
+  app:
+    image: elifaulkner/diseasesimwebapp:latest
+    environment:
+      FUSION_API_KEY: ${FUSION_API_KEY}
+      FUSION_CLIENT_ID: ${FUSION_CLIENT_ID}
+      FUSION_CLIENT_SECRET: ${FUSION_CLIENT_SECRET}
+      FUSION_URL: fusionauth
+    depends_on:
+      - fusionauth
+    ports:
+      - 80:80/tcp
+    networks:
+      - app
+    restart: unless-stopped
   db:
     image: postgres:9.6
     environment:
@@ -12,7 +26,7 @@ services:
       - db
     restart: unless-stopped
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - auth_db_data:/var/lib/postgresql/data
 
   fusionauth:
     image: fusionauth/fusionauth-app:latest
@@ -29,17 +43,21 @@ services:
       FUSIONAUTH_URL: http://fusionauth:9011
     networks:
      - db
+     - app
     restart: unless-stopped
     ports:
       - 9011:9011
     volumes:
-      - fa_config:/usr/local/fusionauth/config
-      
+      - auth_fa_config:/usr/local/fusionauth/config
 
 networks:
   db:
     driver: bridge
+  app:
+    driver: bridge
 
 volumes:
-  db_data:
-  fa_config:
+  auth_db_data:
+    external: true
+  auth_fa_config:
+    external: true
