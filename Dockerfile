@@ -40,7 +40,6 @@ WORKDIR /app/
 COPY api/environment.yml /app/
 RUN conda env create -f environment.yml 
 
-
 COPY api/ /app/
 COPY api/.flaskenv.prod /app/.flaskenv
 

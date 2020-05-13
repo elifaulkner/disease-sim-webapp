@@ -34,12 +34,11 @@ def auth_login():
     api_key = os.environ.get('FUSION_API_KEY')
     client_id = os.environ.get('FUSION_CLIENT_ID')
     client_secret = os.environ.get('FUSION_CLIENT_SECRET')
-    fusion_url = os.environ.get('FUSION_URL')
+    fusion_url = os.environ.get('FUSION_URL_PUBLIC')
+    app_url = os.environ.get('APP_URL')
+    callback = app_url+'/api/auth/callback'
 
-    fusion_client = FusionAuthClient(api_key, fusion_url)
-    callback = request.host_url+'api/auth/callback'
     print(fusion_url)
-
     return redirect(fusion_url+'/oauth2/authorize?client_id='+client_id+'&response_type=code&redirect_uri='+callback, code=302)
 
 @app.route('/api/auth/callback', methods=['GET'])
@@ -48,10 +47,16 @@ def auth_callback():
     client_id = os.environ.get('FUSION_CLIENT_ID')
     client_secret = os.environ.get('FUSION_CLIENT_SECRET')
     fusion_url = os.environ.get('FUSION_URL')
+    app_url = os.environ.get('APP_URL')
 
     fusion_client = FusionAuthClient(api_key, fusion_url)
     print(request.args.get('code'))
-    callback = request.base_url
+    callback = app_url+'/api/auth/callback'
+
+    print(callback)
+
+    print(fusion_url)
+    print(api_key)
 
     response = fusion_client.exchange_o_auth_code_for_access_token(request.args.get('code'), callback, client_id=client_id, client_secret=client_secret)
 
@@ -73,15 +78,13 @@ def auth_user():
 
 @app.route('/api/auth/logout', methods=['GET'])
 def auth_logout():
-    api_key = os.environ.get('FUSION_API_KEY')
     client_id = os.environ.get('FUSION_CLIENT_ID')
-    client_secret = os.environ.get('FUSION_CLIENT_SECRET')
     fusion_url = os.environ.get('FUSION_URL')
+    app_url = os.environ.get('APP_URL')
+    
+    url = fusion_url+'/oauth2/logout?client_id='+client_id+'&post_logout_redirect_uri='+app_url
 
-    fusion_client = FusionAuthClient(api_key, fusion_url)
-    fusion_client.logout(False)
-
-    return redirect(request.referrer)
+    return redirect(url)
     
 @app.route('/api/calibrate', methods=['POST'])
 def calibrate():

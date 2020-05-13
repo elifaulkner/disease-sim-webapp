@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {} from 'react';
 import { CommandBar, ICommandBarItemProps } from 'office-ui-fabric-react/lib/CommandBar';
 
 const FooterMenu = (props) => {
+
   const items: ICommandBarItemProps[] = [
     {
       key: 'blog',
