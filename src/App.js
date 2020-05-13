@@ -46,7 +46,7 @@ function App() {
     fetch('/api/auth/user')
     .then(response => response.json())
     .then(data => setUser(data), (error) => {
-      setUser('')
+      setUser(null)
     });
   }, [])
 
