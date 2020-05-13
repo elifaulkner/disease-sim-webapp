@@ -53,8 +53,6 @@ def auth_callback():
  
     response = fusion_client.exchange_o_auth_code_for_access_token(request.args.get('code'), app_url+'/api/auth/callback', client_id=client_id, client_secret=client_secret)
 
-    #response = requests.post(fusion_url+'/oauth2/token?client_id='+client_id+'&grant_type=authorization_code&redirect_uri='+app_url+'&code='+request.args.get('code'))
-
     print(response.status)
     if(response.was_successful()):
         session['userId'] = response.success_response['userId']
@@ -74,7 +72,7 @@ def auth_user():
 @app.route('/api/auth/logout', methods=['GET'])
 def auth_logout():
     client_id = os.environ.get('FUSION_CLIENT_ID')
-    fusion_url = os.environ.get('FUSION_URL')
+    fusion_url = os.environ.get('FUSION_URL_PUBLIC')
     app_url = os.environ.get('APP_URL')
 
     url = fusion_url+'/oauth2/logout?client_id='+client_id+'&post_logout_redirect_uri='+app_url
