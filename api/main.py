@@ -50,15 +50,10 @@ def auth_callback():
     app_url = os.environ.get('APP_URL')
 
     fusion_client = FusionAuthClient(api_key, fusion_url)
-    print(request.args.get('code'))
-    callback = app_url+'/api/auth/callback'
+ 
+    response = fusion_client.exchange_o_auth_code_for_access_token(request.args.get('code'), app_url+'/api/auth/callback', client_id=client_id, client_secret=client_secret)
 
-    print(callback)
-
-    print(fusion_url)
-    print(api_key)
-
-    response = fusion_client.exchange_o_auth_code_for_access_token(request.args.get('code'), callback, client_id=client_id, client_secret=client_secret)
+    #response = requests.post(fusion_url+'/oauth2/token?client_id='+client_id+'&grant_type=authorization_code&redirect_uri='+app_url+'&code='+request.args.get('code'))
 
     print(response.status)
     if(response.was_successful()):
@@ -66,7 +61,7 @@ def auth_callback():
         session['token_type'] = response.success_response['token_type']
         session['access_token'] = response.success_response['access_token']
         session['expires_in'] = response.success_response['expires_in']
-        return redirect(request.referrer)
+        return redirect(app_url)
     else:
         return jsonify(response.error_response)
 
@@ -74,14 +69,14 @@ def auth_callback():
 def auth_user():
     if 'userId' in session:
         return session['userId']
-    return ''
+    return make_response(code=404)
 
 @app.route('/api/auth/logout', methods=['GET'])
 def auth_logout():
     client_id = os.environ.get('FUSION_CLIENT_ID')
     fusion_url = os.environ.get('FUSION_URL')
     app_url = os.environ.get('APP_URL')
-    
+
     url = fusion_url+'/oauth2/logout?client_id='+client_id+'&post_logout_redirect_uri='+app_url
 
     return redirect(url)
