@@ -29,6 +29,7 @@ FROM continuumio/miniconda3
 RUN apt-get update
 RUN apt-cache search nginx
 RUN apt-get --yes install nginx-full
+RUN apt-get --yes install libpq-dev
 
 COPY --from=ui-build /usr/src/app/build /usr/share/nginx/html
 

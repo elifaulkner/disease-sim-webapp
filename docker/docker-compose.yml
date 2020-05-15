@@ -10,6 +10,7 @@ services:
       FUSION_URL: http://fusionauth:9011
       FUSION_URL_PUBLIC: http://localhost:9011
       APP_URL: http://localhost
+      IDM_DB_PASSWORD: ${IDM_DB_PASSWORD}
     depends_on:
       - fusionauth
     ports:
