@@ -22,7 +22,7 @@ function InterventionsPanel(props) {
 
     const confirm = () => {
         if (props.interventions.some(i => i.name === currentIntervention.name)) {
-            alert('duplicate name, choose another')
+            props.setErrorMessage('duplicate name, choose another')
             return
         }
 
@@ -53,7 +53,7 @@ function InterventionsPanel(props) {
             const remaining = props.interventions.filter(x => !selectedItems.includes(x));
             props.setInterventions(remaining);
         } else {
-            alert('nothing selected to delete')
+            props.setErrorMessage('nothing selected to delete')
         }
     }
 

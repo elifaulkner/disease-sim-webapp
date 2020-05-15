@@ -7,6 +7,7 @@ import calibration as cal
 import covid_tracking
 import requests
 from fusionauth.fusionauth_client import FusionAuthClient
+import data
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY') if os.environ.get('FLASK_SECRET_KEY') else 'lsdhfalwehflawehfla'
@@ -131,27 +132,78 @@ def interventions_from_list(list):
 
 @app.route('/api/simulate', methods=['POST'])
 def simulate_post():
-    print(session.get('userId'))
-    R0 = float(request.json['disease_parameters']['R0'])
-    avg_days_infected = float(request.json['disease_parameters']['avg_days_infected'])
-    avg_days_hospitalized = float(request.json['disease_parameters']['avg_days_hospitalized'])
-    avg_days_immune = float(request.json['disease_parameters']['avg_days_immune'])
-    p_hospitalization_given_infection = float(request.json['disease_parameters']['p_hospitalization_given_infection'])
-    p_death_given_hospitalization = float(request.json['disease_parameters']['p_death_given_hospitalization'])
-    confirmed_case_percentage = float(request.json['disease_parameters']['confirmed_case_percentage'])
-    max_time = int(request.json['sim_parameters']['max_time'])
-    init_infection = float(request.json['sim_parameters']['init_infection'])
-    init_recovered = float(request.json['sim_parameters']['init_recovered'])
-    population = float(request.json['sim_parameters']['population'])
-    
-    interventions = interventions_from_list(request.json['interventions'])
-    model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, interventions)
-    t, sim = model.simulate(max_time, max_time+1, init_infection/population, init_recovered/population)
-    return build_json(t, sim)
-
+    try:
+        print(session.get('userId'))
+        R0 = float(request.json['disease_parameters']['R0'])
+        avg_days_infected = float(request.json['disease_parameters']['avg_days_infected'])
+        avg_days_hospitalized = float(request.json['disease_parameters']['avg_days_hospitalized'])
+        avg_days_immune = float(request.json['disease_parameters']['avg_days_immune'])
+        p_hospitalization_given_infection = float(request.json['disease_parameters']['p_hospitalization_given_infection'])
+        p_death_given_hospitalization = float(request.json['disease_parameters']['p_death_given_hospitalization'])
+        confirmed_case_percentage = float(request.json['disease_parameters']['confirmed_case_percentage'])
+        max_time = int(request.json['sim_parameters']['max_time'])
+        init_infection = float(request.json['sim_parameters']['init_infection'])
+        init_recovered = float(request.json['sim_parameters']['init_recovered'])
+        population = float(request.json['sim_parameters']['population'])
+        
+        interventions = interventions_from_list(request.json['interventions'])
+        model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, interventions)
+        t, sim = model.simulate(max_time, max_time+1, init_infection/population, init_recovered/population)
+        return build_json(t, sim)
+    except Exception as e:
+        make_response(str(e), code=500)
+        
 @app.route('/api/data/covid/state/<code>', methods=['GET'])
 def get_state_data(code):
     return jsonify(covid_tracking.get_state_data(code))
-    
+
+def get_user():
+    if 'userId' in session:
+        return session['userId']
+    return None
+
+@app.route('/api/models/<name>', methods=['PUT'])
+def save_model(name):
+    user = get_user()
+    if(user is None):
+        return make_response("Please Login Before Saving", code=401)
+    model = request.json
+    try:
+        data.save_model(name, user, model)
+        return jsonify({})
+    except Exception as e:
+        return make_response(str(e), code=500)
+
+@app.route('/api/models/list', methods=['GET'])
+def list_models():
+    user = get_user()
+    if(user is None):
+        return make_response("Please login to see Models",code=401)
+    l = data.list_models(user)
+    return jsonify(l)
+
+@app.route('/api/models/<name>', methods=['GET'])
+def get_model(name):
+    user = get_user()
+    if(user is None):
+        return make_response("Please Login", code=401)
+    model = data.load_model(name, user)
+    return jsonify(model)
+
+@app.route('/api/models/<name>', methods=['DELETE'])
+def delete_model(name):
+    user = get_user()
+    if(user is None):
+        return make_response("Please Login", code=401)
+    model = data.delete_model(name, user)
+    return jsonify(model)
+
+@app.route('/api/models/<name>/rename/<newname>', methods=['PUT'])
+def rename_model(name, newname):
+    user = get_user()
+    if(user is None):
+        return make_response("Please Login", code=401)
+    return data.rename_model(name, newname, user)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)

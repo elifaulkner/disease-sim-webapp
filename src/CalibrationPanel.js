@@ -48,7 +48,7 @@ const CalibrationPanel = (props) => {
             const remaining = props.calibrationData.filter(x => !selectedItems.includes(x));
             props.setCalibrationData(remaining);
         } else {
-            alert('nothing selected to delete')
+            props.setErrorMessage('nothing selected to delete')
         }
     }
 
@@ -147,7 +147,7 @@ const CalibrationPanel = (props) => {
                 </Stack>
             </PivotItem>
             <PivotItem itemKey="covid-state" headerText="COVID Tracking Project">
-                <StatePanel setCalibrationData={props.setCalibrationData} setPopulation={props.setPopulation}/>
+                <StatePanel setErrorMessage={props.setErrorMessage} setCalibrationData={props.setCalibrationData} setPopulation={props.setPopulation}/>
             </PivotItem>
         </Pivot>
         <Separator />
@@ -377,7 +377,7 @@ const StatePanel = (props) => {
             fetch('/api/data/covid/state/'+state.key, requestOptions)
                 .then(response => response.json())
                 .then(data => props.setCalibrationData(data), (error) => {
-                    alert(error);
+                    props.setErrorMessage(error.message)
                 });    
 
             props.setPopulation(state['population'])

@@ -6,11 +6,15 @@ import ModelConfigurationPanel from './ModelConfigurationPanel'
 import InterventionsPanel from './InterventionsPanel'
 import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
 import FooterMenu from './FooterMenu';
+import DataMenu from './DataMenu';
 import InterventionsChart from './InterventionsChart'
 import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 import CalibrationPanel from './CalibrationPanel';
 import CalibrationGraph from './CalibrationGraph';
 import { initializeIcons } from '@uifabric/icons';
+import { MessageBar, MessageBarType } from 'office-ui-fabric-react/';
+import { Stack } from 'office-ui-fabric-react/lib/Stack';
+
 
 function App() {
   initializeIcons();
@@ -24,6 +28,17 @@ function App() {
     p_death_given_hospitalization: 0.1,
     confirmed_case_percentage: .01
   });
+
+  const handleError = (error) => {}
+
+  const handleResponse = (response) => {
+    if(response.ok) {
+      return response.json()
+    } else {
+      setErrorMessage(response.url +" Returned Status Code " + response.status +" with message: " + response.statusText) 
+      return {}
+    }
+  }
 
   const [simParameters, setSimParameters] = useState({
     max_time: 730,
@@ -40,15 +55,52 @@ function App() {
   const [simulation, setSimulation] = useState({});
 
   const [calibrationData, setCalibrationData] = useState([]);
-  const [user, setUser] = useState([])
+  //const [user, setUser] = useState([])
 
-  useEffect(() => {
-    fetch('/api/auth/user')
-    .then(response => response.json())
-    .then(data => setUser(data), (error) => {
-      setUser(null)
-    });
-  }, [])
+  const [modelName, setModelName] = useState('')
+
+  const saveModel = (name) => {
+    setModelName(name)
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        disease_parameters: diseaseParameters,
+        sim_parameters: simParameters,
+        interventions: interventions,
+        calibration_data: calibrationData
+      })
+    }
+
+    return fetch('/api/models/'+name, requestOptions)
+      .then(handleResponse)
+      .catch(handleError)
+  }
+
+  const loadModel = (name) => {
+    fetch('/api/models/'+name)
+    .then(handleResponse)
+    .then(model=> {
+      setDiseaseParameters(model['disease_parameters'])
+      setSimParameters(model['sim_parameters'])
+      setInterventions(model['interventions'])
+      setCalibrationData(model['calibration_data'])  
+    })
+    .catch(handleError)
+
+    setModelName(name)
+  }
+
+  const deleteModel = (name) => {
+    const requestOptions = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    }
+
+    fetch('/api/models/'+name, requestOptions)
+    .then(handleResponse)
+    .catch(handleError)
+  }
 
   const simulate = () => {
     const requestOptions = {
@@ -62,11 +114,11 @@ function App() {
     }
 
     fetch('/api/simulate', requestOptions)
-      .then(response => response.json())
-      .then(data => setSimulation(data), (error) => {
-        alert(error);
+      .then(handleResponse)
+      .then(data => setSimulation(data))
+      .catch((error) => {
         setSimulation({})
-      });
+      })
   }
 
   const [calibrationResults, setCalibrationResults] = useState({})
@@ -105,17 +157,37 @@ function App() {
 
     fetch('/api/calibrate', requestOptions)
       .then(response => response.json())
-      .then(data => setCalibrationResults(data), (error) => {
-        alert(error);
-      });
+      .then(data => setCalibrationResults(data))
+      .catch(handleError)
   }
 
   useEffect(simulate, [diseaseParameters, simParameters, interventions]);
 
+  const [errorMessage, setErrorMessage] = useState("")
+  const clearErrorMessage = () => {
+    setErrorMessage("")
+  } 
+
   return (
     <div className="App">
-        {user}
-        <FooterMenu class="footer" />
+        <div class="header">
+          <div class="leftheader">
+            <DataMenu saveModel={saveModel} modelName={modelName} loadModel={loadModel} deleteModel={deleteModel}/>
+          </div>
+          <div class="rightheader">
+            <FooterMenu class="footer" setErrorMessage={setErrorMessage} saveModel={saveModel}/>
+          </div>
+          </div> 
+        <Stack horizontal>
+        </Stack>
+        {errorMessage !== "" && (<MessageBar
+          messageBarType={MessageBarType.error}
+          isMultiline={false}
+          onDismiss={clearErrorMessage}
+          dismissButtonAriaLabel="Close"
+        >
+          {errorMessage}
+        </MessageBar>)}
         <Pivot linkSize={PivotLinkSize.large}>
           <PivotItem headerText="Model Configuration" linkFormat={PivotLinkFormat.tabs}>
             <div class="container">
@@ -138,7 +210,7 @@ function App() {
                 </div>
               </div>
               <div class="sidebar">
-                <InterventionsPanel interventions={interventions} setInterventions={setInterventions} simulate={simulate} setParameterValues={setParameterValues}/>
+                <InterventionsPanel setErrorMessage={setErrorMessage} interventions={interventions} setInterventions={setInterventions} simulate={simulate} setParameterValues={setParameterValues}/>
               </div>
             </div>
           </PivotItem>
@@ -159,7 +231,7 @@ function App() {
                 <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} confirmed_case_percentage={diseaseParameters.confirmed_case_percentage}/>
               </div>
               <div class="sidebar">
-                <CalibrationPanel calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues} interventions={interventions} setPopulation={setPopulation}/>
+                <CalibrationPanel setErrorMessage={setErrorMessage} calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues} interventions={interventions} setPopulation={setPopulation}/>
               </div>
             </div>
           </PivotItem>
