@@ -20,8 +20,8 @@ const DataMenu = (props) => {
       onClick: () => setHideSaveDialog(false)
     },
     {
-      key: 'load',
-      text: 'Load Model',
+      key: 'manage',
+      text: 'Manage Models',
       onClick: () => setHideLoadDialog(false)
     }
   ];
