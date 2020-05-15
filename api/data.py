@@ -5,8 +5,13 @@ import datetime as dt
 from datetime import datetime
 from pony.orm import Database, Required, PrimaryKey, Json, commit, select, db_session, delete
 
+
 db = Database()
-db.bind(provider='postgres', user='idm', password='changeme', host='localhost', database='idm_models', port='54320')
+host = os.environ.get('IDM_DB_HOST')
+port = os.environ.get('IDM_DB_PORT')
+password = os.environ.get('IDM_DB_PASSWORD')
+
+db.bind(provider='postgres', user='idm', password=password, host=host, database='idm_models', port=port)
 class Model(db.Entity):
     user = Required(str)
     name = Required(str)
@@ -40,7 +45,6 @@ def save_model(name, user, new_model):
 def load_model(name, user):
     model = Model.get(user=user, name=name)
     return model.model
-
 
 @db_session
 def delete_model(name, user):

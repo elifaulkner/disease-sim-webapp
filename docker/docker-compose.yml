@@ -11,12 +11,14 @@ services:
       FUSION_URL_PUBLIC: http://localhost:9011
       APP_URL: http://localhost
       IDM_DB_PASSWORD: ${IDM_DB_PASSWORD}
+      IDM_DB_HOST: ${IDM_DB_HOST}
     depends_on:
       - fusionauth
     ports:
       - 80:80/tcp
     networks:
       - app
+      - db
     restart: unless-stopped
   db:
     image: postgres:9.6
@@ -26,7 +28,8 @@ services:
     ports:
       - 54320:5432
     networks:
-      - db
+      - app
+      - db 
     restart: unless-stopped
     volumes:
       - auth_db_data:/var/lib/postgresql/data
