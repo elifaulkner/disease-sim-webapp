@@ -27,7 +27,6 @@ def build_json(t, sim):
 
 @app.route('/api/hello/', methods=['GET'])
 def hello():
-    print('Hello')
     return 'Hello'
 
 @app.route('/api/auth/login', methods=['GET'])
@@ -200,8 +199,8 @@ def delete_model(name):
     user = get_user()
     if(user is None):
         return make_response("Please Login", code=401)
-    model = data.delete_model(name, user)
-    return jsonify(model)
+    data.delete_model(name, user)
+    return ''
 
 @app.route('/api/models/<name>/rename/<newname>', methods=['PUT'])
 def rename_model(name, newname):

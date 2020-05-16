@@ -51,7 +51,6 @@ def delete_model(name, user):
     model = Model.get(user=user, name=name)
     model.delete()
     commit()
-    return model.model
 
 @db_session
 def list_models(user):
