@@ -16,14 +16,14 @@ const DataMenu = (props) => {
   const items: ICommandBarItemProps[] = [
     {
       key: 'save',
-      ariaLabel: 'Save Model',
+      title: 'Save Model',
       iconProps: { iconName: 'Save' },
       onClick: () => setHideSaveDialog(false),
       disabled: !props.signedIn
     },
     {
       key: 'manage',
-      ariaLabel: 'Manage Models',
+      title: 'Manage Models',
       iconProps: { iconName: 'DataConnectionLibrary' },
       onClick: () => setHideLoadDialog(false),
       disabled: !props.signedIn
