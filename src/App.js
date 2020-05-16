@@ -55,7 +55,18 @@ function App() {
   const [simulation, setSimulation] = useState({});
 
   const [calibrationData, setCalibrationData] = useState([]);
-  //const [user, setUser] = useState([])
+  const [signedIn, setSignedIn] = useState([])
+
+  useEffect(() => {
+    fetch('api/auth/user')
+    .then(response => {
+      if(response.ok) {
+        setSignedIn(true)
+      } else {
+        setSignedIn(false)
+      }        
+    })
+  }, [])
 
   const [modelName, setModelName] = useState('')
 
@@ -172,10 +183,10 @@ function App() {
     <div className="App">
         <div class="header">
           <div class="leftheader">
-            <DataMenu saveModel={saveModel} modelName={modelName} loadModel={loadModel} deleteModel={deleteModel}/>
+            <DataMenu saveModel={saveModel} modelName={modelName} loadModel={loadModel} deleteModel={deleteModel} signedIn={signedIn}/>
           </div>
           <div class="rightheader">
-            <FooterMenu class="footer" setErrorMessage={setErrorMessage} saveModel={saveModel}/>
+            <FooterMenu class="footer" setErrorMessage={setErrorMessage} saveModel={saveModel} signedIn={signedIn}/>
           </div>
           </div> 
         <Stack horizontal>

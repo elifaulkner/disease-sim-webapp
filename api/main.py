@@ -78,6 +78,11 @@ def auth_logout():
 
     url = fusion_url+'/oauth2/logout?client_id='+client_id+'&post_logout_redirect_uri='+app_url
 
+    session['userId'] = None
+    session['token_type'] = None
+    session['access_token'] = None
+    session['expires_in'] = None
+
     return redirect(url)
     
 @app.route('/api/calibrate', methods=['POST'])

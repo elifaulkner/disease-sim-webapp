@@ -6,21 +6,27 @@ const FooterMenu = (props) => {
   const items: ICommandBarItemProps[] = [
     {
       key: 'blog',
-      text: 'Blog',
+      ariaLabel: 'Blog',
       target: "_blank",
+      iconProps: { iconName: 'Blog' },
       href: "https://medium.com/infectious-disease-model"
     }, {
       key: 'email',
-      text: 'Feedback',
+      ariaLabel: 'Feedback',
+      iconProps: { iconName: 'Feedback' },
       href: "mailto:support@infectiousdiseasemodel.com"
     }, {
       key: 'login',
-      text: 'Login',
-      href: '/api/auth/login'
+      ariaLabel: 'SignIn',
+      iconProps: { iconName: 'SignIn' },
+      href: '/api/auth/login',
+      disabled: props.signedIn
     }, {
       key: 'logout',
-      text: 'Logout',
-      href: '/api/auth/logout'
+      ariaLabel: 'SignOut',
+      iconProps: { iconName: 'SignOut' },
+      href: '/api/auth/logout',
+      disabled: !props.signedIn
     }];
 
   return (<div class="Footer-Menu">

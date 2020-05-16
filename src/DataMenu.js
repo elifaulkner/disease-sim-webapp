@@ -16,13 +16,17 @@ const DataMenu = (props) => {
   const items: ICommandBarItemProps[] = [
     {
       key: 'save',
-      text: 'Save Model',
-      onClick: () => setHideSaveDialog(false)
+      ariaLabel: 'Save Model',
+      iconProps: { iconName: 'Save' },
+      onClick: () => setHideSaveDialog(false),
+      disabled: !props.signedIn
     },
     {
       key: 'manage',
-      text: 'Manage Models',
-      onClick: () => setHideLoadDialog(false)
+      ariaLabel: 'Manage Models',
+      iconProps: { iconName: 'DataConnectionLibrary' },
+      onClick: () => setHideLoadDialog(false),
+      disabled: !props.signedIn
     }
   ];
 
@@ -74,7 +78,7 @@ const LoadDialog = (props) => {
     hidden={props.hideLoadDialog}
     dialogContentProps={{
       type: DialogType.normal,
-      title: 'Load Model',
+      title: 'Manage Models',
       closeButtonAriaLabel: 'Close',
     }}
     onDismiss={dismissCallback}
