@@ -33,7 +33,16 @@ RUN apt-get --yes install libpq-dev
 
 COPY --from=ui-build /usr/src/app/build /usr/share/nginx/html
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+RUN echo "127.0.0.1 auth.localhost" >> /etc/hosts
+COPY nginx/auth.localhost /etc/nginx/sites-available/
+RUN ln -s /etc/nginx/sites-available/auth.localhost /etc/nginx/sites-enabled/auth.localhost
+
+RUN echo "127.0.0.1 auth.infectiousdiseasemodel.com" >> /etc/hosts
+COPY nginx/auth.infectiousdiseasemodel.com /etc/nginx/sites-available/
+RUN ln -s /etc/nginx/sites-available/auth.infectiousdiseasemodel.com /etc/nginx/sites-enabled/auth.infectiousdiseasemodel.com
+
 EXPOSE 80
 
 WORKDIR /app/
