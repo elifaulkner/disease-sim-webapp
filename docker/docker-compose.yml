@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  app:
+    image: elifaulkner/diseasesimwebapp:latest
+    environment:
+      FUSION_API_KEY: ${FUSION_API_KEY}
+      FUSION_CLIENT_ID: ${FUSION_CLIENT_ID}
+      FUSION_CLIENT_SECRET: ${FUSION_CLIENT_SECRET}
+      FUSION_URL: http://auth.localhost
+      FUSION_URL_PUBLIC: http://auth.localhost
+      APP_URL: http://localhost
+      IDM_DB_PASSWORD: ${IDM_DB_PASSWORD}
+      IDM_DB_HOST: ${IDM_DB_HOST}
+    depends_on:
+      - fusionauth
+    ports:
+      - 80:80/tcp
+    networks:
+      - app
+    restart: unless-stopped
+  db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 54320:5432
+    networks:
+      - app
+    restart: unless-stopped
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+
+  fusionauth:
+    image: fusionauth/fusionauth-app:latest
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/fusionauth
+      DATABASE_ROOT_USER: ${POSTGRES_USER}
+      DATABASE_ROOT_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      FUSIONAUTH_MEMORY: ${FUSIONAUTH_MEMORY}
+      FUSIONAUTH_SEARCH_ENGINE_TYPE: database
+      FUSIONAUTH_URL: http://auth.localhost
+    networks:
+     - app
+    restart: unless-stopped
+    ports:
+      - 9011:9011
+    volumes:
+      - auth_fa_config:/usr/local/fusionauth/config
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  auth_db_data:
+    external: true
+  auth_fa_config:
+    external: true

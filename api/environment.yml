@@ -8,6 +8,10 @@ dependencies:
   - flask
   - pymc3=3.8
   - requests
+  - psycopg2
   - pip:
     - gunicorn==20.0.4
     - python-dotenv==0.13.0
+    - fusionauth-client
+    - pony
+    - psycopg2cffi

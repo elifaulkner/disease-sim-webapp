@@ -30,3 +30,7 @@ api/test/__pycache__/
 
 .vscode
 .vscode/settings.json
+auth/.env
+docker/.env
+azure/db_init.sql
+azure/docker-compose.yml

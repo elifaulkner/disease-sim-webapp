@@ -21,6 +21,29 @@
   font-size: 48px
 }
 
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.leftheader {
+  order:0 ;
+  width: 50%;
+  position: relative;
+  float: left;
+  align-items: flex-start;
+}
+
+.rightheader {
+  order:1 ;
+  width: 50%;
+  position: relative;
+  float: right;
+  align-items: flex-end;
+}
+
 .container {
   display: flex;
   flex-direction: row;
@@ -49,7 +72,6 @@
   min-height: 300px;
   min-width: 90%;
 }
-
 
 .footer {
   height: 4em;

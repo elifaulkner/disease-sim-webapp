@@ -43,8 +43,8 @@
     "python.testing.nosetestsEnabled": false,
     "python.testing.unittestEnabled": true,
     "python.testing.cwd": "./api",
-    "python.venvPath": ".env",
-    "python.pythonPath": ".env\\python.exe",
+    "python.venvPath": "c:\\Users\\efaulkner\\.virtualenvs\\idm\\",
+    "python.pythonPath": "c:\\Users\\efaulkner\\.virtualenvs\\idm\\python.exe",
     //"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
-    "terminal.integrated.shellArgs.windows": ["--init-file", ".vscode/.bash_profile"]
+    //"terminal.integrated.shellArgs.windows": ["--init-file", ".vscode/.bash_profile"]
 }
