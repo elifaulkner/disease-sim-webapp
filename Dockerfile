@@ -43,6 +43,8 @@ RUN echo "127.0.0.1 auth.infectiousdiseasemodel.com" >> /etc/hosts
 COPY nginx/auth.infectiousdiseasemodel.com /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/auth.infectiousdiseasemodel.com /etc/nginx/sites-enabled/auth.infectiousdiseasemodel.com
 
+COPY /nginx/default /etc/nginx/sites-available/
+
 EXPOSE 80
 
 WORKDIR /app/

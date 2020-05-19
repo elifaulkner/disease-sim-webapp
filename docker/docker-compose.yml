@@ -7,7 +7,7 @@ services:
       FUSION_API_KEY: ${FUSION_API_KEY}
       FUSION_CLIENT_ID: ${FUSION_CLIENT_ID}
       FUSION_CLIENT_SECRET: ${FUSION_CLIENT_SECRET}
-      FUSION_URL: http://auth.localhost
+      FUSION_URL: http://fusionauth:9011
       FUSION_URL_PUBLIC: http://auth.localhost
       APP_URL: http://localhost
       IDM_DB_PASSWORD: ${IDM_DB_PASSWORD}
@@ -44,7 +44,7 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       FUSIONAUTH_MEMORY: ${FUSIONAUTH_MEMORY}
       FUSIONAUTH_SEARCH_ENGINE_TYPE: database
-      FUSIONAUTH_URL: http://auth.localhost
+      FUSIONAUTH_URL: http://fusionauth:9011
     networks:
      - app
     restart: unless-stopped
