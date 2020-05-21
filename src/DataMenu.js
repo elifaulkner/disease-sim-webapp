@@ -37,7 +37,7 @@ const DataMenu = (props) => {
       ariaLabel="Use left and right arrow keys to navigate between commands"
     />
     <SaveDialog modelName={props.modelName} saveModel={props.saveModel} setHideSaveDialog={setHideSaveDialog} hideSaveDialog={hideSaveDialog} />
-    <LoadDialog modelName={props.modelName} setHideLoadDialog={setHideLoadDialog} hideLoadDialog={hideLoadDialog} loadModel={props.loadModel} deleteModel={props.deleteModel}/>
+    <LoadDialog modelName={props.modelName} setHideLoadDialog={setHideLoadDialog} hideLoadDialog={hideLoadDialog} saveModel={props.saveModel} loadModel={props.loadModel} deleteModel={props.deleteModel}/>
   </div>);
 }
 
@@ -56,6 +56,10 @@ const LoadDialog = (props) => {
     props.setHideLoadDialog(true)
   }
 
+  const saveModelCallback = () => {
+    const selectedItems = selection.getSelection();
+    props.saveModel(selectedItems[0].name).then(props.setHideLoadDialog(true))
+  }
   const columns = [
     { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
     { key: 'column2', name: 'Last Modified', fieldName: 'modified', minWidth: 100, maxWidth: 200, isResizable: true }
@@ -100,8 +104,9 @@ const LoadDialog = (props) => {
       setKey="name"
     />
     <DialogFooter>
+      <DefaultButton text="Save" onClick={saveModelCallback} />
       <DefaultButton text="Delete" onClick={deleteModelCallback} />
-      <PrimaryButton text="Load" onClick={loadModelCallback} />
+      <DefaultButton text="Load" onClick={loadModelCallback} />
     </DialogFooter>
   </Dialog>)
 }
