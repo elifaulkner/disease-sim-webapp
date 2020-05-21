@@ -10,8 +10,9 @@ db = Database()
 host = os.environ.get('IDM_DB_HOST')
 port = os.environ.get('IDM_DB_PORT')
 password = os.environ.get('IDM_DB_PASSWORD')
+user = os.environ.get('IDM_DB_USER')
 
-db.bind(provider='postgres', user='idm', password=password, host=host, database='idm_models', port=port)
+db.bind(provider='postgres', user=user, password=password, host=host, database='idm_models', port=port)
 class Model(db.Entity):
     user = Required(str)
     name = Required(str)
