@@ -1,29 +1,20 @@
 import os
 from flask import Flask
 from flask import request, render_template, jsonify, redirect, session, make_response, url_for
-from scir import DiseaseModel, Interventions, Intervention
+from scir import DiseaseModel, Interventions, Intervention, build_dict
 import calibration as cal
 #import bayesian_calibration as bayesian_cal
 import covid_tracking
 import requests
 from fusionauth.fusionauth_client import FusionAuthClient
 import data
+from sensitivities import Sensitivities
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY') if os.environ.get('FLASK_SECRET_KEY') else 'lsdhfalwehflawehfla'
 
 def build_json(t, sim):
-    return jsonify({
-        'time' : list(t),
-        'suseptible':list(sim[:,0]),
-        'infectious':list(sim[:,1]),
-        'hospitalized':list(sim[:,2]),
-        'recovered':list(sim[:,3]),
-        'dead':list(sim[:,4]),
-        'cumulative_infectious':list(sim[:,5]),
-        'cumulative_confirmed':list(sim[:,6]),
-        'cumulative_hospitalized':list(sim[:,7])
-        })
+    return jsonify(build_dict(t, sim))
 
 @app.route('/api/hello/', methods=['GET'])
 def hello():
@@ -156,7 +147,32 @@ def simulate_post():
         return build_json(t, sim)
     except Exception as e:
         make_response(str(e), code=500)
+
+@app.route('/api/simulate/sensitivities', methods=['POST'])
+def sensitivities_post():
+    try:
+        print(session.get('userId'))
+        R0 = float(request.json['disease_parameters']['R0'])
+        avg_days_infected = float(request.json['disease_parameters']['avg_days_infected'])
+        avg_days_hospitalized = float(request.json['disease_parameters']['avg_days_hospitalized'])
+        avg_days_immune = float(request.json['disease_parameters']['avg_days_immune'])
+        p_hospitalization_given_infection = float(request.json['disease_parameters']['p_hospitalization_given_infection'])
+        p_death_given_hospitalization = float(request.json['disease_parameters']['p_death_given_hospitalization'])
+        confirmed_case_percentage = float(request.json['disease_parameters']['confirmed_case_percentage'])
+        max_time = int(request.json['sim_parameters']['max_time'])
+        init_infection = float(request.json['sim_parameters']['init_infection'])
+        init_recovered = float(request.json['sim_parameters']['init_recovered'])
+        population = float(request.json['sim_parameters']['population'])
         
+        interventions = interventions_from_list(request.json['interventions'])
+        model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, interventions)
+        
+        sensitivities = Sensitivities(model, max_time, max_time, init_infection, init_recovered, population)
+        return jsonify(sensitivities.build_sensitivities())
+    except Exception as e:
+        make_response(str(e), code=500)
+
+
 @app.route('/api/data/covid/state/<code>', methods=['GET'])
 def get_state_data(code):
     return jsonify(covid_tracking.get_state_data(code))
