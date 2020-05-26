@@ -8,6 +8,7 @@ import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
 import FooterMenu from './FooterMenu';
 import DataMenu from './DataMenu';
 import InterventionsChart from './InterventionsChart'
+import SensitivityHeatMap from './SensitivityHeatMap'
 import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 import CalibrationPanel from './CalibrationPanel';
 import CalibrationGraph from './CalibrationGraph';
@@ -53,6 +54,8 @@ function App() {
   
   const [interventions, setInterventions] = useState([]);
   const [simulation, setSimulation] = useState({});
+  const [sensitivities, setSensitivities] = useState({});
+  const [calibrationResults, setCalibrationResults] = useState({})
 
   const [calibrationData, setCalibrationData] = useState([]);
   const [signedIn, setSignedIn] = useState([])
@@ -132,7 +135,24 @@ function App() {
       })
   }
 
-  const [calibrationResults, setCalibrationResults] = useState({})
+  const calculateSensitivities = () => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        disease_parameters: diseaseParameters,
+        sim_parameters: simParameters,
+        interventions: interventions
+      })
+    }
+
+    fetch('/api/simulate/sensitivities', requestOptions)
+      .then(handleResponse)
+      .then(data => setSensitivities(data))
+      .catch((error) => {
+        setSensitivities({})
+      })
+  }
 
   const setParameterValues = () => {
     setDiseaseParameters({
@@ -173,6 +193,7 @@ function App() {
   }
 
   useEffect(simulate, [diseaseParameters, simParameters, interventions]);
+  //useEffect(calculateSensitivities, [diseaseParameters, simParameters, interventions]);
 
   const [errorMessage, setErrorMessage] = useState("")
   const clearErrorMessage = () => {
@@ -228,11 +249,10 @@ function App() {
           <PivotItem headerText="Cumulative Statistics">
             <div class="container">
               <div class="content">
-                <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
-                <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
+                <SensitivityHeatMap sensitivities={sensitivities}/>
               </div>
               <div class="sidebar">
-                <CumulativeStatisticsPanel sim={simulation} population={simParameters.population} />
+                <CumulativeStatisticsPanel sim={simulation} population={simParameters.population} calculateSensitivities={calculateSensitivities}/>
               </div>
             </div>
           </PivotItem>

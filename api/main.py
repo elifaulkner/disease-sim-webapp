@@ -14,7 +14,17 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY') if os.environ.get('FLASK_SECRET_KEY') else 'lsdhfalwehflawehfla'
 
 def build_json(t, sim):
-    return jsonify(build_dict(t, sim))
+    return jsonify({
+        'time' : list(t),
+        'suseptible':list(sim[:,0]),
+        'infectious':list(sim[:,1]),
+        'hospitalized':list(sim[:,2]),
+        'recovered':list(sim[:,3]),
+        'dead':list(sim[:,4]),
+        'cumulative_infectious':list(sim[:,5]),
+        'cumulative_confirmed':list(sim[:,6]),
+        'cumulative_hospitalized':list(sim[:,7])
+        })
 
 @app.route('/api/hello/', methods=['GET'])
 def hello():

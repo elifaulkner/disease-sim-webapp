@@ -28,7 +28,7 @@ class Sensitivities:
         def setter(x):
             self.model.R0 = x
 
-        return self._compute_sensitivities(setter, getter, 0.1)
+        return self._compute_sensitivities(setter, getter, 0.1, 0.1)
 
     def _avg_days_infected_sensitivities(self):
         def getter():
@@ -37,7 +37,7 @@ class Sensitivities:
         def setter(x):
             self.model.avg_days_infected = x
 
-        return self._compute_sensitivities(setter, getter, 1)
+        return self._compute_sensitivities(setter, getter, 1, 1)
 
     def _avg_days_hospitalized_sensitivities(self):
         def getter():
@@ -46,7 +46,7 @@ class Sensitivities:
         def setter(x):
             self.model.avg_days_hospitalized = x
 
-        return self._compute_sensitivities(setter, getter, 1)
+        return self._compute_sensitivities(setter, getter, 1, 1)
 
     def _avg_days_immune_sensitivities(self):
         def getter():
@@ -55,7 +55,7 @@ class Sensitivities:
         def setter(x):
             self.model.avg_days_immune = x
 
-        return self._compute_sensitivities(setter, getter, 1)
+        return self._compute_sensitivities(setter, getter, 1, 1)
 
     def _p_hospitalization_given_infection_sensitivities(self):
         def getter():
@@ -64,7 +64,7 @@ class Sensitivities:
         def setter(x):
             self.model.p_hospitalization_given_infection = x
 
-        return self._compute_sensitivities(setter, getter, 1)
+        return self._compute_sensitivities(setter, getter, 0.01, 0.01)
 
     def _p_death_given_hospitalization_sensitivities(self):
         def getter():
@@ -73,7 +73,7 @@ class Sensitivities:
         def setter(x):
             self.model.p_death_given_hospitalization = x
 
-        return self._compute_sensitivities(setter, getter, 1)
+        return self._compute_sensitivities(setter, getter, 0.01, 0.01)
 
     def _confirmed_case_percentage_sensitivities(self):
         def getter():
@@ -82,30 +82,30 @@ class Sensitivities:
         def setter(x):
             self.model.confirmed_case_percentage = x
 
-        return self._compute_sensitivities(setter, getter, 1)
+        return self._compute_sensitivities(setter, getter, 0.01, 0.01)
 
-    def _compute_sensitivities(self, setter, getter, delta):
+    def _compute_sensitivities(self, setter, getter, delta, scale):
         init = getter()
         plus = init+delta
         minus = init-delta
 
-        setter(init+.1)
-        [t, sim] = self.model.simulate(self.max_time, self.num_time_points, self.init_infection, self.init_recovered)
+        setter(init+delta)
+        [t, sim] = self.model.simulate(self.max_time, self.num_time_points, self.init_infection/self.population, self.init_recovered/self.population)
         S_plus = CumulativeStats(build_dict(t, sim), self.population)
-        setter(init-.1)
-        [t, sim] = self.model.simulate(self.max_time, self.num_time_points, self.init_infection, self.init_recovered)
+        setter(init-delta)
+        [t, sim] = self.model.simulate(self.max_time, self.num_time_points, self.init_infection/self.population, self.init_recovered/self.population)
         S_minus = CumulativeStats(build_dict(t, sim), self.population)
 
         setter(init)
-        return self._deltas(S_plus, S_minus, plus, minus)
+        return self._deltas(S_plus, S_minus, plus, minus, scale)
 
-    def _deltas(self, S_plus, S_minus, plus, minus):
+    def _deltas(self, S_plus, S_minus, plus, minus, scale):
         return {
-            'max_infectious': (S_plus.max_infectious()-S_minus.max_infectious())/(plus-minus),
-            'max_infectious_time': (S_plus.max_infectious_time()-S_minus.max_infectious_time())/(plus-minus),
-            'max_hospitalized': (S_plus.max_hospitalized()-S_minus.max_hospitalized())/(plus-minus),
-            'max_hospitalized_time': (S_plus.max_hospitalized_time()-S_minus.max_hospitalized_time())/(plus-minus),
-            'cumulative_infected' : (S_plus.cumulative_infected()-S_minus.cumulative_infected())/(plus-minus),
-            'cumulative_hospitalized': (S_plus.cumulative_hospitalized()-S_minus.cumulative_hospitalized())/(plus-minus),
-            'deaths': (S_plus.deaths()-S_minus.deaths())/(plus-minus)
+            'max_infectious': (S_plus.max_infectious()-S_minus.max_infectious())/(plus-minus)*scale,
+            'max_infectious_time': (S_plus.max_infectious_time()-S_minus.max_infectious_time())/(plus-minus)*scale,
+            'max_hospitalized': (S_plus.max_hospitalized()-S_minus.max_hospitalized())/(plus-minus)*scale,
+            'max_hospitalized_time': (S_plus.max_hospitalized_time()-S_minus.max_hospitalized_time())/(plus-minus)*scale,
+            'cumulative_infected' : (S_plus.cumulative_infected()-S_minus.cumulative_infected())/(plus-minus)*scale,
+            'cumulative_hospitalized': (S_plus.cumulative_hospitalized()-S_minus.cumulative_hospitalized())/(plus-minus)*scale,
+            'deaths': (S_plus.deaths()-S_minus.deaths())/(plus-minus)*scale
             }
