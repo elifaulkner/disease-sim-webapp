@@ -84,6 +84,11 @@
   width: 100%;
 }
 
+.tall-graph {
+  height: 800px;
+  width: 100%;
+}
+
 .Footer-Menu {
   position: relative;
   float: right;

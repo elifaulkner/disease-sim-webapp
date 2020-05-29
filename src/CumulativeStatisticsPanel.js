@@ -1,6 +1,5 @@
 import React from 'react';
 import { Label } from 'office-ui-fabric-react/lib/Label';
-import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 
 function CumulativeStatisticsPanel(props) {
 
@@ -48,7 +47,6 @@ function CumulativeStatisticsPanel(props) {
                     <td><Label>Cumulative Dead</Label></td> <td>{formatNumber(Math.ceil(dead*props.population))}</td>
                 </tr>
             </table>
-            <DefaultButton text="Calculate Sensitivities" onClick={props.calculateSensitivities}/>
     </div>)
 }
 

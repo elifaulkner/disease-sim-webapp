@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './App.css';
 import { Stack } from 'office-ui-fabric-react/lib/Stack';
 import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';

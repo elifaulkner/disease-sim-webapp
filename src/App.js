@@ -9,6 +9,7 @@ import FooterMenu from './FooterMenu';
 import DataMenu from './DataMenu';
 import InterventionsChart from './InterventionsChart'
 import SensitivityHeatMap from './SensitivityHeatMap'
+import SensitivitySpiderChart from './SensitivitySpiderChart'
 import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 import CalibrationPanel from './CalibrationPanel';
 import CalibrationGraph from './CalibrationGraph';
@@ -193,7 +194,7 @@ function App() {
   }
 
   useEffect(simulate, [diseaseParameters, simParameters, interventions]);
-  //useEffect(calculateSensitivities, [diseaseParameters, simParameters, interventions]);
+  useEffect(calculateSensitivities, [simulation]);
 
   const [errorMessage, setErrorMessage] = useState("")
   const clearErrorMessage = () => {
@@ -246,13 +247,14 @@ function App() {
               </div>
             </div>
           </PivotItem>
-          <PivotItem headerText="Cumulative Statistics">
+          <PivotItem headerText="Cumulative Statistics" alwaysRender={false}>
             <div class="container">
               <div class="content">
+                <SensitivitySpiderChart sensitivities={sensitivities} calculateSensitivities={calculateSensitivities}/> 
                 <SensitivityHeatMap sensitivities={sensitivities}/>
               </div>
               <div class="sidebar">
-                <CumulativeStatisticsPanel sim={simulation} population={simParameters.population} calculateSensitivities={calculateSensitivities}/>
+                <CumulativeStatisticsPanel sim={simulation} population={simParameters.population}/>
               </div>
             </div>
           </PivotItem>

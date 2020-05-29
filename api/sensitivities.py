@@ -12,13 +12,12 @@ class Sensitivities:
 
     def build_sensitivities(self):
         return {
-            'R0': self._basic_repoductive_number_sensitivities(),
-            'avg_days_infected': self._avg_days_infected_sensitivities(),
-            'avg_days_hospitalized': self._avg_days_hospitalized_sensitivities(),
-            'avg_days_immune': self._avg_days_immune_sensitivities(),
-            'p_hospitalization_given_infection': self._p_hospitalization_given_infection_sensitivities(),
-            'p_death_given_hospitalization': self._p_death_given_hospitalization_sensitivities(),
-            'confirmed_case_percentage': self._confirmed_case_percentage_sensitivities()
+            'per 0.1 R0': self._basic_repoductive_number_sensitivities(),
+            'per day avg_days_infected': self._avg_days_infected_sensitivities(),
+            'per day avg_days_hospitalized': self._avg_days_hospitalized_sensitivities(),
+            'per day avg_days_immune': self._avg_days_immune_sensitivities(),
+            'per 1% p_hospitalization_given_infection': self._p_hospitalization_given_infection_sensitivities(),
+            'per 1% p_death_given_hospitalization': self._p_death_given_hospitalization_sensitivities(),
         }
 
     def _basic_repoductive_number_sensitivities(self):
@@ -64,7 +63,7 @@ class Sensitivities:
         def setter(x):
             self.model.p_hospitalization_given_infection = x
 
-        return self._compute_sensitivities(setter, getter, 0.01, 0.01)
+        return self._compute_sensitivities(setter, getter, 1.0E-8, 0.01)
 
     def _p_death_given_hospitalization_sensitivities(self):
         def getter():
@@ -73,16 +72,7 @@ class Sensitivities:
         def setter(x):
             self.model.p_death_given_hospitalization = x
 
-        return self._compute_sensitivities(setter, getter, 0.01, 0.01)
-
-    def _confirmed_case_percentage_sensitivities(self):
-        def getter():
-            return self.model.confirmed_case_percentage
-
-        def setter(x):
-            self.model.confirmed_case_percentage = x
-
-        return self._compute_sensitivities(setter, getter, 0.01, 0.01)
+        return self._compute_sensitivities(setter, getter, 1.0E-8, 0.01)
 
     def _compute_sensitivities(self, setter, getter, delta, scale):
         init = getter()
