@@ -11,14 +11,34 @@ class Sensitivities:
         self.init_recovered = init_recovered
 
     def build_sensitivities(self):
-        return {
-            'per 0.1 R0': self._basic_repoductive_number_sensitivities(),
-            'per day avg_days_infected': self._avg_days_infected_sensitivities(),
-            'per day avg_days_hospitalized': self._avg_days_hospitalized_sensitivities(),
-            'per day avg_days_immune': self._avg_days_immune_sensitivities(),
-            'per 1% p_hospitalization_given_infection': self._p_hospitalization_given_infection_sensitivities(),
-            'per 1% p_death_given_hospitalization': self._p_death_given_hospitalization_sensitivities(),
+        sensitivities = {
+            '0.1 R0': self._basic_repoductive_number_sensitivities(),
+            '1 day avg_days_infected': self._avg_days_infected_sensitivities(),
+            '1 day avg_days_hospitalized': self._avg_days_hospitalized_sensitivities(),
+            '1 day avg_days_immune': self._avg_days_immune_sensitivities(),
+            '1% p_hospitalization_given_infection': self._p_hospitalization_given_infection_sensitivities(),
+            '1% p_death_given_hospitalization': self._p_death_given_hospitalization_sensitivities(),
         }
+
+        sensitivities.update({'1% ' +i.name: self._intervention_sensitivities(i) for i in self.model.interventions.infection_rate})
+        sensitivities.update({'1% ' +i.name: self._intervention_sensitivities(i) for i in self.model.interventions.infection_time})
+        sensitivities.update({'1% ' +i.name: self._intervention_sensitivities(i) for i in self.model.interventions.hospitilization_time})
+        sensitivities.update({'1% ' +i.name: self._intervention_sensitivities(i) for i in self.model.interventions.immunity_time})
+        sensitivities.update({'1% ' +i.name: self._intervention_sensitivities(i) for i in self.model.interventions.hospitilization_rate})
+        sensitivities.update({'1% ' +i.name: self._intervention_sensitivities(i) for i in self.model.interventions.death_rate})
+        sensitivities.update({'1% ' +i.name: self._intervention_sensitivities(i) for i in self.model.interventions.confirmed_case_percentage})
+
+        return sensitivities
+
+    def _intervention_sensitivities(self, intervention):
+        def getter():
+            return intervention.scale
+
+        def setter(x):
+            intervention.scale = x
+
+        return self._compute_sensitivities(setter, getter, 0.01, 0.01)
+
 
     def _basic_repoductive_number_sensitivities(self):
         def getter():
@@ -76,14 +96,14 @@ class Sensitivities:
 
     def _compute_sensitivities(self, setter, getter, delta, scale):
         init = getter()
-        plus = init+delta
-        minus = init-delta
+        plus = init*1.01
+        minus = init*.99
 
         setter(init+delta)
-        [t, sim] = self.model.simulate(self.max_time, self.num_time_points, self.init_infection/self.population, self.init_recovered/self.population)
+        [t, sim] = self.model.simulate(self.max_time, self.num_time_points*10, self.init_infection/self.population, self.init_recovered/self.population)
         S_plus = CumulativeStats(build_dict(t, sim), self.population)
         setter(init-delta)
-        [t, sim] = self.model.simulate(self.max_time, self.num_time_points, self.init_infection/self.population, self.init_recovered/self.population)
+        [t, sim] = self.model.simulate(self.max_time, self.num_time_points*10, self.init_infection/self.population, self.init_recovered/self.population)
         S_minus = CumulativeStats(build_dict(t, sim), self.population)
 
         setter(init)

@@ -68,7 +68,7 @@ def auth_callback():
 def auth_user():
     if 'userId' in session:
         return session['userId']
-    return make_response(code=404)
+    return make_response(404)
 
 @app.route('/api/auth/logout', methods=['GET'])
 def auth_logout():
@@ -156,7 +156,7 @@ def simulate_post():
         t, sim = model.simulate(max_time, max_time+1, init_infection/population, init_recovered/population)
         return build_json(t, sim)
     except Exception as e:
-        make_response(str(e), code=500)
+        return make_response(str(e), 500)
 
 @app.route('/api/simulate/sensitivities', methods=['POST'])
 def sensitivities_post():
@@ -180,7 +180,7 @@ def sensitivities_post():
         sensitivities = Sensitivities(model, max_time, max_time, init_infection, init_recovered, population)
         return jsonify(sensitivities.build_sensitivities())
     except Exception as e:
-        make_response(str(e), code=500)
+        return make_response(str(e), 500)
 
 
 @app.route('/api/data/covid/state/<code>', methods=['GET'])
@@ -196,19 +196,19 @@ def get_user():
 def save_model(name):
     user = get_user()
     if(user is None):
-        return make_response("Please Login Before Saving", code=401)
+        return make_response("Please Login Before Saving", 401)
     model = request.json
     try:
         data.save_model(name, user, model)
         return jsonify({})
     except Exception as e:
-        return make_response(str(e), code=500)
+        return make_response(str(e), 500)
 
 @app.route('/api/models/list', methods=['GET'])
 def list_models():
     user = get_user()
     if(user is None):
-        return make_response("Please login to see Models",code=401)
+        return make_response("Please login to see Models", 401)
     l = data.list_models(user)
     return jsonify(l)
 
@@ -216,7 +216,7 @@ def list_models():
 def get_model(name):
     user = get_user()
     if(user is None):
-        return make_response("Please Login", code=401)
+        return make_response("Please Login", 401)
     model = data.load_model(name, user)
     return jsonify(model)
 
@@ -224,7 +224,7 @@ def get_model(name):
 def delete_model(name):
     user = get_user()
     if(user is None):
-        return make_response("Please Login", code=401)
+        return make_response("Please Login", 401)
     data.delete_model(name, user)
     return ''
 
@@ -232,7 +232,7 @@ def delete_model(name):
 def rename_model(name, newname):
     user = get_user()
     if(user is None):
-        return make_response("Please Login", code=401)
+        return make_response("Please Login", 401)
     return data.rename_model(name, newname, user)
 
 if __name__ == '__main__':
