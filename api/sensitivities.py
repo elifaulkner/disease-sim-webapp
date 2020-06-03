@@ -12,7 +12,7 @@ class Sensitivities:
 
     def build_sensitivities(self):
         sensitivities = {
-            '0.01 R0': self._basic_repoductive_number_sensitivities(),
+            '0.1 R0': self._basic_repoductive_number_sensitivities(),
             '1 hour avg_days_infected': self._avg_days_infected_sensitivities(),
             '1 day avg_days_hospitalized': self._avg_days_hospitalized_sensitivities(),
             '1 day avg_days_immune': self._avg_days_immune_sensitivities(),
@@ -47,7 +47,7 @@ class Sensitivities:
         def setter(x):
             self.model.R0 = x
 
-        return self._compute_sensitivities(setter, getter, 0.01, 0.01)
+        return self._compute_sensitivities(setter, getter, 0.01, 0.1)
 
     def _avg_days_infected_sensitivities(self):
         def getter():
