@@ -12,6 +12,7 @@ services:
       APP_URL: http://localhost
       IDM_DB_PASSWORD: ${IDM_DB_PASSWORD}
       IDM_DB_HOST: ${IDM_DB_HOST}
+      IDM_DB_USER: idm
     depends_on:
       - fusionauth
     ports:
@@ -33,9 +34,7 @@ services:
       - auth_db_data:/var/lib/postgresql/data
 
   fusionauth:
-    image: fusionauth/fusionauth-app:latest
-    depends_on:
-      - db
+    image: fusionauth/fusionauth-app:1.16.0
     environment:
       DATABASE_URL: jdbc:postgresql://db:5432/fusionauth
       DATABASE_ROOT_USER: ${POSTGRES_USER}
@@ -45,13 +44,19 @@ services:
       FUSIONAUTH_MEMORY: 256M
       FUSIONAUTH_SEARCH_ENGINE_TYPE: database
       FUSIONAUTH_URL: http://fusionauth:9011
+      FUSIONAUTH_ADDITIONAL_JAVA_ARGS: -Xms256m -Xmx256m
+      FUSIONAUTH_RUNTIME_MODE: production
+      FUSIONAUTH_COOKIE_SAME_SITE_POLICY: Lax
+      FUSIONAUTH_URL: http://auth.infectiousdiseasemodel.com
     networks:
      - app
     restart: unless-stopped
     ports:
-      - 9011:9011
+      - "9011:9011"
     volumes:
       - auth_fa_config:/usr/local/fusionauth/config
+    depends_on:
+      - db
 
 networks:
   app:

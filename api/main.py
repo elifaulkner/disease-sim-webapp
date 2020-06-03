@@ -1,13 +1,14 @@
 import os
 from flask import Flask
 from flask import request, render_template, jsonify, redirect, session, make_response, url_for
-from scir import DiseaseModel, Interventions, Intervention
+from scir import DiseaseModel, Interventions, Intervention, build_dict
 import calibration as cal
 #import bayesian_calibration as bayesian_cal
 import covid_tracking
 import requests
 from fusionauth.fusionauth_client import FusionAuthClient
 import data
+from sensitivities import Sensitivities
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY') if os.environ.get('FLASK_SECRET_KEY') else 'lsdhfalwehflawehfla'
@@ -67,7 +68,7 @@ def auth_callback():
 def auth_user():
     if 'userId' in session:
         return session['userId']
-    return make_response(code=404)
+    return make_response(404)
 
 @app.route('/api/auth/logout', methods=['GET'])
 def auth_logout():
@@ -155,8 +156,33 @@ def simulate_post():
         t, sim = model.simulate(max_time, max_time+1, init_infection/population, init_recovered/population)
         return build_json(t, sim)
     except Exception as e:
-        make_response(str(e), code=500)
+        return make_response(str(e), 500)
+
+@app.route('/api/simulate/sensitivities', methods=['POST'])
+def sensitivities_post():
+    try:
+        print(session.get('userId'))
+        R0 = float(request.json['disease_parameters']['R0'])
+        avg_days_infected = float(request.json['disease_parameters']['avg_days_infected'])
+        avg_days_hospitalized = float(request.json['disease_parameters']['avg_days_hospitalized'])
+        avg_days_immune = float(request.json['disease_parameters']['avg_days_immune'])
+        p_hospitalization_given_infection = float(request.json['disease_parameters']['p_hospitalization_given_infection'])
+        p_death_given_hospitalization = float(request.json['disease_parameters']['p_death_given_hospitalization'])
+        confirmed_case_percentage = float(request.json['disease_parameters']['confirmed_case_percentage'])
+        max_time = int(request.json['sim_parameters']['max_time'])
+        init_infection = float(request.json['sim_parameters']['init_infection'])
+        init_recovered = float(request.json['sim_parameters']['init_recovered'])
+        population = float(request.json['sim_parameters']['population'])
         
+        interventions = interventions_from_list(request.json['interventions'])
+        model = DiseaseModel(R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, interventions)
+        
+        sensitivities = Sensitivities(model, max_time, max_time, init_infection, init_recovered, population)
+        return jsonify(sensitivities.build_sensitivities())
+    except Exception as e:
+        return make_response(str(e), 500)
+
+
 @app.route('/api/data/covid/state/<code>', methods=['GET'])
 def get_state_data(code):
     return jsonify(covid_tracking.get_state_data(code))
@@ -170,19 +196,19 @@ def get_user():
 def save_model(name):
     user = get_user()
     if(user is None):
-        return make_response("Please Login Before Saving", code=401)
+        return make_response("Please Login Before Saving", 401)
     model = request.json
     try:
         data.save_model(name, user, model)
         return jsonify({})
     except Exception as e:
-        return make_response(str(e), code=500)
+        return make_response(str(e), 500)
 
 @app.route('/api/models/list', methods=['GET'])
 def list_models():
     user = get_user()
     if(user is None):
-        return make_response("Please login to see Models",code=401)
+        return make_response("Please login to see Models", 401)
     l = data.list_models(user)
     return jsonify(l)
 
@@ -190,7 +216,7 @@ def list_models():
 def get_model(name):
     user = get_user()
     if(user is None):
-        return make_response("Please Login", code=401)
+        return make_response("Please Login", 401)
     model = data.load_model(name, user)
     return jsonify(model)
 
@@ -198,7 +224,7 @@ def get_model(name):
 def delete_model(name):
     user = get_user()
     if(user is None):
-        return make_response("Please Login", code=401)
+        return make_response("Please Login", 401)
     data.delete_model(name, user)
     return ''
 
@@ -206,7 +232,7 @@ def delete_model(name):
 def rename_model(name, newname):
     user = get_user()
     if(user is None):
-        return make_response("Please Login", code=401)
+        return make_response("Please Login", 401)
     return data.rename_model(name, newname, user)
 
 if __name__ == '__main__':
