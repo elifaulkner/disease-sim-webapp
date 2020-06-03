@@ -274,7 +274,7 @@ function App() {
               </div>
             </div>
           </PivotItem>
-          <PivotItem headerText="Cumulative Statistics" alwaysRender={false}>
+          <PivotItem headerText="Stats & Sensitivities" alwaysRender={false}>
             <div class="container">
               <div class="content">
                 <SensitivityChart sensitivities={sensitivities}/>
