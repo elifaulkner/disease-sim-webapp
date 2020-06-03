@@ -33,7 +33,7 @@ const SensitivityHeatMap = (props) => {
               },
               title: {
                 enabled: false,
-                text: 'Sensitivities Table'
+                text: null
               },
             xAxis: {
                 categories: stat_categories
@@ -67,7 +67,7 @@ const SensitivityHeatMap = (props) => {
         })
     }, [guid, points, stat_categories, variable_categories])
 
-    return(<div id={'container'+guid} class="graph"></div>)
+    return(<div id={'container'+guid} class="tall-graph"></div>)
 }
 
 export default SensitivityHeatMap;

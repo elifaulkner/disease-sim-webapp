@@ -8,8 +8,7 @@ import CumulativeStatisticsPanel from './CumulativeStatisticsPanel';
 import FooterMenu from './FooterMenu';
 import DataMenu from './DataMenu';
 import InterventionsChart from './InterventionsChart'
-import SensitivityHeatMap from './SensitivityHeatMap'
-import SensitivitySpiderChart from './SensitivitySpiderChart'
+import SensitivityChart from './SensitivityChart'
 import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 import CalibrationPanel from './CalibrationPanel';
 import CalibrationGraph from './CalibrationGraph';
@@ -278,8 +277,7 @@ function App() {
           <PivotItem headerText="Cumulative Statistics" alwaysRender={false}>
             <div class="container">
               <div class="content">
-                <SensitivitySpiderChart sensitivities={sensitivities} calculateSensitivities={calculateSensitivities}/> 
-                <SensitivityHeatMap sensitivities={sensitivities}/>
+                <SensitivityChart sensitivities={sensitivities}/>
               </div>
               <div class="sidebar">
                 <CumulativeStatisticsPanel sim={simulation} population={model.simParameters.population}/>

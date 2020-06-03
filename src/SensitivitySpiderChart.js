@@ -30,7 +30,7 @@ const SensitivitySpiderChart = (props) => {
                 type: 'sankey'
               },
             title: {
-                text: 'Sensitivities Map'
+                text: null
             },
             series: [{
                 keys: ['from', 'to', 'weight'],
@@ -39,7 +39,7 @@ const SensitivitySpiderChart = (props) => {
         })
     })
 
-    return (<div id={'container' + guid} class="graph"></div>)
+    return (<div id={'container' + guid} class="tall-graph"></div>)
 }
 
 export default SensitivitySpiderChart;
