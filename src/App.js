@@ -21,15 +21,41 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack';
 function App() {
   initializeIcons();
 
-  const [diseaseParameters, setDiseaseParameters] = useState({
-    R0: 3.25,
-    avg_days_infected: 10.0,
-    avg_days_hospitalized: 14.0,
-    avg_days_immune: 183.0,
-    p_hospitalization_given_infection: 0.005,
-    p_death_given_hospitalization: 0.1,
-    confirmed_case_percentage: .01
-  });
+  const [model, setModel] = useState({
+    diseaseParameters: {
+      R0: 3.25,
+      avg_days_infected: 10.0,
+      avg_days_hospitalized: 14.0,
+      avg_days_immune: 183.0,
+      p_hospitalization_given_infection: 0.005,
+      p_death_given_hospitalization: 0.1,
+      confirmed_case_percentage: .01
+    },
+    simParameters: {
+      max_time: 730,
+      population: 1000000,
+      init_infection: 10,
+      init_recovered: 0
+    },
+    interventions: [],
+    calibrationData: []
+  })
+
+  function setDiseaseParameters(val) {
+    setModel({...model, diseaseParameters:val})
+  }
+
+  function setSimParameters(val) {
+    setModel({...model, simParameters:val})
+  }
+
+  function setInterventions(val) {
+    setModel({...model, interventions:val})
+  }
+  
+  function setCalibrationData(val) {
+    setModel({...model, calibrationData:val})
+  }
 
   const handleError = (error) => {}
 
@@ -42,23 +68,17 @@ function App() {
     }
   }
 
-  const [simParameters, setSimParameters] = useState({
-    max_time: 730,
-    population: 1000000,
-    init_infection: 10,
-    init_recovered: 0
-  });
-
   const setPopulation = (p) => {
-    setSimParameters({...simParameters, population: p})
+    setModel(model=> {
+      model.simParameters.population = p
+      return model;
+    })
   }
   
-  const [interventions, setInterventions] = useState([]);
   const [simulation, setSimulation] = useState({});
   const [sensitivities, setSensitivities] = useState({});
   const [calibrationResults, setCalibrationResults] = useState({})
 
-  const [calibrationData, setCalibrationData] = useState([]);
   const [signedIn, setSignedIn] = useState([])
 
   useEffect(() => {
@@ -80,10 +100,10 @@ function App() {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        disease_parameters: diseaseParameters,
-        sim_parameters: simParameters,
-        interventions: interventions,
-        calibration_data: calibrationData
+        disease_parameters: model.diseaseParameters,
+        sim_parameters: model.simParameters,
+        interventions: model.interventions,
+        calibration_data: model.calibrationData
       })
     }
 
@@ -96,10 +116,12 @@ function App() {
     fetch('/api/models/'+name)
     .then(handleResponse)
     .then(model=> {
-      setDiseaseParameters(model['disease_parameters'])
-      setSimParameters(model['sim_parameters'])
-      setInterventions(model['interventions'])
-      setCalibrationData(model['calibration_data'])  
+      setModel({
+        diseaseParameters: model['disease_parameters'],
+        simParameters: model['sim_parameters'],
+        interventions: model['interventions'],
+        calibrationData: model['calibration_data'] 
+      })
     })
     .catch(handleError)
 
@@ -122,9 +144,9 @@ function App() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        disease_parameters: diseaseParameters,
-        sim_parameters: simParameters,
-        interventions: interventions
+        disease_parameters: model.diseaseParameters,
+        sim_parameters: model.simParameters,
+        interventions: model.interventions
       })
     }
 
@@ -141,9 +163,9 @@ function App() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        disease_parameters: diseaseParameters,
-        sim_parameters: simParameters,
-        interventions: interventions
+        disease_parameters: model.diseaseParameters,
+        sim_parameters: model.simParameters,
+        interventions: model.interventions
       })
     }
 
@@ -156,32 +178,38 @@ function App() {
   }
 
   const setParameterValues = () => {
-    setDiseaseParameters({
-      R0: calibrationResults['R0'] || diseaseParameters.R0,
-      avg_days_infected:  calibrationResults['avg_days_infected'] || diseaseParameters.avg_days_infected,
-      p_hospitalization_given_infection:  calibrationResults['p_hospitalization_given_infection'] || diseaseParameters.p_hospitalization_given_infection,
-      p_death_given_hospitalization:  calibrationResults['p_death_given_hospitalization'] || diseaseParameters.p_death_given_hospitalization,
-      confirmed_case_percentage:  calibrationResults['confirmed_case_percentage'] || diseaseParameters.confirmed_case_percentage,
-      avg_days_hospitalized:  calibrationResults['avg_days_hospitalized'] || diseaseParameters.avg_days_hospitalized,
-      avg_days_immune:  calibrationResults['avg_days_immune'] || diseaseParameters.avg_days_immune
+    setModel(model=> {
+      model.diseaseParameters = {
+      R0: calibrationResults['R0'] || model.diseaseParameters.R0,
+      avg_days_infected:  calibrationResults['avg_days_infected'] || model.diseaseParameters.avg_days_infected,
+      p_hospitalization_given_infection:  calibrationResults['p_hospitalization_given_infection'] || model.diseaseParameters.p_hospitalization_given_infection,
+      p_death_given_hospitalization:  calibrationResults['p_death_given_hospitalization'] || model.diseaseParameters.p_death_given_hospitalization,
+      confirmed_case_percentage:  calibrationResults['confirmed_case_percentage'] || model.diseaseParameters.confirmed_case_percentage,
+      avg_days_hospitalized:  calibrationResults['avg_days_hospitalized'] || model.diseaseParameters.avg_days_hospitalized,
+      avg_days_immune:  calibrationResults['avg_days_immune'] || model.diseaseParameters.avg_days_immune
+      }
+      return model
     });
 
-    setInterventions(interventions.map((i) => {return {...i, 'effectiveness' : calibrationResults['Intervention:'+i.name] || i.effectiveness}}))
+    setModel(model=> {
+      model.interventions = model.interventions.map((i) => {return {...i, 'effectiveness' : calibrationResults['Intervention:'+i.name] || i.effectiveness}})
+      return model
+    })
   }
   
   useEffect(() => {
     setCalibrationResults({});
-  }, [diseaseParameters])
+  }, [model])
 
   const calibrate = (variables, method) => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        disease_parameters: diseaseParameters,
-        sim_parameters: simParameters,
-        interventions: interventions,
-        calibration_data: calibrationData,
+        disease_parameters: model.diseaseParameters,
+        sim_parameters: model.simParameters,
+        interventions: model.interventions,
+        calibration_data: model.calibrationData,
         calibration_variables: variables,
         calibration_method: method
       })
@@ -193,7 +221,7 @@ function App() {
       .catch(handleError)
   }
 
-  useEffect(simulate, [diseaseParameters, simParameters, interventions]);
+  useEffect(simulate, [model]);
   useEffect(calculateSensitivities, [simulation]);
 
   const [errorMessage, setErrorMessage] = useState("")
@@ -225,25 +253,25 @@ function App() {
           <PivotItem headerText="Model Configuration" linkFormat={PivotLinkFormat.tabs}>
             <div class="container">
               <div class="content">
-                <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
-                <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
+                <DiseaseGraph simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} />
+                <MorbidityAndMortalityGraph simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} />
               </div>
               <div class="sidebar">
-                <ModelConfigurationPanel diseaseParameters={diseaseParameters} setDiseaseParameters={setDiseaseParameters} simParameters={simParameters} setSimParameters={setSimParameters} simulate={simulate}/>
+                <ModelConfigurationPanel diseaseParameters={model.diseaseParameters} setDiseaseParameters={setDiseaseParameters} simParameters={model.simParameters} setSimParameters={setSimParameters} simulate={simulate}/>
               </div>
             </div>
           </PivotItem>
           <PivotItem headerText="Interventions">
             <div class="container">
               <div class="content">
-                <InterventionsChart title="Active Interventions" interventions={interventions} max={simParameters.max_time} />
+                <InterventionsChart title="Active Interventions" interventions={model.interventions} max={model.simParameters.max_time} />
                 <div class="container">
-                  <DiseaseGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
-                  <MorbidityAndMortalityGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} />
+                  <DiseaseGraph simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} />
+                  <MorbidityAndMortalityGraph simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} />
                 </div>
               </div>
               <div class="sidebar">
-                <InterventionsPanel setErrorMessage={setErrorMessage} interventions={interventions} setInterventions={setInterventions} simulate={simulate} setParameterValues={setParameterValues}/>
+                <InterventionsPanel setErrorMessage={setErrorMessage} interventions={model.interventions} setInterventions={setInterventions} simulate={simulate} setParameterValues={setParameterValues}/>
               </div>
             </div>
           </PivotItem>
@@ -254,17 +282,17 @@ function App() {
                 <SensitivityHeatMap sensitivities={sensitivities}/>
               </div>
               <div class="sidebar">
-                <CumulativeStatisticsPanel sim={simulation} population={simParameters.population}/>
+                <CumulativeStatisticsPanel sim={simulation} population={model.simParameters.population}/>
               </div>
             </div>
           </PivotItem>
           <PivotItem headerText="Calibration">
             <div class="container">
               <div class="content">
-                <CalibrationGraph simulation={simulation} calibrationData={calibrationData} population={simParameters.population} confirmed_case_percentage={diseaseParameters.confirmed_case_percentage}/>
+                <CalibrationGraph simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} confirmed_case_percentage={model.diseaseParameters.confirmed_case_percentage}/>
               </div>
               <div class="sidebar">
-                <CalibrationPanel setErrorMessage={setErrorMessage} calibrationData={calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues} interventions={interventions} setPopulation={setPopulation}/>
+                <CalibrationPanel setErrorMessage={setErrorMessage} calibrationData={model.calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues} interventions={model.interventions} setPopulation={setPopulation}/>
               </div>
             </div>
           </PivotItem>
