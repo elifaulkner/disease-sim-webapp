@@ -3,7 +3,7 @@ import datetime
 import dateutil.parser as parser
 
 def get_state_data(state_code):
-    r = requests.get('https://covidtracking.com/api/v1/states/'+state_code+'/daily.json')
+    r = requests.get('https://covidtracking.com/api/v1/states/'+state_code.lower()+'/daily.json')
     minDate = datetime.date(9999, 12, 31)
     for x in r.json():
         date = split_date(x['date'])
