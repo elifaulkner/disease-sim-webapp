@@ -187,18 +187,12 @@ function App() {
       avg_days_hospitalized:  calibrationResults['avg_days_hospitalized'] || model.diseaseParameters.avg_days_hospitalized,
       avg_days_immune:  calibrationResults['avg_days_immune'] || model.diseaseParameters.avg_days_immune
       }
+      model.interventions = model.interventions.map((i) => {return {...i, 'effectiveness' : calibrationResults['Intervention:'+i.name] || i.effectiveness}})
       return model
     });
 
-    setModel(model=> {
-      model.interventions = model.interventions.map((i) => {return {...i, 'effectiveness' : calibrationResults['Intervention:'+i.name] || i.effectiveness}})
-      return model
-    })
-  }
-  
-  useEffect(() => {
     setCalibrationResults({});
-  }, [model])
+  }
 
   const calibrate = (variables, method) => {
     const requestOptions = {
