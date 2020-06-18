@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name auth.infectiousdiseasemodel.com;
+    server_name auth.infectiousdiseasemodel.com auth.flumodel.com;
 
     location / {
     proxy_set_header X-Real-IP $remote_addr;
