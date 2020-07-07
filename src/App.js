@@ -178,17 +178,22 @@ function App() {
 
   const setParameterValues = () => {
     setModel(model=> {
-      model.diseaseParameters = {
-      R0: calibrationResults['R0'] || model.diseaseParameters.R0,
-      avg_days_infected:  calibrationResults['avg_days_infected'] || model.diseaseParameters.avg_days_infected,
-      p_hospitalization_given_infection:  calibrationResults['p_hospitalization_given_infection'] || model.diseaseParameters.p_hospitalization_given_infection,
-      p_death_given_hospitalization:  calibrationResults['p_death_given_hospitalization'] || model.diseaseParameters.p_death_given_hospitalization,
-      confirmed_case_percentage:  calibrationResults['confirmed_case_percentage'] || model.diseaseParameters.confirmed_case_percentage,
-      avg_days_hospitalized:  calibrationResults['avg_days_hospitalized'] || model.diseaseParameters.avg_days_hospitalized,
-      avg_days_immune:  calibrationResults['avg_days_immune'] || model.diseaseParameters.avg_days_immune
+      const newmodel = {
+        diseaseParameters: {
+          R0: calibrationResults['R0'] || model.diseaseParameters.R0,
+          avg_days_infected:  calibrationResults['avg_days_infected'] || model.diseaseParameters.avg_days_infected,
+          p_hospitalization_given_infection:  calibrationResults['p_hospitalization_given_infection'] || model.diseaseParameters.p_hospitalization_given_infection,
+          p_death_given_hospitalization:  calibrationResults['p_death_given_hospitalization'] || model.diseaseParameters.p_death_given_hospitalization,
+          confirmed_case_percentage:  calibrationResults['confirmed_case_percentage'] || model.diseaseParameters.confirmed_case_percentage,
+          avg_days_hospitalized:  calibrationResults['avg_days_hospitalized'] || model.diseaseParameters.avg_days_hospitalized,
+          avg_days_immune:  calibrationResults['avg_days_immune'] || model.diseaseParameters.avg_days_immune
+          }, 
+        interventions: model.interventions.map((i) => {return {...i, 'effectiveness' : calibrationResults['Intervention:'+i.name] || i.effectiveness}}),
+        simParameters: model.simParameters,
+        calibrationData: model.calibrationData
       }
-      model.interventions = model.interventions.map((i) => {return {...i, 'effectiveness' : calibrationResults['Intervention:'+i.name] || i.effectiveness}})
-      return model
+      
+      return newmodel
     });
 
     setCalibrationResults({});
@@ -281,7 +286,7 @@ function App() {
           <PivotItem headerText="Calibration">
             <div class="container">
               <div class="content">
-                <CalibrationGraph simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} confirmed_case_percentage={model.diseaseParameters.confirmed_case_percentage}/>
+                <CalibrationGraph calibrationResults={calibrationResults} model={model} simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} confirmed_case_percentage={model.diseaseParameters.confirmed_case_percentage}/>
               </div>
               <div class="sidebar">
                 <CalibrationPanel setErrorMessage={setErrorMessage} calibrationData={model.calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues} interventions={model.interventions} setPopulation={setPopulation}/>

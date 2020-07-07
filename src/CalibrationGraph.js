@@ -5,35 +5,35 @@ import IDMGraphHighcharts from './IDMGraphHighcharts';
 const MorbidityAndMortalityGraph = (props) => {
     const [hospitalizedTimes, setHospitalizedtimes] = useState([])
     const [hospitalizedCounts, setHospitalizedCounts] = useState([])
-    
+
     useEffect(() => {
-      setHospitalizedtimes(props.calibrationData.filter(d=>d.state==='hospitalized').map(d=>d.day));
-      setHospitalizedCounts(props.calibrationData.filter(d=>d.state==='hospitalized').map(d=>parseInt(d.count)/props.population));
-    }, [props.calibrationData, props.population]);
+      setHospitalizedtimes(props.model.calibrationData.filter(d=>d.state==='hospitalized').map(d=>d.day));
+      setHospitalizedCounts(props.model.calibrationData.filter(d=>d.state==='hospitalized').map(d=>parseInt(d.count)/props.population));
+    }, [props.model, props.population]);
 
     const [hospitalizedCurrentTimes, setHospitalizedCurrenttimes] = useState([])
     const [hospitalizedCurrentCounts, setHospitalizedCurrentCounts] = useState([])
     
     useEffect(() => {
-      setHospitalizedCurrenttimes(props.calibrationData.filter(d=>d.state==='hospitalized_current').map(d=>d.day));
-      setHospitalizedCurrentCounts(props.calibrationData.filter(d=>d.state==='hospitalized_current').map(d=>parseInt(d.count)/props.population));
-    }, [props.calibrationData, props.population]);
+      setHospitalizedCurrenttimes(props.model.calibrationData.filter(d=>d.state==='hospitalized_current').map(d=>d.day));
+      setHospitalizedCurrentCounts(props.model.calibrationData.filter(d=>d.state==='hospitalized_current').map(d=>parseInt(d.count)/props.population));
+    }, [props.model, props.population]);
 
     const [deathTimes, setDeathtimes] = useState([])
     const [deathCounts, setDeathCounts] = useState([])
 
     useEffect(() => {
-      setDeathtimes(props.calibrationData.filter(d=>d.state==='deaths').map(d=>d.day));
-      setDeathCounts(props.calibrationData.filter(d=>d.state==='deaths').map(d=>parseInt(d.count)/props.population));
-    }, [props.calibrationData, props.population]);
+      setDeathtimes(props.model.calibrationData.filter(d=>d.state==='deaths').map(d=>d.day));
+      setDeathCounts(props.model.calibrationData.filter(d=>d.state==='deaths').map(d=>parseInt(d.count)/props.population));
+    }, [props.model, props.population]);
 
     const [infectiousTimes, setInfectiousTimes] = useState([])
     const [infectiousCounts, setInfectiousCounts] = useState([])
     
     useEffect(() => {
-      setInfectiousTimes(props.calibrationData.filter(d=>d.state==='confirmed').map(d=>d.day));
-      setInfectiousCounts(props.calibrationData.filter(d=>d.state==='confirmed').map(d=>parseInt(d.count)/props.population));
-    }, [props.calibrationData, props.population]);
+      setInfectiousTimes(props.model.calibrationData.filter(d=>d.state==='confirmed').map(d=>d.day));
+      setInfectiousCounts(props.model.calibrationData.filter(d=>d.state==='confirmed').map(d=>parseInt(d.count)/props.population));
+    }, [props.model, props.population]);
 
     const [showCumulativeHospitalizations, setShowCumulativeHospitalizations] = useState(true)
     useEffect(() => {
