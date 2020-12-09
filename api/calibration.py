@@ -122,7 +122,7 @@ class InterventionVariable(ICalibrationVariable):
         self.intervention.scale = x[self.index]
         return self.intervention.to_effectiveness()
 
-def calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population):
+def calibrate(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population, method):
     max_date = max([int(x['day']) for x in calibration_data])
     factory = CalibrationFactory(calibration_variables, calibration_data, interventions, R0, avg_days_infected, avg_days_hospitalized, avg_days_immune, p_hospitalization_given_infection, p_death_given_hospitalization, confirmed_case_percentage, init_infection, init_recovered, population)
 
@@ -154,7 +154,16 @@ def calibrate(calibration_variables, calibration_data, interventions, R0, avg_da
     print(bounds)
     print(ic)
 
-    sln = optimize.least_squares(optim_function, ic,  bounds=bounds)
+    sln = None
+
+    if method == 'LS':
+        sln = optimize.least_squares(optim_function, ic,  bounds=bounds)
+    elif method == 'dual_annealing':
+        sln = optimize.dual_annealing(optim_function, ic,  bounds=bounds)
+    elif method == 'differential_evolution':
+        sln = optimize.differential_evolution(optim_function, ic,  bounds=bounds)
+    else:
+        sln = optimize.least_squares(optim_function, ic,  bounds=bounds)
 
     return [factory.build_return_value(sln.x), factory, sln]
 

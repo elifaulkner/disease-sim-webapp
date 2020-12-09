@@ -260,7 +260,8 @@ const CalibrationCallout = (props) => {
         props.setHideDialog(true)
     }
 
-    const options = [{ key: 'least_squares', text: 'Least Squares' }]
+    
+    const options = [{ key: 'least_squares', text: 'Least Squares' }, { key: 'differential_evolution(', text: 'Differential Evolution' }, { key: 'dual_annealing(', text: 'Dual Annealing' }]
     //const options = [{ key: 'least_squares', text: 'Least Squares' }, { key: 'vi', text: 'Bayesian Variational Inference' }]
     const [calibrationMethod, setCalibrationMethod] = useState(options[0])
     const calibrationMethodChanged = (m) => {
