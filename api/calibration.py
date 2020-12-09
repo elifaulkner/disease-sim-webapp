@@ -113,10 +113,10 @@ class InterventionVariable(ICalibrationVariable):
         return False
 
     def lower_bound(self):
-        return -.9999
+        return 0.0000001
 
     def upper_bound(self):
-        return .9999
+        return 1.99999
 
     def return_value(self, x):
         self.intervention.scale = x[self.index]
