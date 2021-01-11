@@ -52,7 +52,7 @@ def auth_callback():
 
     fusion_client = FusionAuthClient(api_key, fusion_url)
  
-    response = fusion_client.exchange_o_auth_code_for_access_token(request.args.get('code'), app_url+'/api/auth/callback', client_id=client_id, client_secret=client_secret)
+    response = fusion_client.exchange_o_auth_code_for_access_token(code=request.args.get('code'), client_id=client_id,  redirect_uri=app_url+'/api/auth/callback', client_secret=client_secret)
 
     print(response.status)
     if(response.was_successful()):

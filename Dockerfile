@@ -31,13 +31,10 @@ RUN yarn build
 #FROM continuumio/miniconda3
 FROM python:3.7-slim-stretch
 
-RUN apt-get update && \\
-apt-get --yes install nginx-full && \\
-apt-get --yes install libpq-dev && \\
-apt-get --yes install gcc && \\
-apt-get clean && \\
-apt-get autoremove -y && \\
-rm -rf /var/lib/apt/lists/*
+RUN apt-get update 
+RUN apt-get --yes install nginx-full && apt-get --yes install libpq-dev && apt-get --yes install gcc 
+RUN apt-get clean && apt-get autoremove -y 
+RUN rm -rf /var/lib/apt/lists/*
 
 COPY --from=ui-build /usr/src/app/build /usr/share/nginx/html
 
