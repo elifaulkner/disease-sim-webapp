@@ -13,23 +13,26 @@ function InterventionsPanel(props) {
     const [currentType, setCurrentType] = useState('infection_rate')
 
     const columns = [
-        { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
-        { key: 'column2', name: 'Type', fieldName: 'type', minWidth: 100, maxWidth: 200, isResizable: true },
+        { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true},
+        { key: 'column2', name: 'Type', fieldName: 'type', minWidth: 100, maxWidth: 200, isResizable: true},
         { key: 'column3', name: 'Start', fieldName: 'start', minWidth: 50, maxWidth: 200, isResizable: true },
-        { key: 'column4', name: 'End', fieldName: 'end', minWidth: 50, maxWidth: 200, isResizable: true },
+        { key: 'column4', name: 'End', fieldName: 'end', minWidth: 50, maxWidth: 200, isResizable: true},
         { key: 'column5', name: 'Effectiveness', fieldName: 'effectiveness', minWidth: 100, maxWidth: 200, isResizable: true, onRender:(v)=>{return Math.round(v.effectiveness*1000000)/10000+' %'}}
     ];
 
     const confirm = () => {
         if (props.interventions.some(i => i.name === currentIntervention.name)) {
-            props.setErrorMessage('duplicate name, choose another')
-            return
+            const i = props.interventions.find(i => i.name === currentIntervention.name)
+            i.start = currentIntervention.start
+            i.enmd = currentIntervention.end
+            i.effectiveness = currentIntervention.effectiveness
+            i.type = currentIntervention.type
+        } else {
+            props.setInterventions([...props.interventions, {
+                ...currentIntervention,
+                type: currentType
+            }])    
         }
-
-        props.setInterventions([...props.interventions, {
-            ...currentIntervention,
-            type: currentType
-        }])
 
         setCurrentIntervention({ name: '', start: 0, end: 3650, effectiveness: 0, type: '' })
     }
@@ -52,6 +55,18 @@ function InterventionsPanel(props) {
 
             const remaining = props.interventions.filter(x => !selectedItems.includes(x));
             props.setInterventions(remaining);
+        } else {
+            props.setErrorMessage('nothing selected to delete')
+        }
+    }
+
+    const onActiveItemChanged = () => {
+        if (selection.getSelectedCount() > 0) {
+            const selectedItems = selection.getSelection();
+
+            //const selected = props.interventions.find(x => selectedItems.includes(x));
+            //setCurrentIntervention({ name: '', start: 0, end: 3650, effectiveness: 0, type: '' })
+            setCurrentIntervention(selectedItems.pop());
         } else {
             props.setErrorMessage('nothing selected to delete')
         }
@@ -122,6 +137,7 @@ function InterventionsPanel(props) {
                     checkButtonAriaLabel="Row checkbox"
                     selection={selection}
                     setKey="name"
+                    onActiveItemChanged={onActiveItemChanged}
                 />
             </div>
     );
