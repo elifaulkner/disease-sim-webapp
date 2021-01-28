@@ -120,7 +120,7 @@ function InterventionsPanel(props) {
                             onValidate={(v) => setCurrentIntervention(prevState => { return { ...prevState, effectiveness: parseFloat(v)/100 } })} />
                         <Label />
                         <Stack horizontal horizontalAlign="center">
-                            <DefaultButton text="Add Intervention" onClick={confirm} />
+                            <DefaultButton text="Add/Update Intervention" onClick={confirm} />
                             <DefaultButton text="Delete Selected" onClick={deleteSelected} />
                         </Stack>
                     </Stack>
