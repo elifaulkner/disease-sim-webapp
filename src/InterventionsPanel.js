@@ -64,8 +64,6 @@ function InterventionsPanel(props) {
         if (selection.getSelectedCount() > 0) {
             const selectedItems = selection.getSelection();
 
-            //const selected = props.interventions.find(x => selectedItems.includes(x));
-            //setCurrentIntervention({ name: '', start: 0, end: 3650, effectiveness: 0, type: '' })
             setCurrentIntervention(selectedItems.pop());
         } else {
             props.setErrorMessage('nothing selected to delete')
