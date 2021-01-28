@@ -24,7 +24,7 @@ function InterventionsPanel(props) {
         if (props.interventions.some(i => i.name === currentIntervention.name)) {
             const i = props.interventions.find(i => i.name === currentIntervention.name)
             i.start = currentIntervention.start
-            i.enmd = currentIntervention.end
+            i.end = currentIntervention.end
             i.effectiveness = currentIntervention.effectiveness
             i.type = currentIntervention.type
         } else {
