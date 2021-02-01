@@ -45,9 +45,7 @@ class Interventions:
         return self._get_active_intervention_scale(self.immunity_time, t)
 
     def get_immunization_rate(self, t):
-        for a in [i for i in self.immunization_rate if self.isActive(i, t)]:
-            return a.scale
-        return 0
+        return sum([i.scale for i in self.immunization_rate if self.isActive(i, t)])
 
     def __iter__(self):
         return iter([*self.infection_rate, *self.infection_time, *self.hospitilization_time, *self.hospitilization_rate, *self.confirmed_case_percentage, *self.death_rate, *self.immunity_time])

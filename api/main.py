@@ -135,6 +135,7 @@ def interventions_from_list(list):
     interventions.hospitilization_rate = [intervention_from_dict(x) for x in list if x['type'] == 'hospitilization_rate']
     interventions.death_rate = [intervention_from_dict(x) for x in list if x['type'] == 'death_rate']
     interventions.confirmed_case_percentage = [intervention_from_dict(x, 1) for x in list if x['type'] == 'confirmed_case_percentage']
+    interventions.immunization_rate = [Intervention(x['name'], float(x['start']), float(x['end']), float(x['effectiveness'])) for x in list if x['type'] == 'immunization_rate']
     return interventions
 
 @app.route('/api/simulate', methods=['POST'])

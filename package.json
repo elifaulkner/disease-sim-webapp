@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-api": "conda run -v --cwd api/ -n idm flask run",
+    "start-api": "conda run --no-capture-output -v --cwd api/ -n idm flask run",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

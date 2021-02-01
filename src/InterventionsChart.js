@@ -22,6 +22,7 @@ const InterventionsChart = (props) => {
             case 'hospitilization_rate': return 2
             case 'death_rate': return 4
             case 'confirmed_case_percentage': return 6
+            case 'immunization_rate': return 7
             default: return 0;
         }
     }, []);
@@ -71,9 +72,9 @@ const InterventionsChart = (props) => {
                 max: props.max
             },
             yAxis: {
-                categories: ['Infection Rate', 'Infection Time', 'Hospitilization Rate', 'Hospitilization Time', 'Death Rate', 'Immunity Time', 'Confirmed Case Percentage'],
+                categories: ['Infection Rate', 'Infection Time', 'Hospitilization Rate', 'Hospitilization Time', 'Death Rate', 'Immunity Time', 'Confirmed Case Percentage', 'Immunization Rate'],
                 min: 0,
-                max: 6,
+                max: 7,
                 reversed: true,
                 title: {
                     text: ''
