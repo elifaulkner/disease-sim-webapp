@@ -10,6 +10,7 @@ class Interventions:
         self.hospitilization_rate = []
         self.death_rate = []
         self.confirmed_case_percentage = []
+        self.immunization_rate = []
         self.isActive = self._isActive
 
     def _isActive(self, i, t):
@@ -42,6 +43,9 @@ class Interventions:
 
     def get_immunity_time_scale(self, t):
         return self._get_active_intervention_scale(self.immunity_time, t)
+
+    def get_immunization_rate(self, t):
+        return sum([i.scale for i in self.immunization_rate if self.isActive(i, t)])
 
     def __iter__(self):
         return iter([*self.infection_rate, *self.infection_time, *self.hospitilization_time, *self.hospitilization_rate, *self.confirmed_case_percentage, *self.death_rate, *self.immunity_time])
@@ -91,7 +95,8 @@ class DiseaseModel:
         e = p_death_given_hospitalization/avg_days_hospitalized
         f = avg_days_immune**(-1.0)
         g = confirmed_case_percentage
-        
+        h = interventions.get_immunization_rate(t)
+
         S = X[0]
         I = X[1]
         H = X[2]
@@ -103,7 +108,7 @@ class DiseaseModel:
 
         #S, I, H, R, D, CI, CC, CH = X
 
-        return [-a*S*I+f*R, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R, e*H, a*S*I, a*S*I*g, b*I]    
+        return [-a*S*I+f*R-h*S, a*S*I-b*I-c*I, b*I-d*H-e*H, c*I+d*H-f*R+h*S, e*H, a*S*I, a*S*I*g, b*I]    
     
     def equation(self):
         def _scir(X, t, p):

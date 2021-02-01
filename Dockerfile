@@ -5,7 +5,7 @@ WORKDIR /app/
 
 #COPY api/environment.yml /app/
 #RUN conda env create -f environment.yml && conda clean -afy
-RUN pip install scipy matplotlib flask pymc3==3.8 requests python-dotenv==0.13.0 fusionauth-client pony 
+RUN pip install scipy matplotlib flask pymc3==3.8 requests python-dotenv==0.13.0 fusionauth-client pony==0.7.10
 
 COPY api/ /app/
 COPY api/test/ /app/test
