@@ -261,14 +261,14 @@ function App() {
           </PivotItem>
           <PivotItem headerText="Interventions">
             <div class="container">
-              <div class="content">
+              <div class="content70">
                 <InterventionsChart title="Active Interventions" interventions={model.interventions} max={model.simParameters.max_time} />
-                <div class="container">
+                <div class="container66">
                   <DiseaseGraph simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} />
                   <MorbidityAndMortalityGraph simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} />
                 </div>
               </div>
-              <div class="sidebar">
+              <div class="sidebar33">
                 <InterventionsPanel setErrorMessage={setErrorMessage} interventions={model.interventions} setInterventions={setInterventions} simulate={simulate} setParameterValues={setParameterValues}/>
               </div>
             </div>
@@ -285,10 +285,10 @@ function App() {
           </PivotItem>
           <PivotItem headerText="Calibration">
             <div class="container">
-              <div class="content">
+              <div class="content70">
                 <CalibrationGraph calibrationResults={calibrationResults} model={model} simulation={simulation} calibrationData={model.calibrationData} population={model.simParameters.population} confirmed_case_percentage={model.diseaseParameters.confirmed_case_percentage}/>
               </div>
-              <div class="sidebar">
+              <div class="sidebar30">
                 <CalibrationPanel setErrorMessage={setErrorMessage} calibrationData={model.calibrationData} setCalibrationData={setCalibrationData} calibrate={calibrate} calibrationResults={calibrationResults} setParameterValues={setParameterValues} interventions={model.interventions} setPopulation={setPopulation}/>
               </div>
             </div>
