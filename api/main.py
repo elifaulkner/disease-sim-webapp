@@ -5,6 +5,7 @@ from scir import DiseaseModel, Interventions, Intervention, build_dict
 import calibration as cal
 #import bayesian_calibration as bayesian_cal
 import covid_tracking
+import cdc_data
 import requests
 from fusionauth.fusionauth_client import FusionAuthClient
 import data
@@ -189,6 +190,10 @@ def sensitivities_post():
 @app.route('/api/data/covid/state/<code>', methods=['GET'])
 def get_state_data(code):
     return jsonify(covid_tracking.get_state_data(code))
+
+@app.route('/api/data/covid/cdc/state/<code>', methods=['GET'])
+def get_cdc_state_data(code):
+    return jsonify(cdc_data.get_state_data(code))
 
 def get_user():
     if 'userId' in session:

@@ -147,7 +147,10 @@ const CalibrationPanel = (props) => {
                 </Stack>
             </PivotItem>
             <PivotItem itemKey="covid-state" headerText="COVID Tracking Project">
-                <StatePanel setErrorMessage={props.setErrorMessage} setCalibrationData={props.setCalibrationData} setPopulation={props.setPopulation}/>
+                <StatePanel setErrorMessage={props.setErrorMessage} setCalibrationData={props.setCalibrationData} setPopulation={props.setPopulation} source="ctp"/>
+            </PivotItem>
+            <PivotItem itemKey="covid-cdc-state" headerText="CDC">
+                <StatePanel setErrorMessage={props.setErrorMessage} setCalibrationData={props.setCalibrationData} setPopulation={props.setPopulation} source="cdc"/>
             </PivotItem>
         </Pivot>
         <Separator />
@@ -374,12 +377,21 @@ const StatePanel = (props) => {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             }
-        
-            fetch('/api/data/covid/state/'+state.key, requestOptions)
+            
+            if(props.source === "ctp") {
+                fetch('/api/data/covid/state/'+state.key, requestOptions)
+                    .then(response => response.json())
+                    .then(data => props.setCalibrationData(data), (error) => {
+                        props.setErrorMessage(error.message)
+                    });
+            }
+            if(props.source === "cdc") {
+                fetch('/api/data/covid/cdc/state/'+state.key, requestOptions)
                 .then(response => response.json())
                 .then(data => props.setCalibrationData(data), (error) => {
                     props.setErrorMessage(error.message)
-                });    
+                });      
+            }
 
             props.setPopulation(state['population'])
         }
