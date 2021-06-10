@@ -10,7 +10,7 @@
     "@testing-library/user-event": "^7.1.2",
     "canvasjs": "^1.8.3",
     "chart.js": "^2.9.3",
-    "highcharts": "^8.2.2",
+    "highcharts": "^9.0.0",
     "http-proxy-middleware": "^1.0.3",
     "office-ui-fabric-react": "^7.107.0",
     "papaparse": "^5.2.0",
