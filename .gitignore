@@ -34,3 +34,4 @@ auth/.env
 docker/.env
 azure/db_init.sql
 azure/docker-compose.yml
+.coverage
