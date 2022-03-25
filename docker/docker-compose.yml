@@ -19,7 +19,7 @@ services:
     depends_on:
       - fusionauth
     ports:
-      - 8081:80/tcp
+      - 80:80/tcp
     networks:
       - app
     restart: unless-stopped
