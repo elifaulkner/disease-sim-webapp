@@ -1,25 +1,21 @@
 {
   "name": "disease-sim-webapp",
-  "version": "0.1.4",
+  "version": "0.1.9",
   "private": true,
   "dependencies": {
-    "@fluentui/react": "^7.107.5",
-    "@fluentui/react-northstar": "^0.48.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "canvasjs": "^1.8.3",
-    "chart.js": "^2.9.3",
-    "highcharts": "^8.2.2",
+    "highcharts": "^10.0.0",
     "http-proxy-middleware": "^1.0.3",
     "office-ui-fabric-react": "^7.107.0",
     "papaparse": "^5.2.0",
-    "plottable": "^3.8.6",
     "react": "^16.13.1",
     "react-async": "^10.0.1",
     "react-dom": "^16.13.1",
     "react-papaparse": "^3.1.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "^5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -30,8 +26,8 @@
     "version": "echo %npm_package_version%",
     "docker-build": "docker build --rm -f Dockerfile -t elifaulkner/diseasesimwebapp:latest .",
     "docker-start": "docker run --rm -it  -p 80:80/tcp elifaulkner/diseasesimwebapp:latest",
-    "docker-tag": "docker tag elifaulkner/diseasesimwebapp:latest elifaulkner/diseasesimwebapp:0.1.5",
-    "docker-push": "docker push elifaulkner/diseasesimwebapp:0.1.5"
+    "docker-tag": "docker tag elifaulkner/diseasesimwebapp:latest elifaulkner/diseasesimwebapp:0.1.9",
+    "docker-push": "docker push elifaulkner/diseasesimwebapp:0.1.9"
   },
   "eslintConfig": {
     "extends": "react-app"
