@@ -1,8 +1,8 @@
-FROM python:3.7-slim-stretch as unittest
+FROM python:3.8-slim-buster AS unittest
 
 WORKDIR /app/
 
-RUN pip install scipy matplotlib flask pymc3==3.8 requests python-dotenv==0.13.0 fusionauth-client pony==0.7.10
+RUN pip install scipy matplotlib flask requests python-dotenv==0.13.0 fusionauth-client pony==0.7.10
 
 COPY api/ /app/
 COPY api/test/ /app/test
@@ -12,7 +12,7 @@ RUN pip install coverage
 RUN coverage run -m unittest discover -v -s /app/test/ -p Test_*.py
 RUN coverage report -m
 
-FROM node:latest as ui-build
+FROM node:lts AS ui-build
 
 WORKDIR /usr/src/app/
 
@@ -21,12 +21,12 @@ COPY . /usr/src/app/
 RUN npm install
 RUN yarn build
 
-FROM python:3.7-slim-stretch
+FROM python:3.8-slim-buster
 
-RUN apt-get update 
-RUN apt-get --yes install nginx-full && apt-get --yes install libpq-dev && apt-get --yes install gcc 
-RUN apt-get clean && apt-get autoremove -y 
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y nginx-full libpq-dev gcc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ui-build /usr/src/app/build /usr/share/nginx/html
 
@@ -46,7 +46,10 @@ EXPOSE 80
 
 WORKDIR /app/
 
-RUN pip install --no-cache-dir scipy matplotlib flask pymc3==3.8 requests psycopg2-binary gunicorn==20.0.4 python-dotenv==0.13.0 fusionauth-client pony psycopg2cffi
+RUN pip install --no-cache-dir scipy matplotlib flask requests 
+RUN pip install --no-cache-dir gunicorn==20.0.4 python-dotenv==0.13.0 fusionauth-client pony
+RUN pip install --no-cache-dir psycopg2-binary
+RUN pip install --no-cache-dir psycopg2cffi
 
 COPY api/ /app/
 COPY api/.flaskenv.prod /app/.flaskenv
@@ -54,4 +57,4 @@ COPY api/.flaskenv.prod /app/.flaskenv
 COPY docker_startup.sh /app/
 RUN chmod +x docker_startup.sh
 
-ENTRYPOINT /app/docker_startup.sh
+ENTRYPOINT ["/app/docker_startup.sh"]
