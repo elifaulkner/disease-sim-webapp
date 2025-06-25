@@ -2,7 +2,7 @@ FROM python:3.8-slim-buster AS unittest
 
 WORKDIR /app/
 
-RUN pip install scipy matplotlib flask requests python-dotenv==0.13.0 fusionauth-client pony==0.7.10
+RUN pip install scipy matplotlib flask requests python-dotenv==0.13.0 fusionauth-client pony
 
 COPY api/ /app/
 COPY api/test/ /app/test
